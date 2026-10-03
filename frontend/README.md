@@ -108,7 +108,11 @@ The typed client sends `{approve: boolean}` with `X-Aegis-User: security_admin_1
 
 A full approval UI is not included. Demo identities are not production authentication. No live model, data store or tool execution is claimed. Backend state is in-memory and resets on restart. Policy status is refreshed on demand rather than streamed.
 
-## Contract and Developer A handoff
+## Historical B-only handoff
+
+This section preserves the earlier B branch checkpoint. The current combined
+checkout includes A's contract/audit commits; use `../docs/INTEGRATED_VERIFICATION.md`
+and workspace `output/final-integration/` for the current handoff and evidence.
 
 Read `../docs/API_CONTRACT.md` before changing schemas. At the base main commit that document lacked full summary/approval schemas and the action event field. Developer A's published `codex/a-contract-audit` checkpoint `071e57e` supplies them; its documented shapes match `src/schemas.ts` and `src/adapter.ts`. The frontend is compatible with older main responses and the new nullable action addition. The backend/contract checkpoint is not merged into this frontend branch.
 
