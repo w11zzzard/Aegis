@@ -56,7 +56,7 @@ export function EvaluationConsole({ api, onEvaluated, onInspect }: { api: Securi
         <select id="scenario" value={scenario.id} disabled={pending} onChange={event => { setIndex(scenarios.findIndex(s => s.id === event.target.value)); setResult(null); setError(null); }}>
           {scenarios.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
         </select>
-        <p className="expectation">Expected policy behavior: <strong>{scenario.expected}</strong> · not a result</p>
+        <p className="expectation">Expected policy behavior: <strong>{scenario.expected}</strong> via {scenario.expectedPolicy} · not a result</p>
         <pre aria-label="Proposed request payload">{JSON.stringify(scenario.request, null, 2)}</pre>
         <p className="scenario-note">{scenario.note}</p>
         <button className="primary" disabled={pending} onClick={() => void evaluate()}>{pending ? 'Evaluating…' : 'Evaluate proposal'}</button>
@@ -68,6 +68,8 @@ export function EvaluationConsole({ api, onEvaluated, onInspect }: { api: Securi
           <p className="eyebrow">Backend response</p><DecisionBadge decision={result.decision} />
           <dl className="result-fields"><div><dt>Policy</dt><dd>{result.policy}</dd></div><div><dt>Measured latency</dt><dd>{result.latency_ms} ms</dd></div><div><dt>Audit event</dt><dd>{result.event_id}</dd></div></dl>
           <div className="reason-box"><h3>Backend reason</h3><p>{result.reason}</p></div>
+          {(result.decision !== scenario.expected || result.policy !== scenario.expectedPolicy) && <p className="error-message">Backend result differs from this scenario. Expected {scenario.expected} via {scenario.expectedPolicy}; inspect the returned policy and reason.</p>}
+          {(result.decision === 'ALLOW' || result.decision === 'REDACT') && result.sanitized_output !== undefined && <div className="reason-box"><h3>Backend sanitized output</h3><pre>{result.sanitized_output}</pre></div>}
           <button className="secondary" onClick={() => onInspect(result.event_id)}>Inspect audited event</button>
         </section>}
         {!result && !error && !pending && <div className="result-empty"><span className="empty-mark" aria-hidden="true">→</span><h3>Evidence starts with a request.</h3><p>A decision, policy, reason and measured latency will appear after the backend responds.</p></div>}
