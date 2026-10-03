@@ -1,0 +1,7 @@
+fastapi>=0.115,<1
+pydantic>=2.10,<3
+PyYAML>=6.0.2,<7
+uvicorn>=0.34,<1
+httpx>=0.28,<1
+pytest>=8.3,<10
+pytest-cov>=6,<8

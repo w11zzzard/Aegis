@@ -1,0 +1,33 @@
+version: demo-v1
+identities:
+  intern_1: INTERN
+  analyst_42: ANALYST
+  senior_1: SENIOR_ANALYST
+  manager_1: PORTFOLIO_MANAGER
+  security_admin_1: SECURITY_ADMIN
+resources:
+  portfolio/current_positions:
+    classification: RESTRICTED
+    roles: [PORTFOLIO_MANAGER]
+    actions: [read, export]
+    approval_actions: [export]
+    policy: portfolio_restricted
+  research/internal_notes:
+    classification: INTERNAL
+    roles: [ANALYST, SENIOR_ANALYST, PORTFOLIO_MANAGER]
+    actions: [read]
+    policy: research_internal
+  research/confidential:
+    classification: CONFIDENTIAL
+    roles: [SENIOR_ANALYST, PORTFOLIO_MANAGER]
+    actions: [read]
+    policy: research_confidential
+  public/market_summary:
+    classification: PUBLIC
+    roles: [INTERN, ANALYST, SENIOR_ANALYST, PORTFOLIO_MANAGER, SECURITY_ADMIN]
+    actions: [read]
+    policy: market_public
+budgets:
+  window_seconds: 60
+  requests: 60
+  tokens: 32000
