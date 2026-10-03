@@ -129,3 +129,12 @@ footer { border-top: 1px solid #d8ded6; display: flex; justify-content: space-be
   footer { flex-wrap: wrap; gap: 14px; } footer p { flex-basis: 100%; order: 3; }
 }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; scroll-behavior: auto !important; } }
+.summary-section { margin: 4rem 0; }
+.summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.summary-card { border: 1px solid var(--line, #cbd5cc); padding: 1.4rem; min-width: 0; overflow-wrap: anywhere; }
+.summary-card p, .summary-card li { font-size: .85rem; line-height: 1.6; }
+.summary-card dl > div { display: flex; justify-content: space-between; border-bottom: 1px solid #ddd; padding: .4rem 0; }
+.summary-card dd { margin: 0; }
+.summary-card ul { padding-left: 1rem; }
+.stale { color: #875110; font-weight: 600; }
+@media (max-width: 900px) { .summary-grid { grid-template-columns: 1fr; } }

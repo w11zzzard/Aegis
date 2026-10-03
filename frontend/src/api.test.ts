@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { createApi } from './api';
 import { normalizeEvent, normalizeEvents } from './adapter';
 import { event, result } from './test-fixtures';
+import { stats, policyStatus, completed, notRun } from './summary-fixtures';
 
 describe('typed backend adapter', () => {
   it('accepts sanitized events and strips restricted extra payloads', () => {
@@ -12,7 +13,7 @@ describe('typed backend adapter', () => {
     expect(normalizeEvents({ events: [event] })).toEqual([event]);
   });
   it('preserves unknown fields as absent, including measured latency', () => {
-    expect(normalizeEvent({ id: 'minimal', decision: 'REDACT' })).toEqual({ id: 'minimal', decision: 'REDACT' });
+    expect(normalizeEvent({ ...event, user: null, action: null }).user).toBeUndefined();
   });
   it.each([{ ...event, decision: 'DENY' }, { ...event, classification: 'SECRET' }, { ...event, latency_ms: -1 }, {}, { ...event, latency_ms: '2.8' }])('rejects incompatible data %j', (value) => {
     expect(() => normalizeEvent(value)).toThrow(/contract/i);
@@ -24,16 +25,16 @@ describe('typed backend adapter', () => {
 
 describe('API requests', () => {
   it('calls all eight endpoints with correct methods, encoded IDs and bodies', async () => {
-    const responses = [[event], { ...event, id: 'a/b' }, { unexpected_allows: 0 }, { loaded: true }, result, { run_id: 'run-1' }, { cases: [] }, { resolved: true }];
+    const responses = [[event], { ...event, id: 'a/b' }, stats, policyStatus, result, completed, notRun, { id: 'a/b', status: 'denied', resolved_by: 'security_admin_1', executed: false }];
     const fetcher = vi.fn().mockImplementation(async () => new Response(JSON.stringify(responses.shift())));
     const api = createApi('http://localhost:8000/', fetcher);
-    const request = { user: 'analyst_42', role: 'ANALYST' as const, action: 'read', resource: event.resource, classification: 'RESTRICTED' as const, destination: 'INTERNAL' };
+    const request = { user: 'analyst_42', role: 'ANALYST' as const, action: 'read' as const, resource: event.resource, classification: 'RESTRICTED' as const, destination: 'INTERNAL' as const };
     expect(await api.events()).toEqual([event]);
     expect(await api.event('a/b')).toEqual({ ...event, id: 'a/b' });
-    expect(await api.stats()).toEqual({ unexpected_allows: 0 });
-    expect(await api.policyStatus()).toEqual({ loaded: true });
+    expect(await api.stats()).toEqual(stats);
+    expect(await api.policyStatus()).toEqual(policyStatus);
     expect(await api.evaluate(request)).toEqual(result);
-    await api.runRedteam(); await api.redteamResults(); await api.resolveApproval('a/b', { decision: 'deny' });
+    await api.runRedteam(); await api.redteamResults(); await api.resolveApproval('a/b', { approve: false });
     expect(fetcher.mock.calls.map(([url, options]) => [url, options.method])).toEqual([
       ['http://localhost:8000/api/events', 'GET'], ['http://localhost:8000/api/events/a%2Fb', 'GET'],
       ['http://localhost:8000/api/stats', 'GET'], ['http://localhost:8000/api/policies/status', 'GET'],
@@ -41,7 +42,7 @@ describe('API requests', () => {
       ['http://localhost:8000/api/redteam/results', 'GET'], ['http://localhost:8000/api/approvals/a%2Fb', 'POST']
     ]);
     expect(JSON.parse(fetcher.mock.calls[4][1].body)).toEqual(request);
-    expect(JSON.parse(fetcher.mock.calls[7][1].body)).toEqual({ decision: 'deny' });
+    expect(JSON.parse(fetcher.mock.calls[7][1].body)).toEqual({ approve: false });
   });
   it('surfaces network failure without a fallback', async () => {
     const api = createApi('', vi.fn().mockRejectedValue(new TypeError('Failed to fetch')));
