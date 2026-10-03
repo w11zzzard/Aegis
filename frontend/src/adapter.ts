@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { classifications, decisions, roles } from './types';
 import type { SecurityEvent, EvaluateResponse, JsonValue } from './types';
+import { statsSchema, policySchema, redteamSchema, approvalSchema } from './schemas';
 
 const eventSchema = z.object({
   id: z.string().min(1), timestamp: z.string().min(1), request_id: z.string().nullish(),
@@ -11,7 +12,7 @@ const eventSchema = z.object({
 });
 const evaluationSchema = z.object({
   decision: z.enum(decisions), policy: z.string().min(1), reason: z.string().min(1),
-  event_id: z.string().min(1), latency_ms: z.number().nonnegative(),
+  event_id: z.string().min(1), latency_ms: z.number().finite().nonnegative(), sanitized_output: z.string().optional(),
 });
 
 export class ContractError extends Error {
@@ -31,5 +32,13 @@ export function normalizeEvents(value: unknown): SecurityEvent[] {
   const parsed = parse(z.union([z.array(eventSchema), z.object({ events: z.array(eventSchema) })]), value);
   return (Array.isArray(parsed) ? parsed : parsed.events).map(normalizeEvent);
 }
-export function normalizeEvaluation(value: unknown): EvaluateResponse { return parse(evaluationSchema, value); }
+export function normalizeEvaluation(value: unknown): EvaluateResponse {
+  const parsed = parse(evaluationSchema, value);
+  if (parsed.decision !== 'ALLOW' && parsed.decision !== 'REDACT') delete parsed.sanitized_output;
+  return parsed;
+}
+export function normalizeStats(value: unknown) { return parse(statsSchema, value); }
+export function normalizePolicyStatus(value: unknown) { return parse(policySchema, value); }
+export function normalizeRedteam(value: unknown) { return parse(redteamSchema, value); }
+export function normalizeApproval(value: unknown) { return parse(approvalSchema, value); }
 export function normalizeJson(value: unknown): JsonValue { return parse(z.json(), value); }
