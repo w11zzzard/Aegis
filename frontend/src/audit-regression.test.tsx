@@ -6,6 +6,7 @@ import { createApi } from './api';
 import App from './App';
 import { event } from './test-fixtures';
 import { scenarios } from './scenarios';
+vi.mock('./SummaryPanels', () => ({ SummaryPanels: () => null }));
 
 export const malformedEvent = { ...event, id: 'malformed', category: 'fail_closed', policy: 'fail_closed', reason: 'Malformed request', request_id: null, user: null, role: null, action: null, resource: null, classification: null, destination: null };
 const unknownActor = { ...event, id: 'unknown', user: null, request_id: null, policy: 'identity', reason: 'Unknown identity or claimed role mismatch' };

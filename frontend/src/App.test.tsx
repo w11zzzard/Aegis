@@ -4,6 +4,8 @@ import { describe, it, expect, vi } from 'vitest';
 import App from './App';
 import { createApi } from './api';
 import { event, result } from './test-fixtures';
+// Audit/evaluation tests isolate summary transports; summary journeys are tested separately.
+vi.mock('./SummaryPanels', () => ({ SummaryPanels: () => null }));
 
 function serve(handler: (url: string, options: RequestInit) => unknown) {
   const fetcher = vi.fn(async (url: string, options: RequestInit) => new Response(JSON.stringify(handler(url, options))));

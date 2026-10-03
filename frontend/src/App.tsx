@@ -3,6 +3,7 @@ import { api as defaultApi } from './api';
 import type { SecurityApi } from './api';
 import type { SecurityEvent } from './types';
 import { EvaluationConsole, EventDetails, SecurityEventTable } from './components';
+import { SummaryPanels } from './SummaryPanels';
 
 export default function App({ api = defaultApi }: { api?: SecurityApi }) {
   const [events, setEvents] = useState<SecurityEvent[]>([]);
@@ -46,6 +47,7 @@ export default function App({ api = defaultApi }: { api?: SecurityApi }) {
       </div></aside></div>
     </section>
     <EvaluationConsole api={api} onEvaluated={() => void refresh()} onInspect={id => { void inspect(id); document.getElementById('audit')?.scrollIntoView({ behavior: 'instant' }); }} />
+    <SummaryPanels api={api} revision={eventVersion.current} />
     <footer><a href="#" className="footer-brand">AEGIS</a><p>Agent Enforcement Gateway for Intelligent Systems</p><a href="#console">Evaluate a proposal <span aria-hidden="true">↗</span></a></footer>
   </main>;
 }
