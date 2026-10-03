@@ -74,4 +74,3 @@ describe('API requests', () => {
     vi.useRealTimers();
   });
 });
-

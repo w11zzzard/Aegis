@@ -108,4 +108,3 @@ describe('real-evidence dashboard journeys', () => {
     expect(await screen.findByRole('region', { name: 'Event details' })).toHaveTextContent(event.policy);
   });
 });
-
