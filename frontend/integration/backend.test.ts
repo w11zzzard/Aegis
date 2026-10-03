@@ -5,6 +5,19 @@ import { scenarios } from '../src/scenarios';
 import { liveCheck } from '../scripts/live-check.mjs';
 const base = process.env.AEGIS_API_URL || 'http://127.0.0.1:8000';
 const api = createApi(base);
+
+test.each([
+  [{ ...scenarios[0].request, action: 'execute' }, 422],
+  [{ ...scenarios[0].request, prompt: 'a'.repeat(65536) }, 413],
+])('real validation rejection retains status and nullable audited context', async (body, status) => {
+  const result = await api.evaluate(body as typeof scenarios[0]['request']);
+  expect(result.decision).toBe('BLOCK');
+  expect(result.policy).toBe('fail_closed');
+  expect(result.http_status).toBe(status);
+  const event = await api.event(result.event_id);
+  expect(event.action).toBeUndefined();
+  expect(event.user).toBeUndefined();
+});
 test('real backend decisions, policies, audit identity and nullable context', async () => {
   const evidence = await liveCheck();
   expect(evidence.evidence).toHaveLength(5);

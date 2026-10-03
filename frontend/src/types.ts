@@ -50,6 +50,8 @@ export interface EvaluateResponse {
   event_id: string;
   latency_ms: number;
   sanitized_output?: string;
+  // Client transport metadata, derived from HTTP status rather than the JSON body.
+  http_status?: 422 | 413;
 }
 
 export type StatsResponse = import('zod').infer<typeof import('./schemas').statsSchema>;

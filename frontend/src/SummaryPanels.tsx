@@ -11,13 +11,17 @@ function ResourcePanel<T>({ title, loader, revision, render, run }: { title: str
   const version = useRef(0);
   async function load(operation = loader) {
     const current = ++version.current;
-    setPending(true); setError(null);
+    setPending(true); setError(null); setData(null);
     try { const next = await operation(); if (current === version.current) setData(next); }
     catch (failure) {
       if (current === version.current) setError((failure as Error).message);
       // A failed run is not a successful previous run. Retrieve the backend's failed status.
       if (run && operation === run) {
-        try { const next = await loader(); if (current === version.current) setData(next); } catch { /* Original error remains visible. */ }
+        try {
+          const next = await loader();
+          // Restore only the backend's failed-run evidence, never an older completed run.
+          if (current === version.current && next && typeof next === 'object' && 'status' in next && next.status === 'failed') setData(next);
+        } catch { /* Original error remains visible. */ }
       }
     }
     finally { if (current === version.current) setPending(false); }
@@ -25,9 +29,8 @@ function ResourcePanel<T>({ title, loader, revision, render, run }: { title: str
   useEffect(() => { void load(); return () => { ++version.current; }; }, [loader, revision]);
   return <section aria-label={title} className="summary-card" aria-busy={pending}>
     <h3>{title}</h3>
-    {pending && <p className="loading">{data ? 'Refreshing… previous snapshot' : 'Loading backend summary…'}</p>}
+    {pending && <p className="loading">Loading backend summary…</p>}
     {error && <p role="alert" className="error-message">{error}</p>}
-    {data && error && <p className="stale">Stale — previous backend snapshot; refresh to verify.</p>}
     {data && render(data)}
     {run && <button className="secondary" disabled={pending} onClick={() => void load(run)}>{pending ? 'Waiting for backend…' : 'Run red-team'}</button>}
   </section>;
@@ -40,7 +43,7 @@ function Stats({ data }: { data: StatsResponse }) {
     <p>{data.latency_ms.samples === 0 ? 'Unavailable — no latency samples' : 'Mean ' + data.latency_ms.mean + ' ms · max ' + data.latency_ms.max + ' ms · ' + data.latency_ms.samples + ' samples'}</p>
     <h4>Budget window</h4>
     <p>Aggregate usage across all users: {budget.requests_used} requests · {budget.tokens_used} units</p>
-    <p>Conservative character units; not model tokens or monetary cost.</p>
+    <p>Conservative character units (conservative_character_units); not model tokens or monetary cost.</p>
     <p>Per-user limits: {budget.requests_limit_per_user ?? 'Not reported'} requests · {budget.tokens_limit_per_user ?? 'Not reported'} units · window {budget.window_seconds ?? 'Not reported'} seconds</p>
   </>;
 }

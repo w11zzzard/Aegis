@@ -21,7 +21,7 @@ it('shows unloaded policy as unavailable despite a previous version, and red-tea
   expect(await screen.findByText('Failed')).toBeVisible();
   expect(screen.getByText('Corpus unavailable')).toBeVisible();
 });
-it('runs real endpoint, shows completed cases, and labels previous values stale on failed refresh', async () => {
+it('runs the endpoint and clears previous success on a failed refresh', async () => {
   const fetcher = transport();
   render(<SummaryPanels api={createApi('', fetcher)} />);
   await screen.findByText('Not run');
@@ -30,8 +30,21 @@ it('runs real endpoint, shows completed cases, and labels previous values stale 
   expect(screen.getByText(/Shell denied/)).toBeVisible();
   fetcher.mockRejectedValue(new TypeError('offline'));
   await userEvent.click(screen.getByRole('button', { name: 'Refresh summaries' }));
-  expect(await screen.findAllByText(/Stale — previous backend snapshot/)).toHaveLength(3);
-  expect(screen.getAllByRole('alert')).toHaveLength(3);
+  expect(await screen.findAllByRole('alert')).toHaveLength(3);
+  expect(screen.queryByText('Completed')).not.toBeInTheDocument();
+  expect(screen.queryByText('Policy evaluation available')).not.toBeInTheDocument();
+  expect(screen.queryByText(/Shell denied/)).not.toBeInTheDocument();
+});
+
+it('does not restore an old completed run when the run request fails', async () => {
+  const fetcher = transport({ '/api/redteam/results': completed });
+  const original = fetcher.getMockImplementation()!;
+  fetcher.mockImplementation(async url => url === '/api/redteam/run' ? new Response('', { status: 503 }) : original(url));
+  render(<SummaryPanels api={createApi('', fetcher)} />);
+  await screen.findByText('Completed');
+  await userEvent.click(screen.getByRole('button', { name: 'Run red-team' }));
+  await screen.findByRole('alert');
+  expect(screen.queryByText('Completed')).not.toBeInTheDocument();
 });
 it('shows initial errors without invented summaries', async () => {
   render(<SummaryPanels api={createApi('', vi.fn().mockRejectedValue(new TypeError()))} />);

@@ -66,6 +66,7 @@ export function EvaluationConsole({ api, onEvaluated, onInspect }: { api: Securi
         {pending && <p className="loading">Waiting for the backend decision…</p>}
         {result && <section role="region" aria-label="Evaluation result">
           <p className="eyebrow">Backend response</p><DecisionBadge decision={result.decision} />
+          {result.http_status && <p className="error-message">Validation rejected · HTTP {result.http_status}. The sanitized BLOCK event is available for inspection.</p>}
           <dl className="result-fields"><div><dt>Policy</dt><dd>{result.policy}</dd></div><div><dt>Measured latency</dt><dd>{result.latency_ms} ms</dd></div><div><dt>Audit event</dt><dd>{result.event_id}</dd></div></dl>
           <div className="reason-box"><h3>Backend reason</h3><p>{result.reason}</p></div>
           {(result.decision !== scenario.expected || result.policy !== scenario.expectedPolicy) && <p className="error-message">Backend result differs from this scenario. Expected {scenario.expected} via {scenario.expectedPolicy}; inspect the returned policy and reason.</p>}
