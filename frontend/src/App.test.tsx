@@ -101,5 +101,11 @@ describe('real-evidence dashboard journeys', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent(/backend unreachable/i);
     expect(screen.queryByRole('region', { name: 'Evaluation result' })).not.toBeInTheDocument();
   });
+  it('opens the actual audit event returned by evaluation', async () => {
+    serve(url => url === '/api/events' ? [] : url === '/api/security/evaluate' ? result : event);
+    await userEvent.click(screen.getByRole('button', { name: 'Evaluate proposal' }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Inspect audited event' }));
+    expect(await screen.findByRole('region', { name: 'Event details' })).toHaveTextContent(event.policy);
+  });
 });
 
