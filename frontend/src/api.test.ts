@@ -51,6 +51,10 @@ describe('API requests', () => {
     const api = createApi('', vi.fn().mockResolvedValue(new Response('private trace', { status: 503 })));
     await expect(api.events()).rejects.toThrow('HTTP 503');
   });
+  it('explains how to recover from a development proxy 500 when the backend is offline', async () => {
+    const api = createApi('', vi.fn().mockResolvedValue(new Response('', { status: 500 })));
+    await expect(api.events()).rejects.toThrow(/check the api server and proxy/i);
+  });
   it('reports malformed JSON and malformed decisions', async () => {
     const fetcher = vi.fn().mockResolvedValueOnce(new Response('<html>')).mockResolvedValueOnce(new Response(JSON.stringify({ ...result, decision: 'DENY' })));
     const api = createApi('', fetcher);
