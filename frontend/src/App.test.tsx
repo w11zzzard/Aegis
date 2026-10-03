@@ -23,7 +23,8 @@ describe('real-evidence dashboard journeys', () => {
     expect(fetcher).toHaveBeenCalledWith('/api/events/event-1', expect.anything());
   });
   it('shows absent fields as Not reported, never a guessed action or zero latency', async () => {
-    serve(url => url === '/api/events' ? [{ id: 'missing', decision: 'REQUIRE_APPROVAL' }] : { id: 'missing', decision: 'REQUIRE_APPROVAL' });
+    const missing = { ...event, id: 'missing', decision: 'REQUIRE_APPROVAL', user: null, role: null, action: null, resource: null, classification: null, destination: null, request_id: null };
+    serve(url => url === '/api/events' ? [missing] : missing);
     await userEvent.click(await screen.findByRole('button', { name: /inspect missing/i }));
     const details = await screen.findByRole('region', { name: 'Event details' });
     expect(await within(details).findAllByText('Not reported')).not.toHaveLength(0);

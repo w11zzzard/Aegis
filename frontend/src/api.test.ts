@@ -12,7 +12,7 @@ describe('typed backend adapter', () => {
     expect(normalizeEvents({ events: [event] })).toEqual([event]);
   });
   it('preserves unknown fields as absent, including measured latency', () => {
-    expect(normalizeEvent({ id: 'minimal', decision: 'REDACT' })).toEqual({ id: 'minimal', decision: 'REDACT' });
+    expect(normalizeEvent({ ...event, user: null, action: null }).user).toBeUndefined();
   });
   it.each([{ ...event, decision: 'DENY' }, { ...event, classification: 'SECRET' }, { ...event, latency_ms: -1 }, {}, { ...event, latency_ms: '2.8' }])('rejects incompatible data %j', (value) => {
     expect(() => normalizeEvent(value)).toThrow(/contract/i);

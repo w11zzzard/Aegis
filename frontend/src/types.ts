@@ -5,32 +5,34 @@ export const roles = ['INTERN', 'ANALYST', 'SENIOR_ANALYST', 'PORTFOLIO_MANAGER'
 export type Decision = typeof decisions[number];
 export type Classification = typeof classifications[number];
 export type Role = typeof roles[number];
+export type Action = 'read' | 'export';
+export type Destination = 'INTERNAL' | 'EXTERNAL';
 export type JsonValue = null | boolean | number | string | JsonValue[] | { [key: string]: JsonValue };
 
 export interface SecurityEvent {
   id: string;
-  timestamp?: string;
+  timestamp: string;
   request_id?: string;
   user?: string;
   role?: Role;
-  category?: string;
-  action?: string;
+  category: string;
+  action?: Action;
   resource?: string;
   classification?: Classification;
-  destination?: string;
-  decision?: Decision;
-  policy?: string;
-  reason?: string;
-  latency_ms?: number;
+  destination?: Destination;
+  decision: Decision;
+  policy: string;
+  reason: string;
+  latency_ms: number;
 }
 
 export interface EvaluateRequest {
   user: string;
   role: Role;
-  action: string;
+  action: Action;
   resource: string;
   classification: Classification;
-  destination: string;
+  destination: Destination;
   request_id?: string;
   prompt?: string;
   output?: string;
