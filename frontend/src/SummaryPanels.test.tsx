@@ -44,3 +44,20 @@ it('shows real sampled latency and empty completed result state', async () => {
   expect(await screen.findByText('Mean 0.25 ms · max 0.25 ms · 1 samples')).toBeVisible();
   expect(screen.getByText('No case results returned')).toBeVisible();
 });
+it('retrieves the backend failed status after a failed run instead of retaining a successful run', async () => {
+  const fetcher = transport({ '/api/redteam/results': completed });
+  const original = fetcher.getMockImplementation()!;
+  let failed = false;
+  fetcher.mockImplementation(async url => {
+    if (url === '/api/redteam/run') { failed = true; return new Response('Private corpus error', { status: 503 }); }
+    if (url === '/api/redteam/results' && failed) return new Response(JSON.stringify({ ...notRun, status: 'failed', error: 'Corpus invalid' }));
+    return original(url);
+  });
+  render(<SummaryPanels api={createApi('', fetcher)} />);
+  await screen.findByText('Completed');
+  await userEvent.click(screen.getByRole('button', { name: 'Run red-team' }));
+  expect(await screen.findByText('Failed')).toBeVisible();
+  expect(screen.queryByText('Completed')).not.toBeInTheDocument();
+  expect(screen.getByRole('alert')).toHaveTextContent('HTTP 503');
+  expect(screen.queryByText('Private corpus error')).not.toBeInTheDocument();
+});
