@@ -11,6 +11,24 @@ import yaml
 from .models import PolicyConfig
 
 
+class PolicyLoader(yaml.SafeLoader):
+    """Reject ambiguous duplicate keys and aliases in this small policy format."""
+
+    def compose_node(self, parent, index):
+        if self.check_event(yaml.AliasEvent):
+            raise ValueError("Policy aliases are unsupported")
+        return super().compose_node(parent, index)
+
+    def construct_mapping(self, node, deep=False):
+        mapping = {}
+        for key_node, value_node in node.value:
+            key = self.construct_object(key_node, deep=deep)
+            if key in mapping:
+                raise ValueError("Duplicate policy key")
+            mapping[key] = self.construct_object(value_node, deep=deep)
+        return mapping
+
+
 def utc_now():
     return datetime.now(timezone.utc).isoformat()
 
@@ -36,7 +54,7 @@ class PolicyStore:
                 if digest == self.digest and self.loaded:
                     return self.config
                 # JSON validation accepts enum strings while preserving strict types.
-                config = PolicyConfig.model_validate_json(json.dumps(yaml.safe_load(raw)))
+                config = PolicyConfig.model_validate_json(json.dumps(yaml.load(raw, Loader=PolicyLoader)))
                 self.config = config
                 self.digest = digest
                 self.loaded = True

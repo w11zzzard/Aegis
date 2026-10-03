@@ -1,0 +1,10 @@
+[run]
+source = backend
+omit =
+    backend/tests/*
+    backend/.venv/*
+data_file = backend/.coverage
+
+[report]
+show_missing = True
+fail_under = 80

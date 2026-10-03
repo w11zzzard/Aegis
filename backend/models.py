@@ -74,3 +74,20 @@ class PolicyConfig(StrictModel):
     identities: Annotated[dict[Identifier, Role], Field(min_length=1, max_length=1000)]
     resources: Annotated[dict[Identifier, ResourcePolicy], Field(min_length=1, max_length=1000)]
     budgets: Budgets
+
+
+class ApprovalRequest(StrictModel):
+    approve: bool
+
+
+class ChatMessage(StrictModel):
+    role: Literal["system", "user", "assistant"]
+    content: Annotated[str, StringConstraints(max_length=4000)]
+
+
+class ChatRequest(StrictModel):
+    model: Identifier = "aegis-offline-demo"
+    messages: Annotated[list[ChatMessage], Field(min_length=1, max_length=16)]
+    security: EvaluateRequest
+    stream: Literal[False] = False
+    max_tokens: Annotated[int, Field(ge=1, le=4096)] = 128
