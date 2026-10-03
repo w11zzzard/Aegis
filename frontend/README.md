@@ -1,42 +1,130 @@
 # AEGIS dashboard
 
-Frontend owner branch: `dev-b/dashboard`. React, TypeScript and Vite. All application data comes from the backend. There is no runtime mock mode, generated event stream, inferred decision, placeholder metric or latency estimate.
+React, TypeScript, Vite, and Zod runtime validation. Developer B integration branch: `codex/b-dashboard-integration`, based on `origin/main` at `4e9a3ecbac6d685d49a6685635a9f58debefd787`. Only frontend-owned files change.
 
-## Run
+Every decision, event, count, latency, policy status, and corpus result comes from the backend. Test fixtures are confined to tests. The application has no mock mode.
 
-From `frontend/`:
+## Start
 
-```sh
+Use Node 22 and the locked installation, from `frontend/`:
+
+```powershell
 npm ci
-npm run dev
+$env:AEGIS_BACKEND_URL='http://127.0.0.1:8000'
+npm run dev -- --port 5173 --strictPort
 ```
 
-Open `http://127.0.0.1:5173`. Vite proxies `/api` to `http://127.0.0.1:8000`. Override the proxy with `AEGIS_BACKEND_URL`. For a separately hosted API, set `VITE_API_BASE_URL` to its origin before building; the backend must allow that frontend origin with CORS. Production hosting must proxy `/api` to the backend when the base URL is empty. Environment values are build-time configuration, never credentials.
+Start the backend separately following `../backend/README.md` and its locked requirements. Do not stop another developer's server. Choose unused ports and use `--strictPort` so Vite cannot silently move.
 
-```sh
+For an isolated local backend, from the repository root:
+
+```powershell
+python -m venv frontend/.integration-venv
+frontend/.integration-venv/Scripts/python.exe -m pip install -r backend/requirements-lock.txt
+$env:PYTHONDONTWRITEBYTECODE='1'
+frontend/.integration-venv/Scripts/python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 8010
+```
+
+In a second terminal, from `frontend/`, set `AEGIS_BACKEND_URL=http://127.0.0.1:8010` and start Vite on an unused port. The backend proxy handles `/api`; it avoids changing backend CORS for isolated frontend ports.
+
+Configuration:
+
+| Setting | Purpose |
+| --- | --- |
+| AEGIS_BACKEND_URL | Vite development proxy target; default http://127.0.0.1:8000 |
+| VITE_API_BASE_URL | Optional browser API origin, set before build; empty uses same-origin /api |
+| AEGIS_API_URL | Live HTTP acceptance target; default http://127.0.0.1:8000 |
+| AEGIS_FRONTEND_PORT | Browser-suite Vite port; default 5174, strict and never reused automatically |
+| AEGIS_FRONTEND_URL | Explicit existing frontend URL; browser suite then starts no server |
+| PLAYWRIGHT_CHANNEL | chrome or msedge for an installed browser; otherwise install Playwright Chromium |
+| AEGIS_REAL_BROWSER | Set 1 for the separate real browser journey; remove for fixture browser tests |
+
+Production hosting must proxy `/api` when VITE_API_BASE_URL is empty. A direct API origin requires backend CORS permission. Environment settings are not credentials.
+
+## Checks
+
+Fixture unit/component tests and production build:
+
+```powershell
 npm test
+npm run test
 npm run test:coverage
 npm run build
-npx playwright install chromium
-npm run test:e2e
-npm run test:live
+npm audit
 ```
 
-The live check uses `AEGIS_API_URL` (default `http://127.0.0.1:8000`) and creates real audit events. Unit/browser tests use isolated test transport fixtures; those fixtures are never imported by application modules.
+Fixture browser suite (intercepts API responses only in test code):
 
-If Chrome or Edge is already installed, set `PLAYWRIGHT_CHANNEL=chrome` or `PLAYWRIGHT_CHANNEL=msedge` to run E2E without downloading Chromium. In PowerShell: `$env:PLAYWRIGHT_CHANNEL='chrome'; npm run test:e2e`.
+```powershell
+$env:PLAYWRIGHT_CHANNEL='chrome'
+Remove-Item Env:AEGIS_REAL_BROWSER -ErrorAction SilentlyContinue
+npm run test:e2e
+```
 
-## Integration and Developer A handoff
+If no supported browser is installed: `npx playwright install chromium`, then remove PLAYWRIGHT_CHANNEL.
 
-Source of truth: `../docs/API_CONTRACT.md` at `97734e2`. No shared contract or backend files are changed.
+Separate real HTTP and browser checks, with a running backend and unused frontend port:
 
-- Evaluate uses the contract's exact fields and canonical decision/classification/role values. All response payloads cross runtime validation before rendering. Extra event fields (including prompts and output) are discarded.
-- Events currently accept either a direct event array or `{ events: [...] }`, isolated in `src/adapter.ts`. Confirm the intended envelope. No other envelope is silently converted to an empty list.
-- Event `action` and `latency_ms` are optional because the documented event listing omits them. Please include them in event detail responses to satisfy the complete detail view. Missing values render `Not reported`; latency is never computed from client round-trip time.
-- Stats, policy status and red-team response schemas are unspecified. Their typed client methods return validated JSON values pending agreed field definitions. Dedicated summary UI is deferred until the actual schemas are available.
-- Approval body keys are unspecified. `resolveApproval` currently proposes `{ decision: 'approve' | 'deny' }`; confirm with Developer A before exposing an approval interface.
-- The low-risk resource `research/public_summary`, external destination value `EXTERNAL`, and dangerous proposal (`tool: 'shell'`, `tool_arguments: { command: 'rm -rf /' }`) are demo request inputs requiring backend confirmation. The frontend only submits proposals to the evaluation endpoint; it has no tool execution path. Portfolio inputs match the shared acceptance case.
-- Event detail must return an ID matching the selected event, and evaluation must return `event_id`, policy, reason and measured nonnegative latency.
-- Transport failures display `Backend unreachable`; non-2xx responses show the endpoint and HTTP status. Response bodies are not printed as errors. Invalid schemas display a contract error. Failed refreshes clear rows; selection requests are guarded against stale responses.
+```powershell
+$env:AEGIS_API_URL='http://127.0.0.1:8010'
+$env:AEGIS_BACKEND_URL=$env:AEGIS_API_URL
+$env:AEGIS_FRONTEND_PORT='5174'
+$env:PLAYWRIGHT_CHANNEL='chrome'
+npm run test:live
+npm run test -- --config vitest.live.config.ts --reporter=verbose
+$env:AEGIS_REAL_BROWSER='1'
+npm run test:e2e
+Remove-Item Env:AEGIS_REAL_BROWSER
+```
 
-The first slice is implemented and transport-testable independently of backend availability. A real backend event is verified only when the live acceptance check passes against a running backend. See `TDD_EVIDENCE.md` for actual validation results.
+Real checks send proposals, create audit/approval records, consume real sliding-window quotas, and run the committed corpus. Use a dedicated backend process with the default policies for reproducible runs. They never intercept responses. Repeated runs against a heavily used process can legitimately throttle; that is a failure to meet demo expectations, not a reason to substitute results.
+
+## Demo journey
+
+Choose a scenario, evaluate, then inspect the returned audit ID. The UI displays the actual backend decision and flags a mismatch with the expected decision **or policy**.
+
+| Scenario | Identity and proposal | Expected decision / policy |
+| --- | --- | --- |
+| Public read | analyst_42 / ANALYST, public/market_summary, PUBLIC, read, INTERNAL | ALLOW / market_public |
+| Analyst restricted read | analyst_42 / ANALYST, portfolio/current_positions, RESTRICTED, read, INTERNAL | BLOCK / portfolio_restricted |
+| Manager restricted read | manager_1 / PORTFOLIO_MANAGER, same restricted read | ALLOW / portfolio_restricted |
+| Restricted external | Authorized manager restricted read, EXTERNAL | BLOCK / external_exfiltration |
+| Unsafe tool | Authorized manager restricted read, INTERNAL; shell with synthetic command arguments | BLOCK / tool_guard |
+| Synthetic secret output | Authorized public read with synthetic sk- secret output | REDACT / output_secrets |
+| Budget limit | Authorized public read, estimated_tokens 1000000 | THROTTLE / budget |
+
+Tool requests are proposals only; no tool executes. Sanitized output is accepted only from the evaluation response and shown only for ALLOW/REDACT. It is never admitted into audit events.
+
+Refresh events to inspect mixed normal, unknown-actor, and malformed-request records. Nullable audit context consistently renders **Not reported**. Missing action is supported for older servers; valid read/export is preserved. Required event structure, canonical decisions/roles, finite nonnegative latency, and detail ID matching remain strict. Unexpected payload fields are removed.
+
+Summary panels show backend decision counts, retained-sample latency, aggregate budget usage, per-user limits, policy version/load/hot-reload status, and latest real corpus cases. Zero latency samples display unavailable. Budget units are conservative character units, not model tokens or cost. An unloaded policy remains unavailable even with a prior version. Not-run, failed, completed-with-case-failures, loading, errors, empty results, and stale snapshots are distinct. Use Refresh summaries to recheck status; audit/evaluation refreshes also reload summaries.
+
+## Approval scope and limitations
+
+The typed client sends `{approve: boolean}` with `X-Aegis-User: security_admin_1` **only** on the approval operation. It validates matching ID, approved/denied status, demo admin resolver and executed:false; HTTP 403/404/409/422 have explicit safe guidance. Real tests resolve an authorized export and reject replay/missing approval.
+
+A full approval UI is not included. Demo identities are not production authentication. No live model, data store or tool execution is claimed. Backend state is in-memory and resets on restart. Policy status is refreshed on demand rather than streamed.
+
+## Contract and Developer A handoff
+
+Read `../docs/API_CONTRACT.md` before changing schemas. At the base main commit that document lacked full summary/approval schemas and the action event field. Developer A's published `codex/a-contract-audit` checkpoint `071e57e` supplies them; its documented shapes match `src/schemas.ts` and `src/adapter.ts`. The frontend is compatible with older main responses and the new nullable action addition. The backend/contract checkpoint is not merged into this frontend branch.
+
+Copyable handoff:
+
+```text
+Developer B: codex/b-dashboard-integration (frontend-only).
+Contract compatibility checked against main 4e9a3ec and A's codex/a-contract-audit 071e57e.
+Nullable context is normalized to absent/Not reported; read/export/null/older-absent action supported.
+All seven demos assert decision + deciding policy. Registered identities are analyst_42 and manager_1.
+Typed stats/policy/redteam schemas match the expanded API contract.
+Approval uses {approve:boolean}; only that endpoint gets X-Aegis-User:security_admin_1.
+No audit output is admitted. Sanitized output is restricted to ALLOW/REDACT evaluation display.
+Please deliver A's additive audit-action and contract changes through your normal review flow.
+No further backend behavior is needed for the verified dashboard journey.
+Full approval UI is absent; client and actual resolve/replay/missing-ID checks are delivered.
+Reproduce with AEGIS_API_URL and AEGIS_BACKEND_URL pointed at your isolated backend,
+npm run test:live, npm run test -- --config vitest.live.config.ts --reporter=verbose,
+then AEGIS_REAL_BROWSER=1 npm run test:e2e through the existing Vite proxy.
+```
+
+See `INTEGRATION_EVIDENCE.md` for checks, real audit IDs, coverage and commit checkpoints. Earlier `TDD_EVIDENCE.md` describes the original first slice, not this repair's current results.
