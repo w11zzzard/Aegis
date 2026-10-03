@@ -1,7 +1,7 @@
 # AEGIS backend demo
 
 One Python process, deterministic policy decisions, no external model or paid API.
-The shared boundary is `docs/API_CONTRACT.md`; this implementation does not edit it.
+The shared boundary is `docs/API_CONTRACT.md`, now documenting exact wire shapes and nullability.
 
 ## Start from repository root
 
@@ -51,7 +51,7 @@ Invoke-RestMethod http://127.0.0.1:8000/api/events
 For the ALLOW control use `user: manager_1`, `role: PORTFOLIO_MANAGER`.
 For the unconditional exfiltration block use that same manager with `destination: EXTERNAL`.
 
-Developer B integration details (the contract leaves collection envelopes unspecified):
+Developer B integration details (full schemas are in the API contract):
 
 | Endpoint | Response shape / behavior |
 | --- | --- |
@@ -75,6 +75,33 @@ response field; output contents never appear in event views. Blocked, throttled 
 pending requests never return output. Chat returns 403 on BLOCK/REQUIRE_APPROVAL,
 429 on THROTTLE, and a minimal completion on ALLOW/REDACT. The offline completion
 is explicitly labeled and contains no live portfolio data or model-generated answer.
+
+Events include a validated attempted `action` (`read`, `export` or null). Missing or
+malformed context is null on the wire, including request_id on ordinary requests;
+the dashboard should normalize these values for display. See
+[Developer B handoff](DEVELOPER_B_HANDOFF.md) for captured payloads and scenario inputs.
+
+## Real HTTP rehearsal
+
+Use an available isolated port if another developer already has a server running.
+Do not stop their service. In two terminals, from this checkout's root:
+
+```powershell
+./backend/.venv/Scripts/python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 18001 --no-access-log
+./backend/.venv/Scripts/python.exe -m backend.live_check --url http://127.0.0.1:18001
+```
+
+The rehearsal checks 19 real HTTP paths, asserting both decision and deciding policy,
+event/action/nullability, output sanitization, proposed tools, quotas, approvals and
+actual red-team results. It creates synthetic events and consumes that process's quota;
+use a fresh isolated process for repeatable evidence. It does not run a browser or
+prove frontend rendering. The test suite also starts and cleans up its own disposable
+backend on an automatically selected loopback port for this regression.
+
+For the dashboard's existing Vite `/api` proxy, set
+`AEGIS_BACKEND_URL=http://127.0.0.1:18001` when using that port. The existing proxy
+does not include `/health` or `/v1`; those require direct backend calls or a separate
+proxy configuration. No frontend files are changed by the backend handoff.
 
 ## Identity and policy configuration
 

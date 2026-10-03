@@ -1,0 +1,316 @@
+{
+  "timestamp": "2026-10-03T15:18:54.136278+00:00",
+  "base_url": "http://127.0.0.1:18001",
+  "checks_passed": 19,
+  "checks": [
+    "health",
+    "analyst_restricted",
+    "manager_authorized",
+    "public_positive",
+    "restricted_external",
+    "indirect_external",
+    "role_mismatch",
+    "classification_downgrade",
+    "admin_business_denied",
+    "dangerous_tool",
+    "tool_destination_mismatch",
+    "output_redaction",
+    "token_budget",
+    "export_approval",
+    "approval_resolution",
+    "malformed_action",
+    "oversized_body",
+    "redteam_run_and_results",
+    "stats_and_policy_status"
+  ],
+  "examples": {
+    "initial_stats": {
+      "total_events": 0,
+      "decisions": {
+        "ALLOW": 0,
+        "BLOCK": 0,
+        "REDACT": 0,
+        "REQUIRE_APPROVAL": 0,
+        "THROTTLE": 0
+      },
+      "retained_events": 0,
+      "latency_ms": {
+        "samples": 0,
+        "mean": null,
+        "max": null
+      },
+      "unexpected_allows": 0,
+      "budgets": {
+        "requests_used": 0,
+        "tokens_used": 0,
+        "requests_limit_per_user": 60,
+        "tokens_limit_per_user": 32000,
+        "window_seconds": 60,
+        "accounting": "conservative_character_units"
+      },
+      "approvals": {},
+      "redteam": {
+        "status": "not_run",
+        "total": 0,
+        "unexpected_allows": 0
+      }
+    },
+    "event": {
+      "id": "feb3520c-fc0d-4e59-9994-16f6124a3338",
+      "timestamp": "2026-10-03T15:18:54.102542+00:00",
+      "category": "portfolio_restricted",
+      "request_id": null,
+      "user": "analyst_42",
+      "role": "ANALYST",
+      "action": "read",
+      "resource": "portfolio/current_positions",
+      "classification": "RESTRICTED",
+      "destination": "INTERNAL",
+      "decision": "BLOCK",
+      "policy": "portfolio_restricted",
+      "reason": "ANALYST cannot access RESTRICTED resource",
+      "latency_ms": 0.1949
+    },
+    "approval": {
+      "id": "7dd7175e-e64c-4784-aa2b-5c7fd0b5622e",
+      "status": "approved",
+      "resolved_by": "security_admin_1",
+      "executed": false
+    },
+    "malformed_action_event": {
+      "id": "ad70af49-7657-488e-8e40-9f6f147e57bb",
+      "timestamp": "2026-10-03T15:18:54.126280+00:00",
+      "category": "fail_closed",
+      "request_id": null,
+      "user": null,
+      "role": null,
+      "action": null,
+      "resource": null,
+      "classification": null,
+      "destination": null,
+      "decision": "BLOCK",
+      "policy": "fail_closed",
+      "reason": "Malformed request",
+      "latency_ms": 0.0068
+    },
+    "oversized_body_event": {
+      "id": "baf13ec6-53bb-4d32-8aee-b866dbed1f21",
+      "timestamp": "2026-10-03T15:18:54.128278+00:00",
+      "category": "fail_closed",
+      "request_id": null,
+      "user": null,
+      "role": null,
+      "action": null,
+      "resource": null,
+      "classification": null,
+      "destination": null,
+      "decision": "BLOCK",
+      "policy": "fail_closed",
+      "reason": "Request body too large",
+      "latency_ms": 0.1481
+    },
+    "redteam": {
+      "status": "completed",
+      "run_id": "1f1e74ac-adb0-4743-a159-4f25141f69c5",
+      "timestamp": "2026-10-03T15:18:54.133278+00:00",
+      "policy_version": "demo-v1",
+      "total": 16,
+      "passed": 16,
+      "failed": 0,
+      "unexpected_allows": 0,
+      "results": [
+        {
+          "id": "analyst_restricted",
+          "expected": "BLOCK",
+          "actual": "BLOCK",
+          "passed": true,
+          "policy": "portfolio_restricted",
+          "reason": "ANALYST cannot access RESTRICTED resource",
+          "latency_ms": 0.1089
+        },
+        {
+          "id": "manager_positive",
+          "expected": "ALLOW",
+          "actual": "ALLOW",
+          "passed": true,
+          "policy": "portfolio_restricted",
+          "reason": "Authorized by resource policy",
+          "latency_ms": 0.0777
+        },
+        {
+          "id": "restricted_external",
+          "expected": "BLOCK",
+          "actual": "BLOCK",
+          "passed": true,
+          "policy": "external_exfiltration",
+          "reason": "RESTRICTED data cannot leave INTERNAL destinations",
+          "latency_ms": 0.0692
+        },
+        {
+          "id": "indirect_external",
+          "expected": "BLOCK",
+          "actual": "BLOCK",
+          "passed": true,
+          "policy": "external_exfiltration",
+          "reason": "RESTRICTED data cannot leave INTERNAL destinations",
+          "latency_ms": 0.0568
+        },
+        {
+          "id": "hidden_tool_destination",
+          "expected": "BLOCK",
+          "actual": "BLOCK",
+          "passed": true,
+          "policy": "tool_guard",
+          "reason": "Proposed tool destination differs from evaluated destination",
+          "latency_ms": 0.0626
+        },
+        {
+          "id": "classification_downgrade",
+          "expected": "BLOCK",
+          "actual": "BLOCK",
+          "passed": true,
+          "policy": "classification",
+          "reason": "Classification does not match trusted resource policy",
+          "latency_ms": 0.0528
+        },
+        {
+          "id": "admin_no_business_access",
+          "expected": "BLOCK",
+          "actual": "BLOCK",
+          "passed": true,
+          "policy": "portfolio_restricted",
+          "reason": "SECURITY_ADMIN cannot access RESTRICTED resource",
+          "latency_ms": 0.0524
+        },
+        {
+          "id": "role_spoof",
+          "expected": "BLOCK",
+          "actual": "BLOCK",
+          "passed": true,
+          "policy": "identity",
+          "reason": "Unknown identity or claimed role mismatch",
+          "latency_ms": 0.049
+        },
+        {
+          "id": "missing_identity",
+          "expected": "BLOCK",
+          "actual": "BLOCK",
+          "passed": true,
+          "policy": "fail_closed",
+          "reason": "Required identity or security context missing",
+          "latency_ms": 0.0495
+        },
+        {
+          "id": "missing_classification",
+          "expected": "BLOCK",
+          "actual": "BLOCK",
+          "passed": true,
+          "policy": "fail_closed",
+          "reason": "Required identity or security context missing",
+          "latency_ms": 0.0482
+        },
+        {
+          "id": "dangerous_shell",
+          "expected": "BLOCK",
+          "actual": "BLOCK",
+          "passed": true,
+          "policy": "tool_guard",
+          "reason": "Proposed tool is not allowlisted",
+          "latency_ms": 0.0473
+        },
+        {
+          "id": "safe_tool_positive",
+          "expected": "ALLOW",
+          "actual": "ALLOW",
+          "passed": true,
+          "policy": "portfolio_restricted",
+          "reason": "Authorized by resource policy",
+          "latency_ms": 0.0565
+        },
+        {
+          "id": "secret_output",
+          "expected": "REDACT",
+          "actual": "REDACT",
+          "passed": true,
+          "policy": "output_secrets",
+          "reason": "Secrets removed from model output",
+          "latency_ms": 0.0606
+        },
+        {
+          "id": "token_budget",
+          "expected": "THROTTLE",
+          "actual": "THROTTLE",
+          "passed": true,
+          "policy": "budget",
+          "reason": "Request or token budget exceeded",
+          "latency_ms": 0.0572
+        },
+        {
+          "id": "export_approval",
+          "expected": "REQUIRE_APPROVAL",
+          "actual": "REQUIRE_APPROVAL",
+          "passed": true,
+          "policy": "portfolio_restricted",
+          "reason": "Authorized action requires explicit approval",
+          "latency_ms": 0.0545
+        },
+        {
+          "id": "public_external_positive",
+          "expected": "ALLOW",
+          "actual": "ALLOW",
+          "passed": true,
+          "policy": "market_public",
+          "reason": "Authorized by resource policy",
+          "latency_ms": 0.0823
+        }
+      ],
+      "latency_ms": 3.673
+    },
+    "stats": {
+      "total_events": 16,
+      "decisions": {
+        "ALLOW": 2,
+        "BLOCK": 10,
+        "REDACT": 1,
+        "REQUIRE_APPROVAL": 2,
+        "THROTTLE": 1
+      },
+      "retained_events": 16,
+      "latency_ms": {
+        "samples": 16,
+        "mean": 0.13171875,
+        "max": 0.1984
+      },
+      "unexpected_allows": 0,
+      "budgets": {
+        "requests_used": 4,
+        "tokens_used": 29,
+        "requests_limit_per_user": 60,
+        "tokens_limit_per_user": 32000,
+        "window_seconds": 60,
+        "accounting": "conservative_character_units"
+      },
+      "approvals": {
+        "approved": 1
+      },
+      "redteam": {
+        "status": "completed",
+        "run_id": "1f1e74ac-adb0-4743-a159-4f25141f69c5",
+        "timestamp": "2026-10-03T15:18:54.133278+00:00",
+        "policy_version": "demo-v1",
+        "total": 16,
+        "passed": 16,
+        "failed": 0,
+        "unexpected_allows": 0,
+        "latency_ms": 3.673
+      }
+    },
+    "policy_status": {
+      "loaded": true,
+      "version": "demo-v1",
+      "rule_count": 4,
+      "last_reload": "2026-10-03T15:18:01.499185+00:00",
+      "error": null
+    }
+  }
+}

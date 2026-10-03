@@ -2,7 +2,7 @@
 
 **A**gent **E**nforcement **G**ateway for **I**ntelligent **S**ystems
 
-AEGIS is a lightweight AI control layer for governing requests between people, AI agents, models, tools, and data. It combines deterministic policy enforcement with optional semantic signals. Authorization and data-boundary decisions always remain deterministic.
+AEGIS is a lightweight AI control layer for governing requests between people, AI agents, models, tools, and data. The current backend demo uses deterministic policy enforcement and pattern-based output redaction. Semantic inspection and real model calls are not implemented; authorization and data-boundary decisions remain deterministic.
 
 ## Hackathon target
 
@@ -14,7 +14,7 @@ Build and submit a working, locally runnable gateway, configurable policy catalo
 - **Frontend:** React, TypeScript, Vite
 - **Policy and audit state:** versioned YAML for policy; SQLite for durable events and budget counters if persistence is needed
 - **Validation:** pytest + FastAPI TestClient; frontend build/typecheck
-- **Optional semantic signal:** local Ollama adapter, strictly advisory and disabled by default
+- **Planned semantic signal:** a local advisory adapter, subject to mentor scope confirmation; not implemented in the demo
 - **Collaboration:** GitHub repository, two owner branches, short integration PRs; shared API contract in docs/API_CONTRACT.md
 
 No paid model or external service is required for the demo. Keep the core deterministic and runnable offline.
@@ -42,7 +42,24 @@ First shared milestone: analyst requests restricted portfolio → backend blocks
 
 ## Local setup
 
-Backend: create a Python virtual environment, install requirements.txt, then run uvicorn backend.main:app --reload.
+Backend requires Python 3.12+. From the repository root:
+
+```powershell
+py -3.12 -m venv backend/.venv
+./backend/.venv/Scripts/python.exe -m pip install -r backend/requirements-lock.txt
+./backend/.venv/Scripts/python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --no-access-log
+```
+
+For Linux/macOS, create the environment with Python 3.12+ and use `backend/.venv/bin/python`.
+Use one process/worker: audit events, budgets and approval records are in memory and reset on restart.
+Policy configuration is `policies/default.yaml` (or `AEGIS_POLICY_PATH`); valid changes hot reload on the next evaluation/status call, while invalid files disable evaluation. Demo identity selection is not authentication. CORS permits loopback dashboard origins on port 5173. Chat returns a labeled offline fixture, with no semantic classifier, model call or real portfolio access.
+
+```powershell
+./backend/.venv/Scripts/python.exe -m pytest backend/tests -q --cov=backend --cov-config=backend/.coveragerc --cov-report=term-missing
+./backend/.venv/Scripts/python.exe -m backend.demo
+```
+
+See [backend setup and HTTP rehearsal](backend/README.md), the [exact wire contract](docs/API_CONTRACT.md), and the [Developer B handoff](backend/DEVELOPER_B_HANDOFF.md). The competition review identified unresolved semantic-control, coding-window and scoring requirements; mentor questions are in the handoff. This implementation does not establish eligibility against those unresolved requirements.
 
 Frontend: in a second terminal, enter frontend/, install npm dependencies, then run npm run dev.
 
