@@ -1,0 +1,828 @@
+..FFFF..FFFF..FFFF..FFFF..FFFF..FFFF..FFFF..FFFF..FFFF..FFFF..FFFF..FFFF [ 35%]
+..FFFF..FFFF..FFFF..FFFF..FFFF..FFFF..FFFF..FFFF..FFFF..FFFF..FFFF..FFFF [ 71%]
+..FFFF..FFFF......................................FFF.....               [100%]
+================================== FAILURES ===================================
+_ test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-evaluate-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 200 == 422
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-evaluate-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 200 == 422
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-evaluate-application/problem+json] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 200 == 422
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-evaluate-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 200 == 422
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-chat-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 200 == 422
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-chat-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 200 == 422
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-chat-application/problem+json] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 200 == 422
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-chat-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 200 == 422
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-approval-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 200 == 422
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-approval-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 200 == 422
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-approval-application/problem+json] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 200 == 422
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-approval-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 200 == 422
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-redteam-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-redteam-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-redteam-application/problem+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-redteam-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-evaluate-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 200 == 422
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-evaluate-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 200 == 422
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-evaluate-application/problem+json] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 200 == 422
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-evaluate-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 200 == 422
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-chat-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 403 == 422
+E    +  where 403 = <Response [403 Forbidden]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-chat-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 403 == 422
+E    +  where 403 = <Response [403 Forbidden]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-chat-application/problem+json] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 403 == 422
+E    +  where 403 = <Response [403 Forbidden]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-chat-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 403 == 422
+E    +  where 403 = <Response [403 Forbidden]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-approval-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-approval-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-approval-application/problem+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-approval-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-redteam-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-redteam-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-redteam-application/problem+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-redteam-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-evaluate-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-evaluate-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-evaluate-application/problem+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-evaluate-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-chat-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-chat-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-chat-application/problem+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-chat-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-approval-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-approval-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-approval-application/problem+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-approval-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-redteam-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-redteam-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-redteam-application/problem+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-redteam-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-evaluate-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 400 == 422
+E    +  where 400 = <Response [400 Bad Request]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-evaluate-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 400 == 422
+E    +  where 400 = <Response [400 Bad Request]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-evaluate-application/problem+json] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 400 == 422
+E    +  where 400 = <Response [400 Bad Request]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-evaluate-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 400 == 422
+E    +  where 400 = <Response [400 Bad Request]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-chat-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 400 == 422
+E    +  where 400 = <Response [400 Bad Request]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-chat-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 400 == 422
+E    +  where 400 = <Response [400 Bad Request]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-chat-application/problem+json] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 400 == 422
+E    +  where 400 = <Response [400 Bad Request]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-chat-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 400 == 422
+E    +  where 400 = <Response [400 Bad Request]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-approval-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 400 == 422
+E    +  where 400 = <Response [400 Bad Request]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-approval-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 400 == 422
+E    +  where 400 = <Response [400 Bad Request]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-approval-application/problem+json] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 400 == 422
+E    +  where 400 = <Response [400 Bad Request]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-approval-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 400 == 422
+E    +  where 400 = <Response [400 Bad Request]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-redteam-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 400 == 422
+E    +  where 400 = <Response [400 Bad Request]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-redteam-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 400 == 422
+E    +  where 400 = <Response [400 Bad Request]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-redteam-application/problem+json] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 400 == 422
+E    +  where 400 = <Response [400 Bad Request]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-redteam-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:104: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.status_code == 422
+E   assert 400 == 422
+E    +  where 400 = <Response [400 Bad Request]>.status_code
+_ test_accepted_json_is_refused_before_any_body_route_mutation[depth-evaluate-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[depth-evaluate-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[depth-evaluate-application/problem+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[depth-evaluate-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[depth-chat-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[depth-chat-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[depth-chat-application/problem+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[depth-chat-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[depth-approval-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[depth-approval-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[depth-approval-application/problem+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[depth-approval-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[depth-redteam-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[depth-redteam-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[depth-redteam-application/problem+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[depth-redteam-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nodes-evaluate-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nodes-evaluate-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nodes-evaluate-application/problem+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nodes-evaluate-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nodes-chat-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nodes-chat-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nodes-chat-application/problem+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nodes-chat-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nodes-approval-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nodes-approval-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nodes-approval-application/problem+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nodes-approval-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nodes-redteam-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nodes-redteam-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nodes-redteam-application/problem+json] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_accepted_json_is_refused_before_any_body_route_mutation[nodes-redteam-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:106: in test_accepted_json_is_refused_before_any_body_route_mutation
+    assert result.json()["reason"] == "Malformed or ambiguous JSON request"
+E   AssertionError: assert 'Malformed request' == 'Malformed or... JSON request'
+E     
+E     - Malformed or ambiguous JSON request
+E     + Malformed request
+_ test_duplicate_identity_is_rejected_before_binding[user-analyst_42-None-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:126: in test_duplicate_identity_is_rejected_before_binding
+    assert result.status_code == 422 and result.json()["decision"] == "BLOCK"
+E   assert (200 == 422)
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_duplicate_identity_is_rejected_before_binding[user-analyst_42-None-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:126: in test_duplicate_identity_is_rejected_before_binding
+    assert result.status_code == 422 and result.json()["decision"] == "BLOCK"
+E   assert (200 == 422)
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_duplicate_identity_is_rejected_before_binding[user-analyst_42-None-application/problem+json] _
+backend\tests\test_json_boundary.py:126: in test_duplicate_identity_is_rejected_before_binding
+    assert result.status_code == 422 and result.json()["decision"] == "BLOCK"
+E   assert (200 == 422)
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_duplicate_identity_is_rejected_before_binding[user-analyst_42-None-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:126: in test_duplicate_identity_is_rejected_before_binding
+    assert result.status_code == 422 and result.json()["decision"] == "BLOCK"
+E   assert (200 == 422)
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_duplicate_identity_is_rejected_before_binding[role-ANALYST-None-application/vnd.aegis+json] _
+backend\tests\test_json_boundary.py:126: in test_duplicate_identity_is_rejected_before_binding
+    assert result.status_code == 422 and result.json()["decision"] == "BLOCK"
+E   assert (200 == 422)
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_duplicate_identity_is_rejected_before_binding[role-ANALYST-None-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1] _
+backend\tests\test_json_boundary.py:126: in test_duplicate_identity_is_rejected_before_binding
+    assert result.status_code == 422 and result.json()["decision"] == "BLOCK"
+E   assert (200 == 422)
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_duplicate_identity_is_rejected_before_binding[role-ANALYST-None-application/problem+json] _
+backend\tests\test_json_boundary.py:126: in test_duplicate_identity_is_rejected_before_binding
+    assert result.status_code == 422 and result.json()["decision"] == "BLOCK"
+E   assert (200 == 422)
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_duplicate_identity_is_rejected_before_binding[role-ANALYST-None-application/+json; charset=utf-8] _
+backend\tests\test_json_boundary.py:126: in test_duplicate_identity_is_rejected_before_binding
+    assert result.status_code == 422 and result.json()["decision"] == "BLOCK"
+E   assert (200 == 422)
+E    +  where 200 = <Response [200 OK]>.status_code
+_ test_chunked_json_and_size_limits_ignore_untrusted_content_length[duplicate-json-None] _
+backend\tests\test_json_boundary.py:232: in test_chunked_json_and_size_limits_ignore_untrusted_content_length
+    messages = run_body_boundary(boundary_client.app.state.gateway, chunks, headers, downstream)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\tests\test_json_boundary.py:216: in run_body_boundary
+    asyncio.run(run())
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+backend\tests\test_json_boundary.py:214: in run
+    await BodyLimitMiddleware(downstream, gateway)(scope, receive, send)
+backend\body_limit.py:83: in __call__
+    return await self.app(scope, bounded_receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\tests\test_json_boundary.py:225: in downstream
+    raise AssertionError("Rejected chunked body reached downstream")
+E   AssertionError: Rejected chunked body reached downstream
+_ test_chunked_json_and_size_limits_ignore_untrusted_content_length[duplicate-json-1] _
+backend\tests\test_json_boundary.py:232: in test_chunked_json_and_size_limits_ignore_untrusted_content_length
+    messages = run_body_boundary(boundary_client.app.state.gateway, chunks, headers, downstream)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\tests\test_json_boundary.py:216: in run_body_boundary
+    asyncio.run(run())
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+backend\tests\test_json_boundary.py:214: in run
+    await BodyLimitMiddleware(downstream, gateway)(scope, receive, send)
+backend\body_limit.py:83: in __call__
+    return await self.app(scope, bounded_receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\tests\test_json_boundary.py:225: in downstream
+    raise AssertionError("Rejected chunked body reached downstream")
+E   AssertionError: Rejected chunked body reached downstream
+_ test_chunked_json_and_size_limits_ignore_untrusted_content_length[duplicate-json-99999999] _
+backend\tests\test_json_boundary.py:232: in test_chunked_json_and_size_limits_ignore_untrusted_content_length
+    messages = run_body_boundary(boundary_client.app.state.gateway, chunks, headers, downstream)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\tests\test_json_boundary.py:216: in run_body_boundary
+    asyncio.run(run())
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+backend\tests\test_json_boundary.py:214: in run
+    await BodyLimitMiddleware(downstream, gateway)(scope, receive, send)
+backend\body_limit.py:83: in __call__
+    return await self.app(scope, bounded_receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\tests\test_json_boundary.py:225: in downstream
+    raise AssertionError("Rejected chunked body reached downstream")
+E   AssertionError: Rejected chunked body reached downstream
+============================== warnings summary ===============================
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\testclient.py:1
+  C:\Users\admin\Documents\ChatGPT\Hackyeah 2026 goldman\.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-evaluate-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-evaluate-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-evaluate-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-evaluate-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-chat-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-chat-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-chat-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-chat-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-approval-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-approval-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-approval-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-approval-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-redteam-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-redteam-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-redteam-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[duplicate-redteam-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-evaluate-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-evaluate-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-evaluate-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-evaluate-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-chat-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-chat-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-chat-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-chat-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-approval-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-approval-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-approval-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-approval-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-redteam-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-redteam-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-redteam-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nested-duplicate-redteam-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-evaluate-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-evaluate-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-evaluate-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-evaluate-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-chat-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-chat-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-chat-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-chat-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-approval-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-approval-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-approval-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-approval-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-redteam-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-redteam-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-redteam-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-json-redteam-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-evaluate-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-evaluate-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-evaluate-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-evaluate-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-chat-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-chat-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-chat-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-chat-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-approval-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-approval-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-approval-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-approval-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-redteam-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-redteam-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-redteam-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[malformed-encoding-redteam-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[depth-evaluate-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[depth-evaluate-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[depth-evaluate-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[depth-evaluate-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[depth-chat-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[depth-chat-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[depth-chat-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[depth-chat-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[depth-approval-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[depth-approval-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[depth-approval-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[depth-approval-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[depth-redteam-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[depth-redteam-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[depth-redteam-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[depth-redteam-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nodes-evaluate-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nodes-evaluate-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nodes-evaluate-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nodes-evaluate-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nodes-chat-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nodes-chat-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nodes-chat-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nodes-chat-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nodes-approval-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nodes-approval-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nodes-approval-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nodes-approval-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nodes-redteam-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nodes-redteam-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nodes-redteam-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_accepted_json_is_refused_before_any_body_route_mutation[nodes-redteam-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_duplicate_identity_is_rejected_before_binding[user-analyst_42-None-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_duplicate_identity_is_rejected_before_binding[user-analyst_42-None-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_duplicate_identity_is_rejected_before_binding[user-analyst_42-None-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_duplicate_identity_is_rejected_before_binding[user-analyst_42-None-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_duplicate_identity_is_rejected_before_binding[role-ANALYST-None-application/vnd.aegis+json]
+FAILED backend/tests/test_json_boundary.py::test_duplicate_identity_is_rejected_before_binding[role-ANALYST-None-APPLICATION/VND.AEGIS+JSON; charset="utf-8"; version=1]
+FAILED backend/tests/test_json_boundary.py::test_duplicate_identity_is_rejected_before_binding[role-ANALYST-None-application/problem+json]
+FAILED backend/tests/test_json_boundary.py::test_duplicate_identity_is_rejected_before_binding[role-ANALYST-None-application/+json; charset=utf-8]
+FAILED backend/tests/test_json_boundary.py::test_chunked_json_and_size_limits_ignore_untrusted_content_length[duplicate-json-None]
+FAILED backend/tests/test_json_boundary.py::test_chunked_json_and_size_limits_ignore_untrusted_content_length[duplicate-json-1]
+FAILED backend/tests/test_json_boundary.py::test_chunked_json_and_size_limits_ignore_untrusted_content_length[duplicate-json-99999999]
+107 failed, 95 passed, 1 warning in 6.07s

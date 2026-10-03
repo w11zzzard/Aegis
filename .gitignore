@@ -13,5 +13,10 @@ build/
 !.env.example
 *.sqlite3
 *.db
+.aegis/
+.worktrees/
+*.sqlite3-journal
+*.sqlite3-wal
+*.sqlite3-shm
 coverage.xml
 htmlcov/

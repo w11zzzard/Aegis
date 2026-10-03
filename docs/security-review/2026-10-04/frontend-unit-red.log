@@ -1,0 +1,117 @@
+
+ RUN  v4.1.11 C:/Users/admin/Documents/ChatGPT/Hackyeah 2026 goldman/frontend
+
+ × src/api-streams.test.ts > response stream lifecycle > aborts and cancels unread finite HTTP errors without reading private content 8ms
+   → expected false to be true // Object.is equality
+ × src/api-streams.test.ts > response stream lifecycle > aborts and cancels unread oversized HTTP errors without reading private content 1ms
+   → expected false to be true // Object.is equality
+ × src/api-streams.test.ts > response stream lifecycle > aborts and cancels unread endless HTTP errors without reading private content 1ms
+   → expected false to be true // Object.is equality
+ × src/api-streams.test.ts > response stream lifecycle > aborts and cancels unread stalled HTTP errors without reading private content 1ms
+   → expected false to be true // Object.is equality
+ × src/api-streams.test.ts > response stream lifecycle > settles a sanitized HTTP error even when cancellation rejects 1ms
+   → expected false to be true // Object.is equality
+ × src/api-streams.test.ts > response stream lifecycle > settles a sanitized HTTP error even when cancellation stalls 0ms
+   → expected false to be true // Object.is equality
+ × src/api-streams.test.ts > response stream lifecycle > settles a sanitized HTTP error even when cancellation throws 0ms
+   → expected false to be true // Object.is equality
+ × src/api-streams.test.ts > response stream lifecycle > aborts advertised oversized success and releases its body 1ms
+   → expected false to be true // Object.is equality
+ × src/api-streams.test.ts > response stream lifecycle > aborts streamed oversized success and releases its body 2ms
+   → expected false to be true // Object.is equality
+ × src/api-streams.test.ts > response stream lifecycle > releases timeout listeners and reader locks even when read/cancel never settle 2ms
+   → expected "removeEventListener" to be called with arguments: [ 'abort', Any<Function> ]
+
+Number of calls: 0
+
+ ✓ src/api-streams.test.ts > response stream lifecycle > releases consumed invalid JSON responses with safe errors 1ms
+ ✓ src/api-streams.test.ts > response stream lifecycle > releases consumed invalid UTF-8 responses with safe errors 0ms
+ ✓ src/api-streams.test.ts > response stream lifecycle > releases consumed invalid contract responses with safe errors 3ms
+ ✓ src/api-streams.test.ts > response stream lifecycle > accepts valid UTF-8 JSON at the exact byte budget despite a false smaller length 3ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/api-streams.test.ts > response stream lifecycle > aborts and cancels unread finite HTTP errors without reading private content
+ FAIL  src/api-streams.test.ts > response stream lifecycle > aborts and cancels unread oversized HTTP errors without reading private content
+ FAIL  src/api-streams.test.ts > response stream lifecycle > aborts and cancels unread endless HTTP errors without reading private content
+ FAIL  src/api-streams.test.ts > response stream lifecycle > aborts and cancels unread stalled HTTP errors without reading private content
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/api-streams.test.ts:22:28
+     20|     });
+     21|     await expect(api.events()).rejects.toThrow('Backend request failed…
+     22|     expect(signal.aborted).toBe(true);
+       |                            ^
+     23|     expect(cancel).toHaveBeenCalledTimes(1);
+     24|     expect(getReader).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯
+
+ FAIL  src/api-streams.test.ts > response stream lifecycle > settles a sanitized HTTP error even when cancellation rejects
+ FAIL  src/api-streams.test.ts > response stream lifecycle > settles a sanitized HTTP error even when cancellation stalls
+ FAIL  src/api-streams.test.ts > response stream lifecycle > settles a sanitized HTTP error even when cancellation throws
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/api-streams.test.ts:41:28
+     39|     }).events();
+     40|     await expect(promise).rejects.toThrow('Backend request failed: /ap…
+     41|     expect(signal.aborted).toBe(true);
+       |                            ^
+     42|     expect(stream.locked).toBe(false);
+     43|     expect(vi.getTimerCount()).toBe(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯
+
+ FAIL  src/api-streams.test.ts > response stream lifecycle > aborts advertised oversized success and releases its body
+ FAIL  src/api-streams.test.ts > response stream lifecycle > aborts streamed oversized success and releases its body
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ src/api-streams.test.ts:57:28
+     55|       return new Response(stream, { headers: mode === 'advertised' ? {…
+     56|     }).events()).rejects.toBeInstanceOf(ContractError);
+     57|     expect(signal.aborted).toBe(true);
+       |                            ^
+     58|     expect(cancel).toHaveBeenCalledTimes(1);
+     59|     expect(stream.locked).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯
+
+ FAIL  src/api-streams.test.ts > response stream lifecycle > releases timeout listeners and reader locks even when read/cancel never settle
+AssertionError: expected "removeEventListener" to be called with arguments: [ 'abort', Any<Function> ]
+
+Number of calls: 0
+
+ ❯ src/api-streams.test.ts:79:20
+     77|     expect(reader.cancel).toHaveBeenCalledTimes(1);
+     78|     expect(reader.releaseLock).toHaveBeenCalledTimes(1);
+     79|     expect(remove).toHaveBeenCalledWith('abort', expect.any(Function));
+       |                    ^
+     80|     expect(vi.getTimerCount()).toBe(0);
+     81|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  10 failed | 4 passed (14)
+   Start at  00:34:12
+   Duration  777ms (transform 51ms, setup 149ms, import 99ms, tests 25ms, environment 368ms)
+

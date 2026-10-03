@@ -1,0 +1,160 @@
+{
+  "python": [
+    {
+      "package": "annotated-doc",
+      "locked": "0.0.5",
+      "installed": "0.0.5",
+      "matches": true
+    },
+    {
+      "package": "annotated-types",
+      "locked": "0.8.0",
+      "installed": "0.8.0",
+      "matches": true
+    },
+    {
+      "package": "anyio",
+      "locked": "4.15.1",
+      "installed": "4.15.1",
+      "matches": true
+    },
+    {
+      "package": "certifi",
+      "locked": "2026.7.22",
+      "installed": "2026.7.22",
+      "matches": true
+    },
+    {
+      "package": "click",
+      "locked": "8.5.0",
+      "installed": "8.5.0",
+      "matches": true
+    },
+    {
+      "package": "colorama",
+      "locked": "0.4.6",
+      "installed": "0.4.6",
+      "matches": true
+    },
+    {
+      "package": "coverage",
+      "locked": "7.16.2",
+      "installed": "7.16.2",
+      "matches": true
+    },
+    {
+      "package": "fastapi",
+      "locked": "0.142.2",
+      "installed": "0.142.2",
+      "matches": true
+    },
+    {
+      "package": "h11",
+      "locked": "0.16.0",
+      "installed": "0.16.0",
+      "matches": true
+    },
+    {
+      "package": "httpcore",
+      "locked": "1.0.9",
+      "installed": "1.0.9",
+      "matches": true
+    },
+    {
+      "package": "httpx",
+      "locked": "0.28.1",
+      "installed": "0.28.1",
+      "matches": true
+    },
+    {
+      "package": "idna",
+      "locked": "3.20",
+      "installed": "3.20",
+      "matches": true
+    },
+    {
+      "package": "iniconfig",
+      "locked": "2.3.0",
+      "installed": "2.3.0",
+      "matches": true
+    },
+    {
+      "package": "opentelemetry-api",
+      "locked": "1.45.0",
+      "installed": "1.45.0",
+      "matches": true
+    },
+    {
+      "package": "packaging",
+      "locked": "26.3",
+      "installed": "26.3",
+      "matches": true
+    },
+    {
+      "package": "pluggy",
+      "locked": "1.6.0",
+      "installed": "1.6.0",
+      "matches": true
+    },
+    {
+      "package": "pydantic",
+      "locked": "2.13.5",
+      "installed": "2.13.5",
+      "matches": true
+    },
+    {
+      "package": "pydantic_core",
+      "locked": "2.46.5",
+      "installed": "2.46.5",
+      "matches": true
+    },
+    {
+      "package": "Pygments",
+      "locked": "2.21.0",
+      "installed": "2.21.0",
+      "matches": true
+    },
+    {
+      "package": "pytest",
+      "locked": "9.1.1",
+      "installed": "9.1.1",
+      "matches": true
+    },
+    {
+      "package": "pytest-cov",
+      "locked": "7.1.0",
+      "installed": "7.1.0",
+      "matches": true
+    },
+    {
+      "package": "PyYAML",
+      "locked": "6.0.3",
+      "installed": "6.0.3",
+      "matches": true
+    },
+    {
+      "package": "starlette",
+      "locked": "1.7.0",
+      "installed": "1.7.0",
+      "matches": true
+    },
+    {
+      "package": "typing-inspection",
+      "locked": "0.4.4",
+      "installed": "0.4.4",
+      "matches": true
+    },
+    {
+      "package": "typing_extensions",
+      "locked": "4.16.0",
+      "installed": "4.16.0",
+      "matches": true
+    },
+    {
+      "package": "uvicorn",
+      "locked": "0.54.0",
+      "installed": "0.54.0",
+      "matches": true
+    }
+  ]
+}

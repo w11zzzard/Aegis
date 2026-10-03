@@ -1,11 +1,14 @@
 """No model or proposed tool is executed here."""
 
 import re
+import base64
+import binascii
+import hashlib
 
 
 SECRET_PATTERNS = (
     re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----.*?(?:-----END (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|$)", re.S),
-    re.compile(r"\b(?:sk-[A-Za-z0-9_-]{8,}|AKIA[A-Z0-9]{16}|gh[pousr]_[A-Za-z0-9]{16,}|github_pat_[A-Za-z0-9_]{16,}|xox[baprs]-[A-Za-z0-9-]{10,})\b"),
+    re.compile(r"\b(?:sk-[A-Za-z0-9_-]{8,}|(?:AKIA|ASIA)[A-Z0-9]{16}|gh[pousr]_[A-Za-z0-9]{16,}|github_pat_[A-Za-z0-9_]{16,}|xox[baprs]-[A-Za-z0-9-]{10,})\b"),
     re.compile(r"\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\b"),
     re.compile(r"(?i)(?:[\"']?\b(?:password|passwd|pwd|api[_-]?key|access[_-]?token|client[_-]?secret|authorization)[\"']?\s*[:=]\s*)(?:\"[^\"\r\n]*\"|'[^'\r\n]*'|[^\s,;}]+(?:\s+[A-Za-z0-9._-]+)?)"),
     re.compile(r"(?i)\bBearer\s+[A-Za-z0-9._-]+"),
@@ -13,10 +16,71 @@ SECRET_PATTERNS = (
 )
 
 
-def redact_secrets(value: str):
+class CredentialRedactor:
+    """Recognize configured opaque credentials by digest, with bounded work.
+
+    Only digest/length pairs remain in memory. If a value needs too many
+    substring comparisons, conservatively mask that whole value.
+    """
+
+    MAX_COMPARISONS = 32768
+
+    def __init__(self, credentials=()):
+        self.credentials = dict(credentials)
+        self.lengths = sorted(set(self.credentials.values()), reverse=True)
+
+    def matches(self, value):
+        if not 32 <= len(value) <= 256:
+            return False
+        return self.credentials.get(hashlib.sha256(value.encode()).digest()) == len(value)
+
+    def redact(self, value):
+        if not self.credentials:
+            return value, False
+        spans = []
+        comparisons = 0
+        for run in re.finditer(r"[A-Za-z0-9_-]{32,}", value):
+            raw = run.group().encode("ascii")
+            offset = 0
+            while offset <= len(raw) - 32:
+                matched = False
+                for length in self.lengths:
+                    if offset + length > len(raw):
+                        continue
+                    comparisons += 1
+                    if comparisons > self.MAX_COMPARISONS:
+                        return "[REDACTED]", True
+                    digest = hashlib.sha256(raw[offset:offset + length]).digest()
+                    if self.credentials.get(digest) == length:
+                        spans.append((run.start() + offset, run.start() + offset + length))
+                        offset += length
+                        matched = True
+                        break
+                if not matched:
+                    offset += 1
+        result = value
+        for start, end in reversed(spans):
+            result = result[:start] + "[REDACTED]" + result[end:]
+        return result, bool(spans)
+
+
+def redact_secrets(value: str, known_secret=None):
     result = value
     for pattern in SECRET_PATTERNS:
         result = pattern.sub("[REDACTED]", result)
+    # One bounded decoding layer catches recognizable encoded credentials. This
+    # remains a pattern masker, not an arbitrary secret or content classifier.
+    def encoded_secret(match):
+        token = match.group(0)
+        try:
+            decoded = base64.b64decode(token + "=" * (-len(token) % 4), altchars=b"-_", validate=True).decode("utf-8")
+        except (ValueError, UnicodeError, binascii.Error):
+            return token
+        recognized = any(pattern.search(decoded) for pattern in SECRET_PATTERNS)
+        if known_secret is not None:
+            recognized = recognized or known_secret(decoded)
+        return "[REDACTED]" if recognized else token
+    result = re.sub(r"(?<![A-Za-z0-9+/_-])[A-Za-z0-9+/_-]{12,1024}={0,2}(?![A-Za-z0-9+/_-])", encoded_secret, result)
     return result, result != value
 
 

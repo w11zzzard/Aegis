@@ -34,7 +34,7 @@ describe('API requests', () => {
     expect(await api.stats()).toEqual({ unexpected_allows: 0 });
     expect(await api.policyStatus()).toEqual({ loaded: true });
     expect(await api.evaluate(request)).toEqual(result);
-    await api.runRedteam(); await api.redteamResults(); await api.resolveApproval('a/b', { decision: 'deny' });
+    await api.runRedteam(); await api.redteamResults(); await api.resolveApproval('a/b', { approve: false });
     expect(fetcher.mock.calls.map(([url, options]) => [url, options.method])).toEqual([
       ['http://localhost:8000/api/events', 'GET'], ['http://localhost:8000/api/events/a%2Fb', 'GET'],
       ['http://localhost:8000/api/stats', 'GET'], ['http://localhost:8000/api/policies/status', 'GET'],
@@ -42,7 +42,7 @@ describe('API requests', () => {
       ['http://localhost:8000/api/redteam/results', 'GET'], ['http://localhost:8000/api/approvals/a%2Fb', 'POST']
     ]);
     expect(JSON.parse(fetcher.mock.calls[4][1].body)).toEqual(request);
-    expect(JSON.parse(fetcher.mock.calls[7][1].body)).toEqual({ decision: 'deny' });
+    expect(JSON.parse(fetcher.mock.calls[7][1].body)).toEqual({ approve: false });
   });
   it('surfaces network failure without a fallback', async () => {
     const api = createApi('', vi.fn().mockRejectedValue(new TypeError('Failed to fetch')));

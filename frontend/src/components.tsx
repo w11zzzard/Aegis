@@ -24,6 +24,7 @@ export function SecurityEventTable({ events, selectedId, onSelect }: { events: S
 export function EventDetails({ event }: { event: SecurityEvent }) {
   const fields = [
     ['User', display(event.user)], ['Role', display(event.role)], ['Attempted action', display(event.action)],
+    ['Resolution actor', display(event.actor)], ['Approval ID', display(event.approval_id)],
     ['Resource', display(event.resource)], ['Classification', display(event.classification)],
     ['Destination', display(event.destination)], ['Policy', display(event.policy)],
     ['Measured latency', event.latency_ms === undefined ? 'Not reported' : `${event.latency_ms} ms`],

@@ -1,0 +1,26 @@
+
+ RUN  v4.1.11 C:/Users/admin/Documents/ChatGPT/Hackyeah 2026 goldman/frontend
+      Coverage enabled with v8
+
+
+ Test Files  5 passed (5)
+      Tests  63 passed (63)
+   Start at  00:41:12
+   Duration  2.93s (transform 355ms, setup 1.05s, import 1.02s, tests 2.12s, environment 2.57s)
+
+ % Coverage report from v8
+----------------|---------|----------|---------|---------|-------------------
+File            | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------------|---------|----------|---------|---------|-------------------
+All files       |   97.59 |    93.87 |    98.3 |   99.27 |                   
+ App.tsx        |     100 |       92 |     100 |     100 | 24,32             
+ api.ts         |   94.25 |    94.28 |   95.83 |   98.43 | 46                
+ components.tsx |     100 |     90.9 |     100 |     100 | 8,30              
+----------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 97.59% ( 203/208 )
+Branches     : 93.87% ( 92/98 )
+Functions    : 98.3% ( 58/59 )
+Lines        : 99.27% ( 136/137 )
+================================================================================

@@ -1,0 +1,77 @@
+
+ RUN  v4.1.11 C:/Users/admin/Documents/ChatGPT/Hackyeah 2026 goldman/frontend
+
+stdout | integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects finite 503 before the peer watchdog or byte budget
+{"mode":"finite","status":503,"aborted":false,"socketDisconnected":false,"bytesSent":4096,"completeBodySent":false}
+
+ × integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects finite 503 before the peer watchdog or byte budget 784ms
+   → Unread HTTP connection remained active
+stdout | integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects oversized 503 before the peer watchdog or byte budget
+{"mode":"oversized","status":503,"aborted":false,"socketDisconnected":false,"bytesSent":3145728,"completeBodySent":false}
+
+ × integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects oversized 503 before the peer watchdog or byte budget 765ms
+   → Unread HTTP connection remained active
+stdout | integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects endless 503 before the peer watchdog or byte budget
+{"mode":"endless","status":503,"aborted":false,"socketDisconnected":false,"bytesSent":200704,"completeBodySent":false}
+
+ × integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects endless 503 before the peer watchdog or byte budget 756ms
+   → Unread HTTP connection remained active
+stdout | integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects stalled 503 before the peer watchdog or byte budget
+{"mode":"stalled","status":503,"aborted":false,"socketDisconnected":false,"bytesSent":0,"completeBodySent":false}
+
+stdout | integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects false-small 503 before the peer watchdog or byte budget
+{"mode":"false-small","status":503,"aborted":false,"socketDisconnected":true,"bytesSent":4096,"completeBodySent":false}
+
+ × integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects stalled 503 before the peer watchdog or byte budget 758ms
+   → Unread HTTP connection remained active
+ × integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects false-small 503 before the peer watchdog or byte budget 10ms
+   → expected false to be true // Object.is equality
+stdout | integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects false-large 503 before the peer watchdog or byte budget
+{"mode":"false-large","status":503,"aborted":false,"socketDisconnected":false,"bytesSent":196608,"completeBodySent":false}
+
+ × integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects false-large 503 before the peer watchdog or byte budget 760ms
+   → Unread HTTP connection remained active
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects finite 503 before the peer watchdog or byte budget
+ FAIL  integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects oversized 503 before the peer watchdog or byte budget
+ FAIL  integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects endless 503 before the peer watchdog or byte budget
+ FAIL  integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects stalled 503 before the peer watchdog or byte budget
+ FAIL  integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects false-large 503 before the peer watchdog or byte budget
+Error: Unread HTTP connection remained active
+ ❯ Timeout._onTimeout integration/http-streams.test.ts:13:43
+     11| function bounded<T>(promise: Promise<T>, milliseconds: number, label: …
+     12|   return new Promise((resolve, reject) => {
+     13|     const timer = setTimeout(() => reject(new Error(label)), milliseco…
+       |                                           ^
+     14|     promise.then(value => { clearTimeout(timer); resolve(value); }, er…
+     15|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects false-small 503 before the peer watchdog or byte budget
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ integration/http-streams.test.ts:75:30
+     73|       await expect(bounded(api.events(), 750, 'HTTP error did not sett…
+     74|       await bounded(peer.disconnected, 750, 'Unread HTTP connection re…
+     75|       expect(signal.aborted).toBe(true);
+       |                              ^
+     76|       expect(performance.now() - started).toBeLessThan(1000);
+     77|       expect(peer.bytesSent).toBeLessThan(524288);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed (6)
+   Start at  00:34:40
+   Duration  4.10s (transform 45ms, setup 0ms, import 129ms, tests 3.84s, environment 0ms)
+

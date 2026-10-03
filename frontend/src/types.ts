@@ -24,6 +24,8 @@ export interface SecurityEvent {
   policy: string;
   reason: string;
   latency_ms: number;
+  actor?: string;
+  approval_id?: string;
 }
 
 export interface EvaluateRequest {
@@ -56,5 +58,4 @@ export type StatsResponse = JsonValue;
 export type PolicyStatusResponse = JsonValue;
 export type RedteamResponse = JsonValue;
 export type ApprovalResponse = JsonValue;
-// Provisional body; Developer A must confirm before an approval UI is exposed.
-export interface ApprovalRequest { decision: 'approve' | 'deny' }
+export interface ApprovalRequest { approve: boolean }

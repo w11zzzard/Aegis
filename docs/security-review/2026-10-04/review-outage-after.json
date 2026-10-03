@@ -1,0 +1,20 @@
+[
+  {
+    "synthetic_state_shape": "dict",
+    "status": 503,
+    "cache_control": "no-store",
+    "body": "{\"detail\":\"Security state unavailable; request refused\"}"
+  },
+  {
+    "synthetic_state_shape": "list",
+    "status": 503,
+    "cache_control": "no-store",
+    "body": "{\"detail\":\"Security state unavailable; request refused\"}"
+  },
+  {
+    "synthetic_state_shape": "dict",
+    "status": 503,
+    "cache_control": "no-store",
+    "body": "{\"detail\":\"Security state unavailable; request refused\"}"
+  }
+]

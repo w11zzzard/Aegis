@@ -42,7 +42,7 @@ First shared milestone: analyst requests restricted portfolio → backend blocks
 
 ## Local setup
 
-Backend: create a Python virtual environment, install requirements.txt, then run uvicorn backend.main:app --reload.
+Backend: follow [backend/README.md](backend/README.md) to install locked dependencies, provision credentials and set a shared SQLite state path. The default authenticated profile refuses protected requests until configured. Use `AEGIS_PROFILE=local-demo` only for an explicit loopback simulation.
 
 Frontend: in a second terminal, enter frontend/, install npm dependencies, then run npm run dev.
 

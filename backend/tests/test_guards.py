@@ -136,7 +136,7 @@ def test_hot_reload_fail_closed_and_recovery(client):
 def test_policy_missing_on_start(tmp_path):
     from backend.main import create_app
     from fastapi.testclient import TestClient
-    with TestClient(create_app(tmp_path / "missing")) as test_client:
+    with TestClient(create_app(tmp_path / "missing", profile="local-demo"), base_url="http://localhost", client=("127.0.0.1", 50000)) as test_client:
         assert evaluate(test_client, manager())["decision"] == "BLOCK"
         assert test_client.get("/api/policies/status").json()["loaded"] is False
         assert test_client.get("/api/stats").json()["budgets"]["requests_used"] == 0
@@ -147,9 +147,9 @@ def test_approval_explicit_and_authorized(client, approve, expected):
     pending = evaluate(client, manager(action="export"))
     assert pending["decision"] == "REQUIRE_APPROVAL"
     path = f'/api/approvals/{pending["event_id"]}'
-    assert client.post(path, json={"approve": approve}).status_code == 403
-    assert client.post(path, json={"approve": approve}, headers={"X-Aegis-User": "analyst_42"}).status_code == 403
-    headers = {"X-Aegis-User": "security_admin_1"}
+    assert client.post(path, json={"approve": approve}).status_code == 401
+    assert client.post(path, json={"approve": approve}, headers={"X-Aegis-User": "analyst_42"}).status_code == 401
+    headers = {"Authorization": "Bearer " + "a" * 48}
     assert client.post(path, json={}, headers=headers).status_code == 422
     assert client.post(path, json={"approve": "yes"}, headers=headers).status_code == 422
     result = client.post(path, json={"approve": approve}, headers=headers)
@@ -162,7 +162,7 @@ def test_approval_explicit_and_authorized(client, approve, expected):
 def test_approval_expiry_policy_change_and_unknown(client):
     with patch("backend.core.monotonic", return_value=10):
         pending = evaluate(client, manager(action="export"))
-    headers = {"X-Aegis-User": "security_admin_1"}
+    headers = {"Authorization": "Bearer " + "a" * 48}
     with patch("backend.core.monotonic", return_value=311):
         assert client.post(f'/api/approvals/{pending["event_id"]}', json={"approve": True}, headers=headers).status_code == 409
     assert client.post("/api/approvals/unknown", json={"approve": False}, headers=headers).status_code == 404
@@ -206,7 +206,7 @@ def test_chat_offline_enforcement(client):
 
 def test_redteam_real_results_and_stats(client):
     assert client.get("/api/redteam/results").json()["status"] == "not_run"
-    result = client.post("/api/redteam/run", json={}).json()
+    result = client.post("/api/redteam/run", json={}, headers={"Authorization": "Bearer " + "a" * 48}).json()
     assert result["status"] == "completed"
     assert result["total"] == 16
     assert result["passed"] == 16
@@ -219,7 +219,7 @@ def test_redteam_real_results_and_stats(client):
 
 def test_redteam_counts_actual_unexpected_allows(client):
     change_policy(client, lambda config: config["resources"]["portfolio/current_positions"]["roles"].append("ANALYST"))
-    result = client.post("/api/redteam/run").json()
+    result = client.post("/api/redteam/run", headers={"Authorization": "Bearer " + "a" * 48}).json()
     assert result["unexpected_allows"] == 1
     assert result["failed"] == 1
     assert client.get("/api/stats").json()["unexpected_allows"] == 1
@@ -229,7 +229,7 @@ def test_redteam_bad_corpus_returns_no_fake_results(client, tmp_path):
     path = tmp_path / "bad.json"
     path.write_text("broken")
     client.app.state.redteam.corpus_path = path
-    assert client.post("/api/redteam/run").status_code == 503
+    assert client.post("/api/redteam/run", headers={"Authorization": "Bearer " + "a" * 48}).status_code == 503
     assert client.get("/api/redteam/results").json()["status"] == "failed"
 
 

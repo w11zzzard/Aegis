@@ -1,0 +1,11 @@
+{
+  "processes": 4,
+  "principal_attempts": 200,
+  "principal_admitted": 120,
+  "approval_attempts": 16,
+  "approved_once": 1,
+  "replays_refused": 15,
+  "restart_limit_preserved": true,
+  "restart_replay_refused": true,
+  "approval_evidence_preserved": true
+}
