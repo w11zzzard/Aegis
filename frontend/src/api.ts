@@ -18,7 +18,7 @@ export function createApi(baseUrl = '', fetcher: FetchTransport = (url, options)
       } catch {
         throw new Error(`Backend unreachable: ${path}. Check the API server and connection, then retry.`);
       }
-      if (!response.ok) throw new Error(`Backend request failed: ${path} (HTTP ${response.status}).`);
+      if (!response.ok) throw new Error(`Backend request failed: ${path} (HTTP ${response.status}). Check the API server and proxy, then retry.`);
       try { return await response.json(); } catch { throw new ContractError(); }
     } finally { clearTimeout(timeout); }
   }
