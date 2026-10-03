@@ -1,4 +1,4 @@
-import { render, screen, within, waitFor } from '@testing-library/react';
+import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi } from 'vitest';
 import App from './App';
@@ -66,8 +66,8 @@ describe('real-evidence dashboard journeys', () => {
     await userEvent.click(await screen.findByRole('button', { name: /inspect event-1/i }));
     await userEvent.click(screen.getByRole('button', { name: /inspect event-2/i }));
     await within(await screen.findByRole('region', { name: 'Event details' })).findByText('Latest selection');
-    resolveOld(new Response(JSON.stringify(event)));
-    await waitFor(() => expect(screen.getByRole('region', { name: 'Event details' })).toHaveTextContent('Latest selection'));
+    await act(async () => { resolveOld(new Response(JSON.stringify(event))); });
+    expect(screen.getByRole('region', { name: 'Event details' })).toHaveTextContent('Latest selection');
   });
   it('submits all five proposals to the backend and shows actual decisions, not scenario expectations', async () => {
     const fetcher = serve((url) => url === '/api/events' ? [] : { ...result, decision: 'REDACT', reason: 'Actual backend reason' });

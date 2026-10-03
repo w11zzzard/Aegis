@@ -24,6 +24,8 @@ npm run test:live
 
 The live check uses `AEGIS_API_URL` (default `http://127.0.0.1:8000`) and creates real audit events. Unit/browser tests use isolated test transport fixtures; those fixtures are never imported by application modules.
 
+If Chrome or Edge is already installed, set `PLAYWRIGHT_CHANNEL=chrome` or `PLAYWRIGHT_CHANNEL=msedge` to run E2E without downloading Chromium. In PowerShell: `$env:PLAYWRIGHT_CHANNEL='chrome'; npm run test:e2e`.
+
 ## Integration and Developer A handoff
 
 Source of truth: `../docs/API_CONTRACT.md` at `97734e2`. No shared contract or backend files are changed.
