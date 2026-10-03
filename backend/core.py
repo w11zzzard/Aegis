@@ -135,7 +135,7 @@ class Gateway:
         event = {
             "id": event_id, "timestamp": utc_now(), "category": policy,
             **{key: self.audit_value(key, getattr(request, key)) for key in (
-                "request_id", "user", "role", "resource", "classification", "destination"
+                "request_id", "user", "role", "action", "resource", "classification", "destination"
             )},
             **{key: value for key, value in response.items() if key != "event_id"},
         }

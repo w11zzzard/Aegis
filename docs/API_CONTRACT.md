@@ -1,10 +1,10 @@
 # AEGIS API contract — v1
 
-Source of truth: the FastAPI implementation and trusted YAML catalog. All decisions come from the backend. Developer B should normalize nullable metadata for display and validate canonical values; never infer authorization or substitute mocked results. This checkpoint documents existing wire behavior. The additive `action` event field is the next coordinated backend fix; clients may accept its absence from older servers.
+Source of truth: the FastAPI implementation and trusted YAML catalog. All decisions come from the backend. Developer B should normalize nullable metadata for display and validate canonical values; never infer authorization or substitute mocked results. This checkpoint documents existing wire behavior, including the additive `action` event field; clients may accept its absence from older servers.
 
 ## Local integration and canonical values
 
-Base URL: `http://127.0.0.1:8000`. CORS allows `http://localhost:5173` and `http://127.0.0.1:5173`, GET/POST, Content-Type and X-Aegis-User. Vite can proxy `/api`, `/health` and `/v1` to that backend; set its existing `AEGIS_BACKEND_URL` when using an isolated backend port.
+Base URL: `http://127.0.0.1:8000`. CORS allows `http://localhost:5173` and `http://127.0.0.1:5173`, GET/POST, Content-Type and X-Aegis-User. The existing Vite configuration proxies `/api` to that backend; set `AEGIS_BACKEND_URL` when using an isolated backend port. `/health` and `/v1` currently require direct backend calls or a separately configured proxy.
 
 | Type | Accepted values |
 | --- | --- |
