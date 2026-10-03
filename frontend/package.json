@@ -12,12 +12,24 @@
     "test:e2e": "playwright test",
     "test:live": "node scripts/live-check.mjs"
   },
-  "dependencies": { "react": "^19.0.0", "react-dom": "^19.0.0", "zod": "^4.0.0", "@fontsource/geist": "^5.2.0" },
+  "dependencies": {
+    "@fontsource/geist": "^5.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zod": "^4.0.0"
+  },
   "devDependencies": {
-    "@types/react": "^19.0.0", "@types/react-dom": "^19.0.0",
-    "@vitejs/plugin-react": "^5.0.0", "vite": "^7.0.0", "typescript": "^5.9.0",
-    "vitest": "^3.2.0", "@vitest/coverage-v8": "^3.2.0", "jsdom": "^26.0.0",
-    "@testing-library/react": "^16.0.0", "@testing-library/user-event": "^14.0.0",
-    "@testing-library/jest-dom": "^6.0.0", "@playwright/test": "^1.55.0"
+    "@playwright/test": "^1.55.0",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "@vitest/coverage-v8": "4.1.11",
+    "jsdom": "^26.0.0",
+    "typescript": "^5.9.0",
+    "vite": "^7.0.0",
+    "vitest": "4.1.11"
   }
 }
