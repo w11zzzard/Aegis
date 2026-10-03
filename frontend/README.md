@@ -22,7 +22,9 @@ npm run test:e2e
 npm run test:live
 ```
 
-The live check uses `AEGIS_API_URL` (default `http://127.0.0.1:8000`) and creates real audit events. Unit/browser tests use isolated test transport fixtures; those fixtures are never imported by application modules.
+The live check uses `AEGIS_API_URL` (default `http://127.0.0.1:8000`) and creates real audit events. `npm run test:integration` also checks those events and all five presets through the application adapter. Unit tests and the default browser suite use isolated transport fixtures; those fixtures are never imported by application modules.
+
+For a separate browser journey against a running backend, set `AEGIS_REAL_BROWSER=1`, `AEGIS_BACKEND_URL` to the backend origin, and run `npm run test:e2e`. This suite uses no API interception and verifies the five decision/policy pairs and exact audited IDs/reasons, then inspects a malformed event with null context. Browser tests start a dedicated Vite server on port 5174; override it with `AEGIS_FRONTEND_PORT` or use an existing frontend via `AEGIS_FRONTEND_URL`.
 
 If Chrome or Edge is already installed, set `PLAYWRIGHT_CHANNEL=chrome` or `PLAYWRIGHT_CHANNEL=msedge` to run E2E without downloading Chromium. In PowerShell: `$env:PLAYWRIGHT_CHANNEL='chrome'; npm run test:e2e`.
 
@@ -32,10 +34,10 @@ Source of truth: `../docs/API_CONTRACT.md` at `97734e2`. No shared contract or b
 
 - Evaluate uses the contract's exact fields and canonical decision/classification/role values. All response payloads cross runtime validation before rendering. Extra event fields (including prompts and output) are discarded.
 - Events currently accept either a direct event array or `{ events: [...] }`, isolated in `src/adapter.ts`. Confirm the intended envelope. No other envelope is silently converted to an empty list.
-- Event `action` and `latency_ms` are optional because the documented event listing omits them. Please include them in event detail responses to satisfy the complete detail view. Missing values render `Not reported`; latency is never computed from client round-trip time.
+- Nullable context (`request_id`, user, role, action, resource, classification and destination) is normalized to absent values and renders `Not reported`. Action is optional for backend versions that omit it. ID, timestamp, category, decision, policy, reason and finite nonnegative measured latency remain required. Invalid enums and envelopes still produce contract errors.
 - Stats, policy status and red-team response schemas are unspecified. Their typed client methods return validated JSON values pending agreed field definitions. Dedicated summary UI is deferred until the actual schemas are available.
 - Approval body keys are unspecified. `resolveApproval` currently proposes `{ decision: 'approve' | 'deny' }`; confirm with Developer A before exposing an approval interface.
-- The low-risk resource `research/public_summary`, external destination value `EXTERNAL`, and dangerous proposal (`tool: 'shell'`, `tool_arguments: { command: 'rm -rf /' }`) are demo request inputs requiring backend confirmation. The frontend only submits proposals to the evaluation endpoint; it has no tool execution path. Portfolio inputs match the shared acceptance case.
+- Presets use the registered public resource `public/market_summary` and manager `manager_1`. External and synthetic shell proposals begin with an authorized manager read so they reach `external_exfiltration` and `tool_guard`. Each preset records its expected decision and policy separately from the actual backend response. The frontend only submits proposals to the evaluation endpoint; it has no tool execution path.
 - Event detail must return an ID matching the selected event, and evaluation must return `event_id`, policy, reason and measured nonnegative latency.
 - Transport failures display `Backend unreachable`; non-2xx responses show the endpoint and HTTP status. Response bodies are not printed as errors. Invalid schemas display a contract error. Failed refreshes clear rows; selection requests are guarded against stale responses.
 

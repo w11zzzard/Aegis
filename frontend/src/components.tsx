@@ -56,7 +56,7 @@ export function EvaluationConsole({ api, onEvaluated, onInspect }: { api: Securi
         <select id="scenario" value={scenario.id} disabled={pending} onChange={event => { setIndex(scenarios.findIndex(s => s.id === event.target.value)); setResult(null); setError(null); }}>
           {scenarios.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
         </select>
-        <p className="expectation">Expected policy behavior: <strong>{scenario.expected}</strong> · not a result</p>
+        <p className="expectation">Expected policy behavior: <strong>{scenario.expected}</strong> · {scenario.expectedPolicy} · not a result</p>
         <pre aria-label="Proposed request payload">{JSON.stringify(scenario.request, null, 2)}</pre>
         <p className="scenario-note">{scenario.note}</p>
         <button className="primary" disabled={pending} onClick={() => void evaluate()}>{pending ? 'Evaluating…' : 'Evaluate proposal'}</button>

@@ -8,8 +8,13 @@ test('real gateway journey and nullable audit inspection without interception', 
     const result = page.getByRole('region', { name: 'Evaluation result' });
     await expect(result.locator('.decision')).toHaveText(scenario.expected);
     await expect(result.locator('.result-fields')).toContainText(scenario.expectedPolicy);
+    const responseReason = await result.locator('.reason-box p').innerText();
+    const eventId = await result.locator('.result-fields dd').last().innerText();
     await page.getByRole('button', { name: 'Inspect audited event' }).click();
-    await expect(page.getByRole('region', { name: 'Event details' })).toContainText(scenario.expectedPolicy);
+    const detail = page.getByRole('region', { name: 'Event details' });
+    await expect(detail.locator('.detail-id')).toHaveText(eventId);
+    await expect(detail.locator('.reason-box p')).toHaveText(responseReason);
+    await expect(detail).toContainText(scenario.expectedPolicy);
   }
   const response = await page.request.post('/api/security/evaluate', { data: { action: 'execute' } });
   expect(response.status()).toBe(422);

@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { createApi } from './api';
 import { normalizeEvent, normalizeEvents } from './adapter';
 import { event, result } from './test-fixtures';
+import type { EvaluateRequest } from './types';
 
 describe('typed backend adapter', () => {
   it('accepts sanitized events and strips restricted extra payloads', () => {
@@ -27,7 +28,7 @@ describe('API requests', () => {
     const responses = [[event], { ...event, id: 'a/b' }, { unexpected_allows: 0 }, { loaded: true }, result, { run_id: 'run-1' }, { cases: [] }, { resolved: true }];
     const fetcher = vi.fn().mockImplementation(async () => new Response(JSON.stringify(responses.shift())));
     const api = createApi('http://localhost:8000/', fetcher);
-    const request = { user: 'analyst_42', role: 'ANALYST' as const, action: 'read', resource: event.resource, classification: 'RESTRICTED' as const, destination: 'INTERNAL' };
+    const request: EvaluateRequest = { user: 'analyst_42', role: 'ANALYST', action: 'read', resource: event.resource, classification: 'RESTRICTED', destination: 'INTERNAL' };
     expect(await api.events()).toEqual([event]);
     expect(await api.event('a/b')).toEqual({ ...event, id: 'a/b' });
     expect(await api.stats()).toEqual({ unexpected_allows: 0 });
