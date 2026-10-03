@@ -1,14 +1,14 @@
 import type { Decision, EvaluateRequest } from './types';
-interface Scenario { id: string; label: string; expected: Decision; note: string; request: EvaluateRequest }
+interface Scenario { id: string; label: string; expected: Decision; expectedPolicy: string; note: string; request: EvaluateRequest }
 const portfolio: EvaluateRequest = {
   user: 'analyst_42', role: 'ANALYST', action: 'read', resource: 'portfolio/current_positions',
   classification: 'RESTRICTED', destination: 'INTERNAL',
 };
 // These are proposed inputs, never simulated security outcomes.
 export const scenarios: Scenario[] = [
-  { id: 'normal', label: 'Normal low-risk request', expected: 'ALLOW', note: 'Confirm this public resource with the backend policy catalog.', request: { ...portfolio, resource: 'research/public_summary', classification: 'PUBLIC' } },
-  { id: 'analyst', label: 'Analyst · restricted portfolio', expected: 'BLOCK', note: 'Shared contract acceptance case.', request: portfolio },
-  { id: 'manager', label: 'Portfolio manager · same resource', expected: 'ALLOW', note: 'Same data, different role. The backend decides.', request: { ...portfolio, user: 'manager_7', role: 'PORTFOLIO_MANAGER' } },
-  { id: 'external', label: 'Restricted data · external destination', expected: 'BLOCK', note: 'Confirm EXTERNAL is the destination token used by the backend.', request: { ...portfolio, user: 'manager_7', role: 'PORTFOLIO_MANAGER', destination: 'EXTERNAL' } },
-  { id: 'tool', label: 'Dangerous proposed tool action', expected: 'BLOCK', note: 'Evaluation only. This dashboard has no tool execution path. Tool schema requires backend confirmation.', request: { ...portfolio, resource: 'tools/shell', classification: 'INTERNAL', action: 'execute', tool: 'shell', tool_arguments: { command: 'rm -rf /' } } },
+  { id: 'normal', label: 'Public market summary', expected: 'ALLOW', expectedPolicy: 'market_public', note: 'Registered public read; policy and decision are both checked.', request: { ...portfolio, resource: 'public/market_summary', classification: 'PUBLIC' } },
+  { id: 'analyst', label: 'Analyst · restricted portfolio', expected: 'BLOCK', expectedPolicy: 'portfolio_restricted', note: 'The restricted-resource guard must explain the block.', request: portfolio },
+  { id: 'manager', label: 'Portfolio manager · same resource', expected: 'ALLOW', expectedPolicy: 'portfolio_restricted', note: 'Registered manager_1 with the authorized role.', request: { ...portfolio, user: 'manager_1', role: 'PORTFOLIO_MANAGER' } },
+  { id: 'external', label: 'Restricted data · external destination', expected: 'BLOCK', expectedPolicy: 'external_exfiltration', note: 'Authorized manager; the destination guard must block.', request: { ...portfolio, user: 'manager_1', role: 'PORTFOLIO_MANAGER', destination: 'EXTERNAL' } },
+  { id: 'tool', label: 'Unsafe tool proposal', expected: 'BLOCK', expectedPolicy: 'tool_guard', note: 'Valid manager read plus synthetic shell arguments. Evaluation only; no command executes.', request: { ...portfolio, user: 'manager_1', role: 'PORTFOLIO_MANAGER', tool: 'shell', tool_arguments: { command: 'echo AEGIS_SYNTHETIC_UNSAFE_PROPOSAL' } } },
 ];
