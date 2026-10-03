@@ -1,5 +1,21 @@
 # Developer B handoff — API contract and attempted action
 
+## Integrated checkpoint
+
+The combined checkout is `codex/a-contract-audit`. Existing A commits 0f2bb00,
+9c5e248, dc6ad3e and 071e57e are retained; B's frontend integration through
+f576258 is incorporated by merge 0369002. Final functional repairs are be12bcb:
+validated evaluation HTTP 422/413 retains status and audit navigation, failed
+summary refreshes clear prior success, and browser checks match exact event IDs.
+The backend policy engine, registry and corpus are unchanged.
+
+See `docs/INTEGRATED_VERIFICATION.md` for the shared checkpoint, current commands
+and fresh evidence location. The sections below preserve the earlier A-only
+handoff and captured payloads as historical evidence, not current verification.
+No changes have been merged to main or deployed.
+
+## Historical A-only handoff
+
 Branch: `codex/a-contract-audit`, based on `origin/main@4e9a3ec`.
 Contract checkpoint: `0f2bb00`. Tested audit-action fix: `9c5e248`.
 Nothing has been merged or deployed. No frontend, policy or corpus files were changed.

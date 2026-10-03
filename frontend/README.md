@@ -1,6 +1,6 @@
 # AEGIS dashboard
 
-React, TypeScript, Vite, and Zod runtime validation. Developer B integration branch: `codex/b-dashboard-integration`, based on `origin/main` at `4e9a3ecbac6d685d49a6685635a9f58debefd787`. Only frontend-owned files change.
+React, TypeScript, Vite, and Zod runtime validation. B's integration through `f576258` is now combined with the contract/audit work on `codex/a-contract-audit`. See `../docs/INTEGRATED_VERIFICATION.md` for the shared checkpoint and current evidence.
 
 Every decision, event, count, latency, policy status, and corpus result comes from the backend. Test fixtures are confined to tests. The application has no mock mode.
 
@@ -38,6 +38,7 @@ Configuration:
 | AEGIS_FRONTEND_URL | Explicit existing frontend URL; browser suite then starts no server |
 | PLAYWRIGHT_CHANNEL | chrome or msedge for an installed browser; otherwise install Playwright Chromium |
 | AEGIS_REAL_BROWSER | Set 1 for the separate real browser journey; remove for fixture browser tests |
+| AEGIS_QUOTA_FRONTEND_URL | Optional second frontend against a fresh isolated two-request policy; enables the real quota browser check |
 
 Production hosting must proxy `/api` when VITE_API_BASE_URL is empty. A direct API origin requires backend CORS permission. Environment settings are not credentials.
 
@@ -97,7 +98,9 @@ Tool requests are proposals only; no tool executes. Sanitized output is accepted
 
 Refresh events to inspect mixed normal, unknown-actor, and malformed-request records. Nullable audit context consistently renders **Not reported**. Missing action is supported for older servers; valid read/export is preserved. Required event structure, canonical decisions/roles, finite nonnegative latency, and detail ID matching remain strict. Unexpected payload fields are removed.
 
-Summary panels show backend decision counts, retained-sample latency, aggregate budget usage, per-user limits, policy version/load/hot-reload status, and latest real corpus cases. Zero latency samples display unavailable. Budget units are conservative character units, not model tokens or cost. An unloaded policy remains unavailable even with a prior version. Not-run, failed, completed-with-case-failures, loading, errors, empty results, and stale snapshots are distinct. Use Refresh summaries to recheck status; audit/evaluation refreshes also reload summaries.
+Summary panels show backend decision counts, retained-sample latency, aggregate budget usage, per-user limits, policy version/load/hot-reload status, and latest real corpus cases. Zero latency samples display unavailable. Budget units are labeled conservative_character_units. An unloaded policy remains unavailable even with a prior version. Not-run, failed, completed-with-case-failures, loading, errors and empty results are distinct. Failed refreshes clear previous successful snapshots. Use Refresh summaries to recheck status; audit/evaluation refreshes also reload summaries.
+
+Evaluation HTTP 422/413 is accepted only for its validated, documented BLOCK/fail_closed envelope and exact reason. The result retains the HTTP status and event navigation. `http_status` is client metadata, never a backend contract field. Other error bodies produce sanitized errors.
 
 ## Approval scope and limitations
 
