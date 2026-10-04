@@ -18,14 +18,24 @@ export async function liveCheck(base = process.env.AEGIS_API_URL || 'http://127.
     const event = await call('/api/events/' + encodeURIComponent(result.event_id));
     assert.equal(event.id, result.event_id); assert.equal(event.request_id, request_id);
     assert.equal(event.decision, decision); assert.equal(event.policy, policy);
+    assert.equal(event.reason, result.reason);
     evidence.push({ id: event.id, decision, policy });
   }
+  const ordinary = await call('/api/security/evaluate', publicRead);
+  const ordinaryEvent = await call('/api/events/' + ordinary.event_id);
+  assert.equal(ordinaryEvent.request_id, null);
+  assert.equal(ordinaryEvent.reason, ordinary.reason);
+  const unknown = await call('/api/security/evaluate', { ...publicRead, user: 'unknown_dashboard_actor' });
+  assert.equal(unknown.decision, 'BLOCK'); assert.equal(unknown.policy, 'identity');
+  const unknownEvent = await call('/api/events/' + unknown.event_id);
+  assert.equal(unknownEvent.user, null); assert.equal(unknownEvent.request_id, null);
+  assert.equal(unknownEvent.reason, unknown.reason);
   const malformed = await call('/api/security/evaluate', { action: 'execute' }, 422);
   const nullable = await call('/api/events/' + malformed.event_id);
   assert.equal(nullable.id, malformed.event_id); assert.equal(nullable.user, null); assert.equal(nullable.role, null);
   const { events } = await call('/api/events');
-  for (const id of [...evidence.map(event => event.id), nullable.id]) assert.ok(events.some(event => event.id === id));
-  return { evidence, nullableEvent: nullable.id };
+  for (const id of [...evidence.map(event => event.id), ordinaryEvent.id, unknownEvent.id, nullable.id]) assert.ok(events.some(event => event.id === id));
+  return { evidence, nullableEvent: nullable.id, ordinaryEvent: ordinaryEvent.id, unknownEvent: unknownEvent.id };
 }
 if (process.argv[1]?.endsWith('live-check.mjs')) {
   try { console.log('LIVE PASS', JSON.stringify(await liveCheck(), null, 2)); }

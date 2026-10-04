@@ -1,0 +1,71 @@
+
+ RUN  v4.1.11 C:/Users/admin/.codex/worktrees/aegis-security-cp1/Hackyeah 2026 goldman/frontend
+
+ ❯ src/response-secrecy.test.ts (15 tests | 15 failed) 9ms
+     × rejects unexpected sensitive prompt fields instead of silently accepting a sanitized-looking response 4ms
+     × rejects unexpected sensitive output fields instead of silently accepting a sanitized-looking response 0ms
+     × rejects unexpected sensitive source fields instead of silently accepting a sanitized-looking response 0ms
+     × rejects unexpected sensitive tool fields instead of silently accepting a sanitized-looking response 0ms
+     × rejects unexpected sensitive tool_arguments fields instead of silently accepting a sanitized-looking response 0ms
+     × rejects unexpected sensitive Authorization fields instead of silently accepting a sanitized-looking response 0ms
+     × rejects unexpected sensitive access_token fields instead of silently accepting a sanitized-looking response 0ms
+     × rejects unexpected sensitive API-Key fields instead of silently accepting a sanitized-looking response 0ms
+     × rejects unexpected sensitive password fields instead of silently accepting a sanitized-looking response 0ms
+     × rejects unexpected sensitive stack fields instead of silently accepting a sanitized-looking response 0ms
+     × rejects unexpected sensitive traceback fields instead of silently accepting a sanitized-looking response 0ms
+     × rejects sanitized_output attached to BLOCK 1ms
+     × rejects sanitized_output attached to REQUIRE_APPROVAL 0ms
+     × rejects sanitized_output attached to THROTTLE 0ms
+     × rejects output in an audit but preserves permitted evaluation compatibility without displaying content 0ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 15 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/response-secrecy.test.ts > sensitive response fields must fail visibly > rejects unexpected sensitive prompt fields instead of silently accepting a sanitized-looking response
+ FAIL  src/response-secrecy.test.ts > sensitive response fields must fail visibly > rejects unexpected sensitive output fields instead of silently accepting a sanitized-looking response
+ FAIL  src/response-secrecy.test.ts > sensitive response fields must fail visibly > rejects unexpected sensitive source fields instead of silently accepting a sanitized-looking response
+ FAIL  src/response-secrecy.test.ts > sensitive response fields must fail visibly > rejects unexpected sensitive tool fields instead of silently accepting a sanitized-looking response
+ FAIL  src/response-secrecy.test.ts > sensitive response fields must fail visibly > rejects unexpected sensitive tool_arguments fields instead of silently accepting a sanitized-looking response
+ FAIL  src/response-secrecy.test.ts > sensitive response fields must fail visibly > rejects unexpected sensitive Authorization fields instead of silently accepting a sanitized-looking response
+ FAIL  src/response-secrecy.test.ts > sensitive response fields must fail visibly > rejects unexpected sensitive access_token fields instead of silently accepting a sanitized-looking response
+ FAIL  src/response-secrecy.test.ts > sensitive response fields must fail visibly > rejects unexpected sensitive API-Key fields instead of silently accepting a sanitized-looking response
+ FAIL  src/response-secrecy.test.ts > sensitive response fields must fail visibly > rejects unexpected sensitive password fields instead of silently accepting a sanitized-looking response
+ FAIL  src/response-secrecy.test.ts > sensitive response fields must fail visibly > rejects unexpected sensitive stack fields instead of silently accepting a sanitized-looking response
+ FAIL  src/response-secrecy.test.ts > sensitive response fields must fail visibly > rejects unexpected sensitive traceback fields instead of silently accepting a sanitized-looking response
+AssertionError: expected function to throw an error, but it didn't
+ ❯ src/response-secrecy.test.ts:8:60
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/15]⎯
+
+ FAIL  src/response-secrecy.test.ts > sensitive response fields must fail visibly > rejects sanitized_output attached to BLOCK
+ FAIL  src/response-secrecy.test.ts > sensitive response fields must fail visibly > rejects sanitized_output attached to REQUIRE_APPROVAL
+ FAIL  src/response-secrecy.test.ts > sensitive response fields must fail visibly > rejects sanitized_output attached to THROTTLE
+AssertionError: expected function to throw an error, but it didn't
+ ❯ src/response-secrecy.test.ts:14:103
+     12|   });
+     13|   it.each(['BLOCK', 'REQUIRE_APPROVAL', 'THROTTLE'])('rejects sanitize…
+     14|     expect(() => normalizeEvaluation({ ...result, decision, sanitized_…
+       |                                                                                                       ^
+     15|   });
+     16|   it('rejects output in an audit but preserves permitted evaluation co…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/15]⎯
+
+ FAIL  src/response-secrecy.test.ts > sensitive response fields must fail visibly > rejects output in an audit but preserves permitted evaluation compatibility without displaying content
+AssertionError: expected function to throw an error, but it didn't
+ ❯ src/response-secrecy.test.ts:17:87
+     15|   });
+     16|   it('rejects output in an audit but preserves permitted evaluation co…
+     17|     expect(() => normalizeEvent({ ...event, sanitized_output: 'SYNTHET…
+       |                                                                                       ^
+     18|     for (const decision of ['ALLOW', 'REDACT']) expect(normalizeEvalua…
+     19|     expect(normalizeEvent({ ...event, evidence_class: 'protected', har…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/15]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  15 failed (15)
+   Start at  01:57:48
+   Duration  709ms (transform 46ms, setup 137ms, import 86ms, tests 9ms, environment 341ms)
+

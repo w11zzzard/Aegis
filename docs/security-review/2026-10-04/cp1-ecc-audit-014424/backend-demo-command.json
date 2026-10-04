@@ -1,0 +1,12 @@
+{
+  "command": [
+    "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\.worktrees\\b-dashboard-integration\\frontend\\.integration-venv\\Scripts\\python.exe",
+    "-m",
+    "backend.demo"
+  ],
+  "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+  "started_warsaw": "2026-10-04T01:57:31.382445+02:00",
+  "ended_warsaw": "2026-10-04T01:57:31.855574+02:00",
+  "exit_code": 0,
+  "log": "backend-demo.log"
+}

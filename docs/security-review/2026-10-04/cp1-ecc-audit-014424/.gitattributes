@@ -1,0 +1,2 @@
+# Preserve immutable audit bytes and intentional whitespace in raw logs/patches.
+* -text -whitespace

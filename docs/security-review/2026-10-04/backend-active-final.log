@@ -1,0 +1,34 @@
+........................................................................ [ 18%]
+........................................................................ [ 36%]
+........................................................................ [ 54%]
+........................................................................ [ 72%]
+........................................................................ [ 90%]
+........................................                                 [100%]
+============================== warnings summary ===============================
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\testclient.py:1
+  C:\Users\admin\Documents\ChatGPT\Hackyeah 2026 goldman\.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=============================== tests coverage ================================
+______________ coverage: platform win32, python 3.12.14-final-0 _______________
+
+Name                     Stmts   Miss  Cover   Missing
+------------------------------------------------------
+backend\__init__.py          0      0   100%
+backend\admission.py        79      0   100%
+backend\body_limit.py       78      2    97%   46, 96
+backend\core.py            207      5    98%   91, 147, 173, 292, 294
+backend\credentials.py      18     18     0%   3-26
+backend\demo.py             23      3    87%   28, 35, 39
+backend\guards.py           74      0   100%
+backend\main.py            143      8    94%   32-36, 139-140, 164
+backend\models.py           65      0   100%
+backend\policy.py           64      0   100%
+backend\redteam.py          56      3    95%   36, 42, 45
+backend\security.py         95      2    98%   27, 31
+backend\state.py           134      0   100%
+------------------------------------------------------
+TOTAL                     1036     41    96%
+Required test coverage of 80.0% reached. Total coverage: 96.04%
+400 passed, 1 warning in 61.27s (0:01:01)

@@ -1,0 +1,4 @@
+Command: .worktrees/b-dashboard-integration/frontend/.integration-venv/Scripts/python.exe -m pytest backend/tests/test_credential_redaction.py backend/tests/test_state_validation.py backend/tests/test_review_concurrency.py -q
+............................................... [100%]
+47 passed, 1 warning in 1.63s
+Warning: Existing Starlette/httpx TestClient deprecation; no application/test failure.

@@ -1,0 +1,59 @@
+{
+  "date": "2026-10-04",
+  "npm": {
+    "command": "npm audit --json --cache '../output/security-audit/npm-cache'",
+    "working_directory": "frontend",
+    "source": "https://registry.npmjs.org/",
+    "exit_code": 0,
+    "result": {
+      "auditReportVersion": 2,
+      "vulnerabilities": {},
+      "metadata": {
+        "vulnerabilities": {"info":0,"low":0,"moderate":0,"high":0,"critical":0,"total":0},
+        "dependencies": {"prod":6,"dev":216,"optional":53,"peer":0,"peerOptional":0,"total":221}
+      }
+    }
+  },
+  "python": {
+    "command": "output/security-audit/.venv/Scripts/python.exe -m pip_audit -r backend/requirements-lock.txt --no-deps --disable-pip --cache-dir output/security-audit/pip-cache --format json",
+    "tool_version": "pip-audit 2.10.1",
+    "source": "https://pypi.org/",
+    "exit_code": 0,
+    "dependencies": [
+      {"name":"annotated-doc","version":"0.0.5","vulns":[]},
+      {"name":"annotated-types","version":"0.8.0","vulns":[]},
+      {"name":"anyio","version":"4.15.1","vulns":[]},
+      {"name":"certifi","version":"2026.7.22","vulns":[]},
+      {"name":"click","version":"8.5.0","vulns":[]},
+      {"name":"colorama","version":"0.4.6","vulns":[]},
+      {"name":"coverage","version":"7.16.2","vulns":[]},
+      {"name":"fastapi","version":"0.142.2","vulns":[]},
+      {"name":"h11","version":"0.16.0","vulns":[]},
+      {"name":"httpcore","version":"1.0.9","vulns":[]},
+      {"name":"httpx","version":"0.28.1","vulns":[]},
+      {"name":"idna","version":"3.20","vulns":[]},
+      {"name":"iniconfig","version":"2.3.0","vulns":[]},
+      {"name":"opentelemetry-api","version":"1.45.0","vulns":[]},
+      {"name":"packaging","version":"26.3","vulns":[]},
+      {"name":"pluggy","version":"1.6.0","vulns":[]},
+      {"name":"pydantic","version":"2.13.5","vulns":[]},
+      {"name":"pydantic-core","version":"2.46.5","vulns":[]},
+      {"name":"pygments","version":"2.21.0","vulns":[]},
+      {"name":"pytest","version":"9.1.1","vulns":[]},
+      {"name":"pytest-cov","version":"7.1.0","vulns":[]},
+      {"name":"pyyaml","version":"6.0.3","vulns":[]},
+      {"name":"starlette","version":"1.7.0","vulns":[]},
+      {"name":"typing-inspection","version":"0.4.4","vulns":[]},
+      {"name":"typing-extensions","version":"4.16.0","vulns":[]},
+      {"name":"uvicorn","version":"0.54.0","vulns":[]}
+    ],
+    "fixes": [],
+    "warning": "Fully hash-locked Python artifacts are not configured. Advisory results are scoped to the selected database and exact versions at this date."
+  },
+  "primary_advisories_checked": [
+    {"url":"https://github.com/vitest-dev/vitest/security/advisories/GHSA-82fw-gwwq-j7x9","installed":"vitest and @vitest/mocker 4.1.11","patched":"4.1.11"},
+    {"url":"https://github.com/vitejs/vite/security/advisories/GHSA-fx2h-pf6j-xcff","installed":"vite 7.3.6","patched":"7.3.5 in version 7 branch"},
+    {"url":"https://github.com/Kludex/starlette/security/advisories/GHSA-jp82-jpqv-5vv3","installed":"starlette 1.7.0","status":"exact current PyPI audit has no advisory records"}
+  ],
+  "environment": "Initial restricted-network attempts failed; approved read-only network escalation completed both scans. No dependency upgrades, real credentials, hosted changes or publication."
+}

@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from threading import RLock
@@ -33,6 +34,12 @@ def utc_now():
     return datetime.now(timezone.utc).isoformat()
 
 
+@dataclass(frozen=True)
+class PolicySnapshot:
+    config: PolicyConfig | None
+    digest: str | None
+
+
 class PolicyStore:
     def __init__(self, path: Path):
         self.path = path
@@ -54,7 +61,9 @@ class PolicyStore:
                 if digest == self.digest and self.loaded:
                     return self.config
                 # JSON validation accepts enum strings while preserving strict types.
-                config = PolicyConfig.model_validate_json(json.dumps(yaml.load(raw, Loader=PolicyLoader)))
+                # PolicyLoader derives from SafeLoader and rejects aliases/duplicate keys.
+                parsed = yaml.load(raw, Loader=PolicyLoader)  # nosec B506
+                config = PolicyConfig.model_validate_json(json.dumps(parsed))
                 self.config = config
                 self.digest = digest
                 self.loaded = True
@@ -74,3 +83,10 @@ class PolicyStore:
                 "last_reload": self.last_reload,
                 "error": None if self.loaded else "Policy unavailable or invalid",
             }
+
+    def snapshot(self):
+        # Capture both fields under the same lock; callers never consult mutable
+        # global digest state to authorize a previously evaluated operation.
+        with self.lock:
+            config = self.reload()
+            return PolicySnapshot(config.model_copy(deep=True) if config else None, self.digest if config else None)

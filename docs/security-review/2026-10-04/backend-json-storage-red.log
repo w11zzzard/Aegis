@@ -1,0 +1,630 @@
+Reconstructed pre-fix boundary: current inner handling, outer sqlite3.Error guard removed.
+FFFFFFFFFFFF...                                                          [100%]
+================================== FAILURES ===================================
+_ test_store_outage_refuses_every_http_boundary_with_safe_headers[audit-malformed-operational] _
+backend\tests\test_storage_boundary.py:56: in test_store_outage_refuses_every_http_boundary_with_safe_headers
+    assert result.status_code == 503
+E   assert 500 == 503
+E    +  where 500 = <Response [500 Internal Server Error]>.status_code
+_ test_store_outage_refuses_every_http_boundary_with_safe_headers[audit-malformed-locked] _
+backend\tests\test_storage_boundary.py:56: in test_store_outage_refuses_every_http_boundary_with_safe_headers
+    assert result.status_code == 503
+E   assert 500 == 503
+E    +  where 500 = <Response [500 Internal Server Error]>.status_code
+_ test_store_outage_refuses_every_http_boundary_with_safe_headers[audit-malformed-corruption] _
+backend\tests\test_storage_boundary.py:56: in test_store_outage_refuses_every_http_boundary_with_safe_headers
+    assert result.status_code == 503
+E   assert 500 == 503
+E    +  where 500 = <Response [500 Internal Server Error]>.status_code
+_ test_store_outage_refuses_every_http_boundary_with_safe_headers[audit-duplicate-vendor-operational] _
+backend\tests\test_storage_boundary.py:56: in test_store_outage_refuses_every_http_boundary_with_safe_headers
+    assert result.status_code == 503
+E   assert 500 == 503
+E    +  where 500 = <Response [500 Internal Server Error]>.status_code
+_ test_store_outage_refuses_every_http_boundary_with_safe_headers[audit-duplicate-vendor-locked] _
+backend\tests\test_storage_boundary.py:56: in test_store_outage_refuses_every_http_boundary_with_safe_headers
+    assert result.status_code == 503
+E   assert 500 == 503
+E    +  where 500 = <Response [500 Internal Server Error]>.status_code
+_ test_store_outage_refuses_every_http_boundary_with_safe_headers[audit-duplicate-vendor-corruption] _
+backend\tests\test_storage_boundary.py:56: in test_store_outage_refuses_every_http_boundary_with_safe_headers
+    assert result.status_code == 503
+E   assert 500 == 503
+E    +  where 500 = <Response [500 Internal Server Error]>.status_code
+_ test_store_outage_refuses_every_http_boundary_with_safe_headers[audit-oversized-operational] _
+backend\tests\test_storage_boundary.py:56: in test_store_outage_refuses_every_http_boundary_with_safe_headers
+    assert result.status_code == 503
+E   assert 500 == 503
+E    +  where 500 = <Response [500 Internal Server Error]>.status_code
+_ test_store_outage_refuses_every_http_boundary_with_safe_headers[audit-oversized-locked] _
+backend\tests\test_storage_boundary.py:56: in test_store_outage_refuses_every_http_boundary_with_safe_headers
+    assert result.status_code == 503
+E   assert 500 == 503
+E    +  where 500 = <Response [500 Internal Server Error]>.status_code
+_ test_store_outage_refuses_every_http_boundary_with_safe_headers[audit-oversized-corruption] _
+backend\tests\test_storage_boundary.py:56: in test_store_outage_refuses_every_http_boundary_with_safe_headers
+    assert result.status_code == 503
+E   assert 500 == 503
+E    +  where 500 = <Response [500 Internal Server Error]>.status_code
+__ test_timed_out_body_during_store_outage_uses_outer_fallback[operational] ___
+backend\tests\test_storage_boundary.py:97: in receive
+    raise TimeoutError
+E   TimeoutError
+
+During handling of the above exception, another exception occurred:
+backend\tests\test_storage_boundary.py:100: in test_timed_out_body_during_store_outage_uses_outer_fallback
+    messages = run_outer_boundary(gateway, BodyLimitMiddleware(downstream, gateway), receive)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\tests\test_storage_boundary.py:83: in run_outer_boundary
+    asyncio.run(run())
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+backend\tests\test_storage_boundary.py:81: in run
+    await outer(scope, receive, send)
+docs\security-review\2026-10-04\backend-json-storage-pre-fix.py:33: in unguarded_boundary
+    return await self.handle(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\security.py:124: in handle
+    return await self.app(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\body_limit.py:43: in __call__
+    return await refuse(408, "Request body timed out")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\body_limit.py:33: in refuse
+    result = self.gateway.record(EvaluateRequest(), Decision.BLOCK, "fail_closed", reason, started)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1139: in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1143: in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1198: in _execute_mock_call
+    raise effect
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\testclient.py:357: in handle_request
+    portal.call(self.app, scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\anyio\from_thread.py:340: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\anyio\from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\applications.py:1215: in __call__
+    await super().__call__(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\telemetry\_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+docs\security-review\2026-10-04\backend-json-storage-pre-fix.py:33: in unguarded_boundary
+    return await self.handle(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\security.py:124: in handle
+    return await self.app(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\trustedhost.py:57: in __call__
+    await self.app(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\cors.py:91: in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\cors.py:149: in simple_response
+    await self.app(scope, receive, send)
+backend\body_limit.py:49: in __call__
+    result = self.gateway.record(
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1139: in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1143: in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1198: in _execute_mock_call
+    raise effect
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\testclient.py:357: in handle_request
+    portal.call(self.app, scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\anyio\from_thread.py:340: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\anyio\from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\applications.py:1215: in __call__
+    await super().__call__(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\telemetry\_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+docs\security-review\2026-10-04\backend-json-storage-pre-fix.py:33: in unguarded_boundary
+    return await self.handle(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\security.py:124: in handle
+    return await self.app(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\trustedhost.py:57: in __call__
+    await self.app(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\cors.py:91: in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\cors.py:149: in simple_response
+    await self.app(scope, receive, send)
+backend\body_limit.py:84: in __call__
+    return await refuse(422, "Malformed or ambiguous JSON request")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\body_limit.py:33: in refuse
+    result = self.gateway.record(EvaluateRequest(), Decision.BLOCK, "fail_closed", reason, started)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1139: in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1143: in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1198: in _execute_mock_call
+    raise effect
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\testclient.py:357: in handle_request
+    portal.call(self.app, scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\anyio\from_thread.py:340: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\anyio\from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\applications.py:1215: in __call__
+    await super().__call__(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\telemetry\_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+docs\security-review\2026-10-04\backend-json-storage-pre-fix.py:33: in unguarded_boundary
+    return await self.handle(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\security.py:124: in handle
+    return await self.app(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\trustedhost.py:57: in __call__
+    await self.app(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\cors.py:91: in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\cors.py:149: in simple_response
+    await self.app(scope, receive, send)
+backend\body_limit.py:84: in __call__
+    return await refuse(422, "Malformed or ambiguous JSON request")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\body_limit.py:33: in refuse
+    result = self.gateway.record(EvaluateRequest(), Decision.BLOCK, "fail_closed", reason, started)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1139: in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1143: in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1198: in _execute_mock_call
+    raise effect
+E   sqlite3.OperationalError: SYNTHETIC_PRIVATE operational failure
+_____ test_timed_out_body_during_store_outage_uses_outer_fallback[locked] _____
+backend\tests\test_storage_boundary.py:97: in receive
+    raise TimeoutError
+E   TimeoutError
+
+During handling of the above exception, another exception occurred:
+backend\tests\test_storage_boundary.py:100: in test_timed_out_body_during_store_outage_uses_outer_fallback
+    messages = run_outer_boundary(gateway, BodyLimitMiddleware(downstream, gateway), receive)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\tests\test_storage_boundary.py:83: in run_outer_boundary
+    asyncio.run(run())
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+backend\tests\test_storage_boundary.py:81: in run
+    await outer(scope, receive, send)
+docs\security-review\2026-10-04\backend-json-storage-pre-fix.py:33: in unguarded_boundary
+    return await self.handle(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\security.py:124: in handle
+    return await self.app(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\body_limit.py:43: in __call__
+    return await refuse(408, "Request body timed out")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\body_limit.py:33: in refuse
+    result = self.gateway.record(EvaluateRequest(), Decision.BLOCK, "fail_closed", reason, started)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1139: in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1143: in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1198: in _execute_mock_call
+    raise effect
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\testclient.py:357: in handle_request
+    portal.call(self.app, scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\anyio\from_thread.py:340: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\anyio\from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\applications.py:1215: in __call__
+    await super().__call__(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\telemetry\_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+docs\security-review\2026-10-04\backend-json-storage-pre-fix.py:33: in unguarded_boundary
+    return await self.handle(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\security.py:124: in handle
+    return await self.app(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\trustedhost.py:57: in __call__
+    await self.app(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\cors.py:91: in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\cors.py:149: in simple_response
+    await self.app(scope, receive, send)
+backend\body_limit.py:49: in __call__
+    result = self.gateway.record(
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1139: in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1143: in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1198: in _execute_mock_call
+    raise effect
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\testclient.py:357: in handle_request
+    portal.call(self.app, scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\anyio\from_thread.py:340: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\anyio\from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\applications.py:1215: in __call__
+    await super().__call__(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\telemetry\_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+docs\security-review\2026-10-04\backend-json-storage-pre-fix.py:33: in unguarded_boundary
+    return await self.handle(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\security.py:124: in handle
+    return await self.app(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\trustedhost.py:57: in __call__
+    await self.app(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\cors.py:91: in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\cors.py:149: in simple_response
+    await self.app(scope, receive, send)
+backend\body_limit.py:84: in __call__
+    return await refuse(422, "Malformed or ambiguous JSON request")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\body_limit.py:33: in refuse
+    result = self.gateway.record(EvaluateRequest(), Decision.BLOCK, "fail_closed", reason, started)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1139: in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1143: in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1198: in _execute_mock_call
+    raise effect
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\testclient.py:357: in handle_request
+    portal.call(self.app, scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\anyio\from_thread.py:340: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\anyio\from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\applications.py:1215: in __call__
+    await super().__call__(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\telemetry\_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+docs\security-review\2026-10-04\backend-json-storage-pre-fix.py:33: in unguarded_boundary
+    return await self.handle(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\security.py:124: in handle
+    return await self.app(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\trustedhost.py:57: in __call__
+    await self.app(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\cors.py:91: in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\cors.py:149: in simple_response
+    await self.app(scope, receive, send)
+backend\body_limit.py:84: in __call__
+    return await refuse(422, "Malformed or ambiguous JSON request")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\body_limit.py:33: in refuse
+    result = self.gateway.record(EvaluateRequest(), Decision.BLOCK, "fail_closed", reason, started)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1139: in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1143: in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1198: in _execute_mock_call
+    raise effect
+E   sqlite3.OperationalError: database is locked SYNTHETIC_PRIVATE
+___ test_timed_out_body_during_store_outage_uses_outer_fallback[corruption] ___
+backend\tests\test_storage_boundary.py:97: in receive
+    raise TimeoutError
+E   TimeoutError
+
+During handling of the above exception, another exception occurred:
+backend\tests\test_storage_boundary.py:100: in test_timed_out_body_during_store_outage_uses_outer_fallback
+    messages = run_outer_boundary(gateway, BodyLimitMiddleware(downstream, gateway), receive)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\tests\test_storage_boundary.py:83: in run_outer_boundary
+    asyncio.run(run())
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\asyncio\base_events.py:691: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+backend\tests\test_storage_boundary.py:81: in run
+    await outer(scope, receive, send)
+docs\security-review\2026-10-04\backend-json-storage-pre-fix.py:33: in unguarded_boundary
+    return await self.handle(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\security.py:124: in handle
+    return await self.app(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\body_limit.py:43: in __call__
+    return await refuse(408, "Request body timed out")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\body_limit.py:33: in refuse
+    result = self.gateway.record(EvaluateRequest(), Decision.BLOCK, "fail_closed", reason, started)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1139: in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1143: in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1198: in _execute_mock_call
+    raise effect
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\testclient.py:357: in handle_request
+    portal.call(self.app, scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\anyio\from_thread.py:340: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\anyio\from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\applications.py:1215: in __call__
+    await super().__call__(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\telemetry\_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+docs\security-review\2026-10-04\backend-json-storage-pre-fix.py:33: in unguarded_boundary
+    return await self.handle(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\security.py:124: in handle
+    return await self.app(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\trustedhost.py:57: in __call__
+    await self.app(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\cors.py:91: in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\cors.py:149: in simple_response
+    await self.app(scope, receive, send)
+backend\body_limit.py:49: in __call__
+    result = self.gateway.record(
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1139: in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1143: in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1198: in _execute_mock_call
+    raise effect
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\testclient.py:357: in handle_request
+    portal.call(self.app, scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\anyio\from_thread.py:340: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\anyio\from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\applications.py:1215: in __call__
+    await super().__call__(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\telemetry\_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+docs\security-review\2026-10-04\backend-json-storage-pre-fix.py:33: in unguarded_boundary
+    return await self.handle(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\security.py:124: in handle
+    return await self.app(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\trustedhost.py:57: in __call__
+    await self.app(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\cors.py:91: in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\cors.py:149: in simple_response
+    await self.app(scope, receive, send)
+backend\body_limit.py:84: in __call__
+    return await refuse(422, "Malformed or ambiguous JSON request")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\body_limit.py:33: in refuse
+    result = self.gateway.record(EvaluateRequest(), Decision.BLOCK, "fail_closed", reason, started)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1139: in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1143: in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1198: in _execute_mock_call
+    raise effect
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\testclient.py:357: in handle_request
+    portal.call(self.app, scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\anyio\from_thread.py:340: in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\anyio\from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\applications.py:1215: in __call__
+    await super().__call__(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\telemetry\_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+docs\security-review\2026-10-04\backend-json-storage-pre-fix.py:33: in unguarded_boundary
+    return await self.handle(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\security.py:124: in handle
+    return await self.app(scope, receive, secure_send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\trustedhost.py:57: in __call__
+    await self.app(scope, receive, send)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\cors.py:91: in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\starlette\middleware\cors.py:149: in simple_response
+    await self.app(scope, receive, send)
+backend\body_limit.py:84: in __call__
+    return await refuse(422, "Malformed or ambiguous JSON request")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+backend\body_limit.py:33: in refuse
+    result = self.gateway.record(EvaluateRequest(), Decision.BLOCK, "fail_closed", reason, started)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1139: in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1143: in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\mock.py:1198: in _execute_mock_call
+    raise effect
+E   sqlite3.DatabaseError: database disk image is malformed SYNTHETIC_PRIVATE
+============================== warnings summary ===============================
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\_pytest\config\__init__.py:1345
+  C:\Users\admin\Documents\ChatGPT\Hackyeah 2026 goldman\.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\_pytest\config\__init__.py:1345: PytestAssertRewriteWarning: Module already imported so cannot be rewritten; anyio
+    self._mark_plugins_for_rewrite(hook, disable_autoload)
+
+.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\testclient.py:1
+  C:\Users\admin\Documents\ChatGPT\Hackyeah 2026 goldman\.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED backend/tests/test_storage_boundary.py::test_store_outage_refuses_every_http_boundary_with_safe_headers[audit-malformed-operational]
+FAILED backend/tests/test_storage_boundary.py::test_store_outage_refuses_every_http_boundary_with_safe_headers[audit-malformed-locked]
+FAILED backend/tests/test_storage_boundary.py::test_store_outage_refuses_every_http_boundary_with_safe_headers[audit-malformed-corruption]
+FAILED backend/tests/test_storage_boundary.py::test_store_outage_refuses_every_http_boundary_with_safe_headers[audit-duplicate-vendor-operational]
+FAILED backend/tests/test_storage_boundary.py::test_store_outage_refuses_every_http_boundary_with_safe_headers[audit-duplicate-vendor-locked]
+FAILED backend/tests/test_storage_boundary.py::test_store_outage_refuses_every_http_boundary_with_safe_headers[audit-duplicate-vendor-corruption]
+FAILED backend/tests/test_storage_boundary.py::test_store_outage_refuses_every_http_boundary_with_safe_headers[audit-oversized-operational]
+FAILED backend/tests/test_storage_boundary.py::test_store_outage_refuses_every_http_boundary_with_safe_headers[audit-oversized-locked]
+FAILED backend/tests/test_storage_boundary.py::test_store_outage_refuses_every_http_boundary_with_safe_headers[audit-oversized-corruption]
+FAILED backend/tests/test_storage_boundary.py::test_timed_out_body_during_store_outage_uses_outer_fallback[operational]
+FAILED backend/tests/test_storage_boundary.py::test_timed_out_body_during_store_outage_uses_outer_fallback[locked]
+FAILED backend/tests/test_storage_boundary.py::test_timed_out_body_during_store_outage_uses_outer_fallback[corruption]
+12 failed, 3 passed, 40 deselected, 2 warnings in 1.32s

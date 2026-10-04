@@ -1,0 +1,668 @@
+{
+  "status": "passed",
+  "started": "2026-10-04T02:02:58.857183+02:00",
+  "boundary": "real HTTP loopback sockets, no intercepted responses",
+  "finished": "2026-10-04T02:03:13.235986+02:00",
+  "source": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+  "head": "e52eb5059bba618db768c17353256d9eb516938c",
+  "source_kind": "working-tree verification; full final state hash owned by primary report",
+  "source_file_sha256": {
+    "backend/core.py": "d8cbacb350d864e8addc0c9218ac367b7432d74273fedf1bc7bf2b2cf45c39e4",
+    "backend/guards.py": "d0fe1a22f4a0cf6b64496fbc648f4b5e6c8aa3447bfff7cf0acd014e9ec8cddf",
+    "backend/main.py": "53946641eb7fd217d0e89cd74071428f8a6b393e40a138f3439a95e2ccdeb938",
+    "backend/security.py": "dcd676e53f96c06c93974eb6e4109b9d7ae34d52a26cf18c61996d414589012a",
+    "backend/models.py": "e7250a9805262d60d80ae12d46e6772a4079af5637353ddbee03ce6d4c0615c5",
+    "backend/policy.py": "d9a7ef89ec9f537d90fa0771adcbb8a4873f33f89fc44aead39a357fbdc5a01a",
+    "backend/redteam.py": "0295d9fe517753db7348e62ca3040ef43c6fa26ff394388e1843498796c02e77",
+    "backend/state.py": "11a97fe28b8e982f1d3b6926643c10b7adae66d3c2be12bf89a0ea82d4e26cf1",
+    "backend/admission.py": "9bf55939ca7d0e0a6b027fd74a1f1d2d34da04b9d8444dfd518531316fb5f207",
+    "backend/body_limit.py": "aa26985b9f866003dcaa59e10b40c8219c6f8ac44add95c239e4b1036e7979ff",
+    "policies/default.yaml": "58e1056de4028e59a480bb17a729ea3db8b2c68490ce32cfd8f4809db09aedc9",
+    "redteam/corpus.json": "29c49337d0fe469012715ddd4bfd88c3a6e59c3e81a374af434c81145c311921",
+    "backend/tests/test_redteam_integrity.py": "92c004c949e3836853ab81d6b9af1c4b8bc6d0f8ab06993aa51f90e4b5e722b1",
+    "backend/tests/test_cp1_lifecycle.py": "6bd2751ab03a9462465e47a861b5ce47970b53a6b92cb1633d48d7b79b022cd0"
+  },
+  "cases": [
+    {
+      "name": "authenticated manager",
+      "timestamp": "2026-10-04T02:02:59.468851+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "ALLOW",
+      "policy": "portfolio_restricted",
+      "event_agrees": true
+    },
+    {
+      "name": "analyst restricted denial",
+      "timestamp": "2026-10-04T02:02:59.483720+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "BLOCK",
+      "policy": "portfolio_restricted",
+      "event_agrees": true
+    },
+    {
+      "name": "credential principal cannot spoof manager",
+      "timestamp": "2026-10-04T02:02:59.497212+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "BLOCK",
+      "policy": "identity",
+      "event_agrees": true
+    },
+    {
+      "name": "unknown resource",
+      "timestamp": "2026-10-04T02:02:59.510813+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "BLOCK",
+      "policy": "fail_closed",
+      "event_agrees": true
+    },
+    {
+      "name": "missing classification",
+      "timestamp": "2026-10-04T02:02:59.525134+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "BLOCK",
+      "policy": "fail_closed",
+      "event_agrees": true
+    },
+    {
+      "name": "server classification cannot be lowered",
+      "timestamp": "2026-10-04T02:02:59.538649+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "BLOCK",
+      "policy": "classification",
+      "event_agrees": true
+    },
+    {
+      "name": "restricted external regardless of injected prompt",
+      "timestamp": "2026-10-04T02:02:59.552702+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "BLOCK",
+      "policy": "external_exfiltration",
+      "event_agrees": true
+    },
+    {
+      "name": "public external positive",
+      "timestamp": "2026-10-04T02:02:59.566984+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "ALLOW",
+      "policy": "market_public",
+      "event_agrees": true
+    },
+    {
+      "name": "banned shell inert proposal",
+      "timestamp": "2026-10-04T02:02:59.582323+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "BLOCK",
+      "policy": "tool_guard",
+      "event_agrees": true
+    },
+    {
+      "name": "banned HTTP owned downstream",
+      "timestamp": "2026-10-04T02:02:59.595733+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "BLOCK",
+      "policy": "tool_guard",
+      "event_agrees": true
+    },
+    {
+      "name": "mismatched tool destination",
+      "timestamp": "2026-10-04T02:02:59.609629+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "BLOCK",
+      "policy": "tool_guard",
+      "event_agrees": true
+    },
+    {
+      "name": "nested tool resource",
+      "timestamp": "2026-10-04T02:02:59.623919+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "BLOCK",
+      "policy": "tool_guard",
+      "event_agrees": true
+    },
+    {
+      "name": "extra nested tool argument",
+      "timestamp": "2026-10-04T02:02:59.638564+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "BLOCK",
+      "policy": "tool_guard",
+      "event_agrees": true
+    },
+    {
+      "name": "owned downstream remains untouched",
+      "timestamp": "2026-10-04T02:02:59.638564+02:00",
+      "passed": true,
+      "calls": 0,
+      "marker_absent": true
+    },
+    {
+      "name": "allowlisted matching tool",
+      "timestamp": "2026-10-04T02:02:59.652968+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "ALLOW",
+      "policy": "portfolio_restricted",
+      "event_agrees": true
+    },
+    {
+      "name": "supported synthetic secret",
+      "timestamp": "2026-10-04T02:02:59.668953+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "REDACT",
+      "policy": "output_secrets",
+      "event_agrees": true
+    },
+    {
+      "name": "encoded configured credential suffix",
+      "timestamp": "2026-10-04T02:02:59.683860+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "REDACT",
+      "policy": "output_secrets",
+      "event_agrees": true
+    },
+    {
+      "name": "encoded configured credential prose",
+      "timestamp": "2026-10-04T02:02:59.699463+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "REDACT",
+      "policy": "output_secrets",
+      "event_agrees": true
+    },
+    {
+      "name": "benign encoding preserved",
+      "timestamp": "2026-10-04T02:02:59.717493+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "ALLOW",
+      "policy": "portfolio_restricted",
+      "event_agrees": true
+    },
+    {
+      "name": "pending output absent",
+      "timestamp": "2026-10-04T02:02:59.736364+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "REQUIRE_APPROVAL",
+      "policy": "portfolio_restricted",
+      "event_agrees": true
+    },
+    {
+      "name": "approval never grants subsequent execution",
+      "timestamp": "2026-10-04T02:02:59.798441+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "REQUIRE_APPROVAL",
+      "policy": "portfolio_restricted",
+      "event_agrees": true
+    },
+    {
+      "name": "approval non-admin mutation replay controls",
+      "timestamp": "2026-10-04T02:02:59.798441+02:00",
+      "passed": true,
+      "unauthorized": 403,
+      "mutation": 422,
+      "resolution": 200,
+      "replay": 409,
+      "executed": false
+    },
+    {
+      "name": "pending policy-change binding",
+      "timestamp": "2026-10-04T02:02:59.815117+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "REQUIRE_APPROVAL",
+      "policy": "portfolio_restricted",
+      "event_agrees": true
+    },
+    {
+      "name": "pending expiry fixture",
+      "timestamp": "2026-10-04T02:02:59.848784+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "REQUIRE_APPROVAL",
+      "policy": "portfolio_restricted",
+      "event_agrees": true
+    },
+    {
+      "name": "throttled output absent",
+      "timestamp": "2026-10-04T02:02:59.867259+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "THROTTLE",
+      "policy": "budget",
+      "event_agrees": true
+    },
+    {
+      "name": "malformed JSON sanitized",
+      "timestamp": "2026-10-04T02:02:59.877778+02:00",
+      "passed": true,
+      "status": 422,
+      "decision": "BLOCK",
+      "output_absent": true,
+      "no_store": true
+    },
+    {
+      "name": "duplicate JSON sanitized",
+      "timestamp": "2026-10-04T02:02:59.892997+02:00",
+      "passed": true,
+      "status": 422,
+      "decision": "BLOCK",
+      "output_absent": true,
+      "no_store": true
+    },
+    {
+      "name": "nonfinite JSON sanitized",
+      "timestamp": "2026-10-04T02:02:59.901543+02:00",
+      "passed": true,
+      "status": 422,
+      "decision": "BLOCK",
+      "output_absent": true,
+      "no_store": true
+    },
+    {
+      "name": "deep JSON sanitized",
+      "timestamp": "2026-10-04T02:02:59.910558+02:00",
+      "passed": true,
+      "status": 422,
+      "decision": "BLOCK",
+      "output_absent": true,
+      "no_store": true
+    },
+    {
+      "name": "oversized input sanitized",
+      "timestamp": "2026-10-04T02:02:59.919667+02:00",
+      "passed": true,
+      "status": 413,
+      "decision": "BLOCK",
+      "output_absent": true,
+      "no_store": true
+    },
+    {
+      "name": "alternate chat route",
+      "timestamp": "2026-10-04T02:02:59.942565+02:00",
+      "passed": true,
+      "denied": 403,
+      "allowed": 200,
+      "offline_canned_output": true
+    },
+    {
+      "name": "administrative reads protected",
+      "timestamp": "2026-10-04T02:02:59.961417+02:00",
+      "passed": true,
+      "no_credential": 401,
+      "non_admin": 403
+    },
+    {
+      "name": "untrusted origin refused",
+      "timestamp": "2026-10-04T02:02:59.970790+02:00",
+      "passed": true,
+      "status": 403
+    },
+    {
+      "name": "committed corpus positive and attack controls",
+      "timestamp": "2026-10-04T02:03:00.000585+02:00",
+      "passed": true,
+      "total": 16,
+      "passed_cases": 16,
+      "failed": 0,
+      "unexpected_allows": 0
+    },
+    {
+      "name": "weakened disposable policy negative control",
+      "timestamp": "2026-10-04T02:03:10.120293+02:00",
+      "passed": true,
+      "total": 16,
+      "passed_cases": 15,
+      "failed": 1,
+      "unexpected_allows": 1
+    },
+    {
+      "name": "restored policy blocks analyst",
+      "timestamp": "2026-10-04T02:03:10.139530+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "BLOCK",
+      "policy": "portfolio_restricted",
+      "event_agrees": true
+    },
+    {
+      "name": "approval expires across real restart",
+      "timestamp": "2026-10-04T02:03:10.713546+02:00",
+      "passed": true,
+      "status": 409,
+      "fixture": "created timestamp aged in stopped owned SQLite state",
+      "executed": false
+    },
+    {
+      "name": "audit and SQLite exclude synthetic secret/encoded credential",
+      "timestamp": "2026-10-04T02:03:10.715493+02:00",
+      "passed": true,
+      "checked_pools": [
+        "protected events",
+        "telemetry",
+        "approvals"
+      ],
+      "secrets_absent": true
+    },
+    {
+      "name": "fresh quota request 1",
+      "timestamp": "2026-10-04T02:03:11.653673+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "ALLOW",
+      "policy": "portfolio_restricted",
+      "event_agrees": true
+    },
+    {
+      "name": "fresh quota request 2",
+      "timestamp": "2026-10-04T02:03:11.672130+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "ALLOW",
+      "policy": "portfolio_restricted",
+      "event_agrees": true
+    },
+    {
+      "name": "fresh quota request 3",
+      "timestamp": "2026-10-04T02:03:11.688256+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "THROTTLE",
+      "policy": "budget",
+      "event_agrees": true
+    },
+    {
+      "name": "lowering limits retains consumed quota",
+      "timestamp": "2026-10-04T02:03:11.707998+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "THROTTLE",
+      "policy": "budget",
+      "event_agrees": true
+    },
+    {
+      "name": "lowered limits and consumed usage",
+      "timestamp": "2026-10-04T02:03:11.715120+02:00",
+      "passed": true,
+      "requests_used": 2,
+      "character_units_used": 16,
+      "requests_limit": 1,
+      "character_unit_limit": 15
+    },
+    {
+      "name": "restart retains consumed quota",
+      "timestamp": "2026-10-04T02:03:12.304006+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "THROTTLE",
+      "policy": "budget",
+      "event_agrees": true
+    },
+    {
+      "name": "bounded concurrent HTTP quota",
+      "timestamp": "2026-10-04T02:03:12.542168+02:00",
+      "passed": true,
+      "requests": 20,
+      "concurrent_workers": 8,
+      "allowed": 3,
+      "throttled": 17
+    },
+    {
+      "name": "local-demo policy initial manager",
+      "timestamp": "2026-10-04T02:03:13.113211+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "ALLOW",
+      "policy": "portfolio_restricted",
+      "event_agrees": true
+    },
+    {
+      "name": "valid policy reload changes authorization",
+      "timestamp": "2026-10-04T02:03:13.134921+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "BLOCK",
+      "policy": "portfolio_restricted",
+      "event_agrees": true
+    },
+    {
+      "name": "invalid policy unknown control",
+      "timestamp": "2026-10-04T02:03:13.157695+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "BLOCK",
+      "policy": "fail_closed",
+      "event_agrees": true
+    },
+    {
+      "name": "invalid policy missing budgets",
+      "timestamp": "2026-10-04T02:03:13.182279+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "BLOCK",
+      "policy": "fail_closed",
+      "event_agrees": true
+    },
+    {
+      "name": "malformed YAML disables policy",
+      "timestamp": "2026-10-04T02:03:13.204524+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "BLOCK",
+      "policy": "fail_closed",
+      "event_agrees": true
+    },
+    {
+      "name": "repaired policy recovers",
+      "timestamp": "2026-10-04T02:03:13.225955+02:00",
+      "passed": true,
+      "status": 200,
+      "decision": "ALLOW",
+      "policy": "portfolio_restricted",
+      "event_agrees": true
+    },
+    {
+      "name": "policy lifecycle visible in documented local-demo",
+      "timestamp": "2026-10-04T02:03:13.229988+02:00",
+      "passed": true,
+      "valid_changed": true,
+      "invalid_disabled": true,
+      "repaired": true,
+      "selectable_identity_not_authentication": true
+    }
+  ],
+  "commands": [
+    {
+      "command": [
+        "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\.worktrees\\b-dashboard-integration\\frontend\\.integration-venv\\Scripts\\python.exe",
+        "-m",
+        "uvicorn",
+        "backend.main:app",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "59473",
+        "--workers",
+        "1",
+        "--no-access-log",
+        "--log-level",
+        "warning"
+      ],
+      "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+      "started": "2026-10-04T02:02:58.865553+02:00",
+      "profile": "authenticated",
+      "state": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\backend-live-owned-mqt8b88k\\state.sqlite3",
+      "policy": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\backend-live-owned-mqt8b88k\\policy.yaml",
+      "log": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\backend-live-020258_855184-authenticated.log",
+      "synthetic_credential_identities": [
+        "analyst_42",
+        "intern_1",
+        "manager_1",
+        "security_admin_1"
+      ],
+      "ready": "2026-10-04T02:02:59.449812+02:00",
+      "pid": 30964,
+      "stopped": "2026-10-04T02:03:10.139530+02:00",
+      "exit_code": 1,
+      "stop_reason": "owned test process terminated after verification"
+    },
+    {
+      "command": [
+        "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\.worktrees\\b-dashboard-integration\\frontend\\.integration-venv\\Scripts\\python.exe",
+        "-m",
+        "uvicorn",
+        "backend.main:app",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "58808",
+        "--workers",
+        "1",
+        "--no-access-log",
+        "--log-level",
+        "warning"
+      ],
+      "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+      "started": "2026-10-04T02:03:10.145132+02:00",
+      "profile": "authenticated",
+      "state": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\backend-live-owned-mqt8b88k\\state.sqlite3",
+      "policy": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\backend-live-owned-mqt8b88k\\policy.yaml",
+      "log": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\backend-live-020258_855184-expiry-restart.log",
+      "synthetic_credential_identities": [
+        "analyst_42",
+        "intern_1",
+        "manager_1",
+        "security_admin_1"
+      ],
+      "ready": "2026-10-04T02:03:10.700250+02:00",
+      "pid": 37556,
+      "stopped": "2026-10-04T02:03:10.714649+02:00",
+      "exit_code": 1,
+      "stop_reason": "owned test process terminated after verification"
+    },
+    {
+      "command": [
+        "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\.worktrees\\b-dashboard-integration\\frontend\\.integration-venv\\Scripts\\python.exe",
+        "-m",
+        "uvicorn",
+        "backend.main:app",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "58812",
+        "--workers",
+        "1",
+        "--no-access-log",
+        "--log-level",
+        "warning"
+      ],
+      "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+      "started": "2026-10-04T02:03:11.067264+02:00",
+      "profile": "authenticated",
+      "state": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\backend-live-owned-mqt8b88k\\quota-state.sqlite3",
+      "policy": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\backend-live-owned-mqt8b88k\\policy.yaml",
+      "log": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\backend-live-020258_855184-fresh-quota.log",
+      "synthetic_credential_identities": [
+        "analyst_42",
+        "intern_1",
+        "manager_1",
+        "security_admin_1"
+      ],
+      "ready": "2026-10-04T02:03:11.631587+02:00",
+      "pid": 17984,
+      "stopped": "2026-10-04T02:03:11.716298+02:00",
+      "exit_code": 1,
+      "stop_reason": "owned test process terminated after verification"
+    },
+    {
+      "command": [
+        "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\.worktrees\\b-dashboard-integration\\frontend\\.integration-venv\\Scripts\\python.exe",
+        "-m",
+        "uvicorn",
+        "backend.main:app",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "58816",
+        "--workers",
+        "1",
+        "--no-access-log",
+        "--log-level",
+        "warning"
+      ],
+      "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+      "started": "2026-10-04T02:03:11.716298+02:00",
+      "profile": "authenticated",
+      "state": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\backend-live-owned-mqt8b88k\\quota-state.sqlite3",
+      "policy": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\backend-live-owned-mqt8b88k\\policy.yaml",
+      "log": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\backend-live-020258_855184-quota-restart.log",
+      "synthetic_credential_identities": [
+        "analyst_42",
+        "intern_1",
+        "manager_1",
+        "security_admin_1"
+      ],
+      "ready": "2026-10-04T02:03:12.284128+02:00",
+      "pid": 10056,
+      "stopped": "2026-10-04T02:03:12.543159+02:00",
+      "exit_code": 1,
+      "stop_reason": "owned test process terminated after verification"
+    },
+    {
+      "command": [
+        "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\.worktrees\\b-dashboard-integration\\frontend\\.integration-venv\\Scripts\\python.exe",
+        "-m",
+        "uvicorn",
+        "backend.main:app",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "58829",
+        "--workers",
+        "1",
+        "--no-access-log",
+        "--log-level",
+        "warning"
+      ],
+      "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+      "started": "2026-10-04T02:03:12.545159+02:00",
+      "profile": "local-demo",
+      "state": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\backend-live-owned-mqt8b88k\\demo-state.sqlite3",
+      "policy": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\backend-live-owned-mqt8b88k\\policy.yaml",
+      "log": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\backend-live-020258_855184-policy-lifecycle.log",
+      "synthetic_credential_identities": [
+        "analyst_42",
+        "intern_1",
+        "manager_1",
+        "security_admin_1"
+      ],
+      "ready": "2026-10-04T02:03:13.093362+02:00",
+      "pid": 17464,
+      "stopped": "2026-10-04T02:03:13.231989+02:00",
+      "exit_code": 1,
+      "stop_reason": "owned test process terminated after verification"
+    }
+  ],
+  "all_owned_processes_stopped": true,
+  "limitations": [
+    "No enterprise identity or production integration",
+    "Approval expiry ages a stopped disposable state's timestamp rather than waiting five minutes",
+    "Policy readiness checks use the explicit loopback local-demo profile; authenticated invalid-policy requests refuse credentials",
+    "No live model or real business data"
+  ]
+}

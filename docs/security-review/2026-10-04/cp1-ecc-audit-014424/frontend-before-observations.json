@@ -1,0 +1,21 @@
+{
+  "baseline": "e52eb5059bba618db768c17353256d9eb516938c",
+  "observations": [
+    {
+      "finding": "Strict CSP and small inlined fonts",
+      "classification": "Reproduced browser configuration defect",
+      "originalConfig": "font-src 'self'; default Vite assetsInlineLimit",
+      "observed": "Five built-preview console CSP violations loading data:font/woff2 font assets",
+      "rawBeforeLog": "Not retained as a file; observed in tool transcript. No claim of a saved original CSP log.",
+      "regression": "Fixture browser demands zero console/page errors and inert text at 1440/768/375",
+      "after": "Six final fixture browser tests passed with emitted same-origin fonts and strict CSP unchanged"
+    },
+    {
+      "finding": "Sensitive field response schema acceptance",
+      "classification": "Required contract/defense-in-depth gap, not a demonstrated displayed-content leak",
+      "beforeLog": "frontend-sensitive-fields-before.log",
+      "before": "15 regressions failed: unexpected sensitive keys and forbidden sanitized_output were silently stripped/accepted",
+      "after": "Targeted sensitive fields/aliases/nesting and refusal output fail with sanitized ContractError; permitted ALLOW/REDACT content remains omitted; 100 final unit tests passed"
+    }
+  ]
+}

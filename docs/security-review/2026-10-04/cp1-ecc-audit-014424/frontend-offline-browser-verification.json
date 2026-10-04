@@ -1,0 +1,152 @@
+{
+  "startedAt": "2026-10-04T00:12:13.401Z",
+  "completedAt": "2026-10-04T00:12:19.273Z",
+  "timezone": "Europe/Warsaw",
+  "browser": "154.0.8037.97",
+  "hostileResponse": {
+    "type": "opaque",
+    "status": 0
+  },
+  "hostileRunStatus": "not_run",
+  "authenticatedRedteam": {
+    "total": 16,
+    "passed": 16,
+    "failed": 0
+  },
+  "dashboard": "PASS: authenticated manager evaluation, own event detail, action, disconnect",
+  "storage": {
+    "local": 0,
+    "session": 0
+  },
+  "outputSecrecy": {
+    "permitted": "REDACT",
+    "restrictedExternal": "BLOCK",
+    "auditContainsSecret": false
+  },
+  "liveCases": [
+    {
+      "scenario": "normal",
+      "decision": "ALLOW",
+      "policy": "market_public",
+      "event_id": "7a7407ca-5cb3-41f6-83d2-cdc901fb2dad"
+    },
+    {
+      "scenario": "analyst",
+      "decision": "BLOCK",
+      "policy": "portfolio_restricted",
+      "event_id": "99271ba5-b634-4644-9903-ddac4b1b607d"
+    },
+    {
+      "scenario": "manager",
+      "decision": "ALLOW",
+      "policy": "portfolio_restricted",
+      "event_id": "db2c8ca8-d394-4635-9a92-265ea7fd2a12"
+    },
+    {
+      "scenario": "external",
+      "decision": "BLOCK",
+      "policy": "external_exfiltration",
+      "event_id": "78aceb14-c15e-4134-98fc-fb7f2ed5a8f8"
+    },
+    {
+      "scenario": "tool",
+      "decision": "BLOCK",
+      "policy": "tool_guard",
+      "event_id": "32a7f46b-d100-4db8-850f-f62b938ea863"
+    }
+  ],
+  "freshQuota": [
+    "ALLOW",
+    "ALLOW",
+    "THROTTLE"
+  ],
+  "browserResponsesIntercepted": false,
+  "offlineGuard": {
+    "enabled": true,
+    "browserRequestRouting": "Continue owned loopback requests; abort external requests; no API response fulfillment",
+    "guardedBrowserBlocks": [
+      "https://aegis-owned-negative.invalid"
+    ],
+    "pythonGuardProbes": [
+      {
+        "pid": 1304,
+        "dnsAndConnectBlocked": true
+      },
+      {
+        "pid": 16168,
+        "dnsAndConnectBlocked": true
+      },
+      {
+        "pid": 18924,
+        "dnsAndConnectBlocked": true
+      },
+      {
+        "pid": 32912,
+        "dnsAndConnectBlocked": true
+      }
+    ]
+  },
+  "pageErrors": [],
+  "networkFailures": [],
+  "expectedDeniedResponseCancellations": [
+    {
+      "path": "/api/redteam/run",
+      "status": 403,
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/api/events",
+      "status": 401,
+      "failure": "net::ERR_ABORTED"
+    },
+    {
+      "path": "/api/events",
+      "status": 401,
+      "failure": "net::ERR_ABORTED"
+    }
+  ],
+  "expected401ConsoleErrors": 2,
+  "expectedHostile403ConsoleErrors": 1,
+  "otherConsoleErrors": 0,
+  "externalRequests": [],
+  "frontendIntegrationExit": 0,
+  "sourceHashes": {
+    "frontend/src/adapter.ts": "db1b53c8c23138f17c5c43132c7049610bff9ba1f0b7d5b7887be0ae9f0bb93c",
+    "frontend/src/api.ts": "f643549a5a261718ea8ae55340f2c2b6744cb8410460e432847cfc5f82b94754",
+    "frontend/src/App.tsx": "ae0f12ea7415ed25bb35bb51bc94dfa30d5f595e1fe859c35dc8f4ba3231ad47",
+    "frontend/src/components.tsx": "dec5b3fc41906e519b17f21bf55ed37a2b6aa908bceea1248f09be6e5356518a",
+    "frontend/src/scenarios.ts": "361aa8f57c9af290fadcb8ec201631416021c0741e861b668a19ccb99c7ed3d5",
+    "frontend/vite.config.ts": "c3bfde35ddb79436d4cb0a9f687769836d669ad9da0e5745e677e1ce46a5e84f",
+    "frontend/scripts/verify-security.mjs": "028c9710ab4daaeff3bd7a85f43714ac689954afd23c6d2b857ef416d554791f",
+    "frontend/scripts/offline-guard.py": "a53a5a4e8595e52e84113414523ff0f7eafeaf52c2d40417de0b375d3955f965",
+    "backend/guards.py": "3d5691377b6c021a380160391df56ab1e64b19fffb09e4e902d1e7cfc8496fa8",
+    "backend/redteam.py": "0295d9fe517753db7348e62ca3040ef43c6fa26ff394388e1843498796c02e77",
+    "policies/default.yaml": "58e1056de4028e59a480bb17a729ea3db8b2c68490ce32cfd8f4809db09aedc9"
+  },
+  "scope": "Separate simulation of external-network unavailability after locked prerequisites: per-context browser request guard and per-child Python DNS/connect audit hook; self-probes blocked before outbound networking and actual owned loopback journeys succeeded. No host firewall/global disconnect or offline installation claim. Production TLS/identity-provider/runtime deployment, axe, screen-reader, CWV and visual baseline comparison not verified.",
+  "cleanup": {
+    "ownedProcesses": [
+      {
+        "pid": 1304,
+        "stopped": true
+      },
+      {
+        "pid": 16168,
+        "stopped": true
+      },
+      {
+        "pid": 32556,
+        "stopped": true
+      },
+      {
+        "pid": 18924,
+        "stopped": true
+      },
+      {
+        "pid": 32912,
+        "stopped": true
+      }
+    ],
+    "ownedServersClosed": true
+  }
+}

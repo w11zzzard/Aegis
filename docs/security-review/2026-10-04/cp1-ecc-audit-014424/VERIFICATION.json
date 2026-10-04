@@ -1,0 +1,987 @@
+{
+  "recorded_warsaw": "2026-10-04T02:22:51.096925+02:00",
+  "timezone": "Europe/Warsaw (UTC+02 on run date)",
+  "source": {
+    "kind": "working-tree verification; no release/merge certification",
+    "recorded_warsaw": "2026-10-04T02:16:12.569353+02:00",
+    "directory": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+    "head": "e52eb5059bba618db768c17353256d9eb516938c",
+    "branch": "detached",
+    "status": [
+      " M backend/README.md",
+      " M backend/guards.py",
+      " M backend/redteam.py",
+      " M docs/API_CONTRACT.md",
+      " M frontend/scripts/verify-security.mjs",
+      " M frontend/src/adapter.ts",
+      " M frontend/src/api.test.ts",
+      " M frontend/src/audit-regression.test.tsx",
+      " M frontend/vite.config.ts",
+      "?? backend/tests/test_cp1_lifecycle.py",
+      "?? backend/tests/test_encoded_credential_context.py",
+      "?? backend/tests/test_redteam_integrity.py",
+      "?? frontend/e2e/security-boundaries.spec.ts",
+      "?? frontend/scripts/offline-guard.py",
+      "?? frontend/src/response-secrecy.test.ts",
+      "?? frontend/src/security-boundaries.test.tsx"
+    ],
+    "tracked_diff_sha256": "d8be38e97a90cf6c9b6d0276704ddb46ab2b2efa007f99e9cc8490648ade3333",
+    "patch": "working-tree.patch",
+    "source_fingerprint_sha256": "1607e81b1c837ac651f30760927ee3fc3c4b2a08f4fd77ef994181383d96a0cc",
+    "file_sha256": {
+      ".github/workflows/security.yml": "0db857949e79afebf7c6a7814c3d56123f5e98ff0b2192dd5a32e438d1956355",
+      ".gitignore": "2900c1345d050b34ce6d036afdd743b70a269629ec703ba835f206943b023d66",
+      "README.md": "98602b91a268492d933a824d969ead66f92b62d14ee65476ae9cc796769208c4",
+      "backend/.coveragerc": "1008649dd0ee1190ad2930d65e998c9e4c54b423a23971a1de7eb63a556f7cee",
+      "backend/.gitignore": "9d03b62dfdabfa1ce297edc4d34968e56aea7119b6be53549af5217101a33432",
+      "backend/README.md": "ddedab83537b26b5a28072421ff9558a3bb7eeadfe76dbbb37801110b11fe7da",
+      "backend/__init__.py": "c7b3b10be2477f3131207ebcef7407fef2ddcff0f2cba0f9fc6b88d7e19f47ba",
+      "backend/admission.py": "9bf55939ca7d0e0a6b027fd74a1f1d2d34da04b9d8444dfd518531316fb5f207",
+      "backend/body_limit.py": "aa26985b9f866003dcaa59e10b40c8219c6f8ac44add95c239e4b1036e7979ff",
+      "backend/core.py": "d8cbacb350d864e8addc0c9218ac367b7432d74273fedf1bc7bf2b2cf45c39e4",
+      "backend/credentials.py": "b026a3257104d272dd2f398a5887f46c14b626475aae7fe484d3c5ebf90e9901",
+      "backend/demo.py": "20aa3ea0fe5dfba1de76a2c612a4ec4d700b8d3e00a16c07fc5f4a96d40b4994",
+      "backend/guards.py": "3d5691377b6c021a380160391df56ab1e64b19fffb09e4e902d1e7cfc8496fa8",
+      "backend/main.py": "53946641eb7fd217d0e89cd74071428f8a6b393e40a138f3439a95e2ccdeb938",
+      "backend/models.py": "e7250a9805262d60d80ae12d46e6772a4079af5637353ddbee03ce6d4c0615c5",
+      "backend/policy.py": "d9a7ef89ec9f537d90fa0771adcbb8a4873f33f89fc44aead39a357fbdc5a01a",
+      "backend/redteam.py": "0295d9fe517753db7348e62ca3040ef43c6fa26ff394388e1843498796c02e77",
+      "backend/requirements-lock.txt": "d85efd5838d4e8f9e8bc425fced967d02e7bb3bf8da41a10247ebbe693ae59a3",
+      "backend/requirements.txt": "df1ad169b8e52875be4abb962b06dfe10886b8b6508c87332f8b793af319b548",
+      "backend/security.py": "dcd676e53f96c06c93974eb6e4109b9d7ae34d52a26cf18c61996d414589012a",
+      "backend/state.py": "11a97fe28b8e982f1d3b6926643c10b7adae66d3c2be12bf89a0ea82d4e26cf1",
+      "backend/tests/test_admission_retention.py": "0b39a19460e1df7961b3ca8ae45b0444c7572e74fc754a00684a9e6649db111a",
+      "backend/tests/test_core.py": "bc506c4639339b98330543480eed26a6caa93002f0b4df19910606f1232a38dd",
+      "backend/tests/test_cp1_lifecycle.py": "6bd2751ab03a9462465e47a861b5ce47970b53a6b92cb1633d48d7b79b022cd0",
+      "backend/tests/test_credential_redaction.py": "ea060752b3b252c4f8ccd42184abd1092e53a1ce021bbf4b9cbcac3b49f3185a",
+      "backend/tests/test_encoded_credential_context.py": "e7300a778110137071d3fc07750582acb316b98b8e65a8ea17d394f85956b8c2",
+      "backend/tests/test_guards.py": "ab12b23d6a31898ab2bbf1295db3bab11e33a7df877c34f812d5709cbcb0cfa7",
+      "backend/tests/test_json_boundary.py": "c0219086549c4a2ed541bd5e553bbc7c41f1d840ba4643900a180199e1739317",
+      "backend/tests/test_redteam_integrity.py": "92c004c949e3836853ab81d6b9af1c4b8bc6d0f8ab06993aa51f90e4b5e722b1",
+      "backend/tests/test_review_concurrency.py": "70468558008466545488edb87824a78726bcec8edd0d22025f6bb43a697211e9",
+      "backend/tests/test_security_fixes.py": "66c3bf4d2522fe1fc71e2f0a788a33d72d24f7d00b16b1a700636e7aa86fbbfb",
+      "backend/tests/test_state_validation.py": "fec7ed178305948b32ce3da6fc12403794da2501b98641a2cbb2b9d32ef0d5aa",
+      "backend/tests/test_storage_boundary.py": "3df6e2fa1308336ca7e732a839747a7923a75a667704d33a451fb529dc604e00",
+      "docs/API_CONTRACT.md": "05bf943a4c69d6b57b6c5786b1d30b4133a2b14a8916f36310fb3cdf5f3462e5",
+      "docs/ARCHITECTURE_AND_SPRINT.md": "083c2d7f6f1d61b4e5a5b6cf5ef4bb0b6010cf852bed50b7e5b01e7de4dceddc",
+      "docs/security-review/2026-10-04/FIX_REPORT.md": "37a007eaf87608bcf14f65a281c7d1d3e32d1fee89af9a62da99567aa83a6664",
+      "docs/security-review/2026-10-04/INDEPENDENT_REVIEW.md": "70b51ef784c7f2bfb4d095be60d3c3e708b34bb9599b61afbc3b21022084a360",
+      "docs/security-review/2026-10-04/backend-active-final.log": "1b4208520f8e9ceba738fecc1b0b7cfe3fd9a7f89e60c412fcfb176a3f4f5120",
+      "docs/security-review/2026-10-04/backend-active.log": "54c4a135748db1b9c3e4858a59acd3ee0f95cdba7dbcedef1a8ed1a4a20e2c7f",
+      "docs/security-review/2026-10-04/backend-demo.log": "5e95e41788504fe50466ee5cc91fd479612eefad15f569cef99dfcd91d9e0c8e",
+      "docs/security-review/2026-10-04/backend-json-combined-green.log": "97b9e3e84c97d52a8129ff3be41ca7e16f6253718b27c73996665ac9feafb54a",
+      "docs/security-review/2026-10-04/backend-json-green.log": "c845473f583d9c7da89553f5edb99333c46853a1a116dba2a2c452d5ef022430",
+      "docs/security-review/2026-10-04/backend-json-red.log": "7bd750e288108b8b05cd18f5a5a7a8d5b863bb62c60fb3ac389f7cc8e217b4b6",
+      "docs/security-review/2026-10-04/backend-json-storage-green.log": "aacb051629136fb17a032bf835ac72567dc9615b9cdad3fcd949a8ad559fae16",
+      "docs/security-review/2026-10-04/backend-json-storage-pre-fix.py": "2f506525e1ac6bc3cd8a7f947433b6484c64a69d649e83b201491b8795f41e5c",
+      "docs/security-review/2026-10-04/backend-json-storage-red.log": "10a992dd9b9df3fa50c19d5c41ccded2a222a43160c3cda4463aa6206cb35bcd",
+      "docs/security-review/2026-10-04/backend-json-verification.md": "8209a2cba0ff07b4b9085ceb0fcad73d7844bc1914bffe8c00a8bec5992e1a86",
+      "docs/security-review/2026-10-04/browser-verification.json": "96a192e1d45a3ed5f72170ceb322d1b3e9c9fa081626ecc67fd671d49935fd3e",
+      "docs/security-review/2026-10-04/frontend-FIX_REPORT.md": "3e3409d981b3a55aa0c562fabaec23c8bb70b9c46ada498461037f561e6fb9be",
+      "docs/security-review/2026-10-04/frontend-active-coverage.log": "92c5c2b11a318812a9f089a9e586503a8e7c50fc47026fbf3203bcff30a24a20",
+      "docs/security-review/2026-10-04/frontend-active-final.log": "6ba0d4f9a7e974367c6bf048e459de4994973ae80153515e0edd9bc6f289ffed",
+      "docs/security-review/2026-10-04/frontend-authenticated-browser.log": "ef716a293c544d0300b2915d4346a836a05a56e652cdcb91584811f362d2748f",
+      "docs/security-review/2026-10-04/frontend-authenticated-final.log": "ef716a293c544d0300b2915d4346a836a05a56e652cdcb91584811f362d2748f",
+      "docs/security-review/2026-10-04/frontend-browser.log": "7483ddbe78fc1242f067031a6dafb790d9be92c5cecc51bc28bbdfa426e8258b",
+      "docs/security-review/2026-10-04/frontend-build-final.log": "47d3e5e5ad4cd54b0f877a5b9a69e7e2ae0be7d04aa87ef86f995409c0cce481",
+      "docs/security-review/2026-10-04/frontend-build.log": "150148828f349c8e13e9a1dedacd381a4bb227d2d8ad795299a0bf3ae96e81b1",
+      "docs/security-review/2026-10-04/frontend-http-green.log": "ceb1f2c1c408046efb1c8c05c337d7515c5d5998c621b6f8aade6c0806f70d05",
+      "docs/security-review/2026-10-04/frontend-http-red.log": "ac9e1c60f788b6e6cf07e1324564ba1e89438e31a9bb7e0b5a4bbb688d9bdde4",
+      "docs/security-review/2026-10-04/frontend-independent-http.log": "3b99f60ed364cadb214196af8f30445ed6b2123c5fd3ccf1c2659d67e96ed2b5",
+      "docs/security-review/2026-10-04/frontend-independent-review.md": "33028e7b5aaa756ffe38f8838e5b00fc2145ef7ac074eb4dbb6fc4127f5f5977",
+      "docs/security-review/2026-10-04/frontend-independent-streams.log": "f98b5970967e39ef5fa59af067f3bc2e6269c24eb132b9c187bdd58f7316e8d2",
+      "docs/security-review/2026-10-04/frontend-integration.log": "394450c269deb33e92c3833ceb7af8553035cadb2984785f7760a512eb5396c5",
+      "docs/security-review/2026-10-04/frontend-typecheck-final.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "docs/security-review/2026-10-04/frontend-unit-green.log": "854377ca916f19d379de3a122de1981764d5ebb320dcbd9759ced2f8ad1fd6ff",
+      "docs/security-review/2026-10-04/frontend-unit-red.log": "21d70960ad8aedad1dd2b6aa774c748ae7b13266d9b6551793d459729c2c724a",
+      "docs/security-review/2026-10-04/json-nonfinite-green.log": "35a454fb1c06166170002276ab34f05a407cf9267d5f8900a85817792e8c0551",
+      "docs/security-review/2026-10-04/json-nonfinite-red.log": "1799a7ccde91b6c1146e229f39f1f6e7c19827f4eb8d556a1a161a85b9925962",
+      "docs/security-review/2026-10-04/reproduce_retention.py": "04bbf2efbe69ca912bd69d58d10977a4e4c8de160796710aaf81b58bb06502d3",
+      "docs/security-review/2026-10-04/retention-green.log": "310b757b7d55bbae99406e654af3d0ad646d2bbe15667603369d11931198c315",
+      "docs/security-review/2026-10-04/retention-load.json": "4208ed2a019444369edb31d387aaefd38c34811217708e4edd517eaceb56496b",
+      "docs/security-review/2026-10-04/retention-load.log": "4208ed2a019444369edb31d387aaefd38c34811217708e4edd517eaceb56496b",
+      "docs/security-review/2026-10-04/retention-red.log": "5a1e6dee3febf1894151fc49ecaf3f8ea286ddb28d032c747f8fd220e67d56de",
+      "docs/security-review/2026-10-04/review-additional-green.log": "dc671b788bc9aea2d5f5da3d998617a1f709a380f31ea97d0b5e69c7013ca0fe",
+      "docs/security-review/2026-10-04/review-credential-before.json": "5a975d3a89db9b240e19a4e6921c1908baaba0a78a5a04d01b407bcfc5762371",
+      "docs/security-review/2026-10-04/review-dependency-audit.json": "6675638c57a6e6170c906feac739012b2c28ed3e0648a80af075bc1975131422",
+      "docs/security-review/2026-10-04/review-focused-tests.log": "a38858641278ff037a95914ed054afc063418c8839e3b587eee02d6a8e64d784",
+      "docs/security-review/2026-10-04/review-inventory.py": "d9e078014108f800ff608704e6f0654e591304fa41cce93587e34141afb61f97",
+      "docs/security-review/2026-10-04/review-outage-after.json": "f73b8c4c2f413ce96755aab324564390c4d81ba09c4ed2fb11cce8a962b2df0b",
+      "docs/security-review/2026-10-04/review-outage-before.json": "50db5de55491e5aca9da1713a8cb6569d158eaa646f45504096f4f0e5f8da64f",
+      "docs/security-review/2026-10-04/review-processes.json": "9f6def3b24be477213a95112808d6b46bf37a1d7009d56390b594214aa869397",
+      "docs/security-review/2026-10-04/review-processes.py": "1ef37401ea525f3bf1d67fc9cf8990baaa9cb8afdc9ea1f519e0a7716c5259f1",
+      "docs/security-review/2026-10-04/review-python-inventory.json": "8bb669455512c904e1e01488e088abd45b112f130ced652e5e664cce6d20baf4",
+      "docs/security-review/2026-10-04/review-reproduce.py": "6e30e8d71d976fa4bb2da1e228f597d0e276f00a4e9982c3ad1b354f1d10e6dd",
+      "frontend/.env.example": "3ccd99c7f9d34357fe2e2dd0a2cef41bfc89b5c8c989d6a8972e8e14379235c9",
+      "frontend/.gitignore": "abe884127c24bcda10a77f40a0a7bba7170151e11abdd916f7ffccf75c32ed88",
+      "frontend/FIX_VERIFICATION.md": "be8678c8a09140bd66f424050147047eefb9e31479ddb5eb9d1daf8a2d21afa1",
+      "frontend/README.md": "fffc308d7ae37d6653ccce8e3936a22744f68296237bbdee270b81a17fac1ede",
+      "frontend/TDD_EVIDENCE.md": "e71475af073af5992ebab843d80b406cb517fdf502b62d54ba674f0bbe62121d",
+      "frontend/audit/mega-security.config.ts": "8cd460dc9d533b132f586e9204d9414ad3a96e58c102f51b14d963ea2b2ffed7",
+      "frontend/audit/mega-security.test.tsx": "6c7212ea619c66a9943d8bb92109dcbed3ed781edefdf1e952ec1df4d56bf8e4",
+      "frontend/audit/security-audit.test.ts": "7350f087c905072b8f9bfb3dbde69d1130e5fd0d8a5e37593b016c8716d1090f",
+      "frontend/audit/vitest.config.ts": "1ca513766623704a0c69246c0052768babc2611db15f943791d8afe7e2633ad7",
+      "frontend/e2e-live/backend.spec.ts": "fc58801d27d2caae96a0c65fa8175bae009292c44682e4f4a6d53e3a42d69115",
+      "frontend/e2e/dashboard.spec.ts": "b68018bdacfe96cb454a14b664fdaa8d238e6365e7a329919a2a908612946c2d",
+      "frontend/e2e/security-boundaries.spec.ts": "6018e09792e387207c67807f56415a20ab3f68b749cf61d8b05e3f95656065a3",
+      "frontend/index.html": "9eedcbb81d3ade456927808277e57f1766f9d34ccc25a10dbceb31760caf4662",
+      "frontend/integration/backend.test.ts": "f9ee112c976b62ac29b22bb10ffc3b5e4958a80bead87b58fd29cdd62a23aa8c",
+      "frontend/integration/http-streams.test.ts": "8717f821bb89de72c37b9dff2173f5f4b8625b5ca8ef314c12094c5eac13b272",
+      "frontend/package-lock.json": "32b18c480fb15b24d56131da203f0886faec15d8f7f7581beb65180a966da32a",
+      "frontend/package.json": "3e3264e1dede3041911589356d6b71ebbb069e024f7e7ecaa53999d651fb055e",
+      "frontend/playwright.config.ts": "cc4f2a52eafcb06b210f0b9df9d42e4e26d1132aa9b088683918167d639361a0",
+      "frontend/scripts/live-check.mjs": "f51158985a870cf8a3259e5f192319de9e2487aebba471a07a4567cff0a10417",
+      "frontend/scripts/offline-guard.py": "a53a5a4e8595e52e84113414523ff0f7eafeaf52c2d40417de0b375d3955f965",
+      "frontend/scripts/verify-security.mjs": "028c9710ab4daaeff3bd7a85f43714ac689954afd23c6d2b857ef416d554791f",
+      "frontend/src/App.test.tsx": "501fe9e8b70d78f234f3c6a2f64eb224cef5a7b7e8d1ecff15330415216800a1",
+      "frontend/src/App.tsx": "ae0f12ea7415ed25bb35bb51bc94dfa30d5f595e1fe859c35dc8f4ba3231ad47",
+      "frontend/src/adapter.ts": "db1b53c8c23138f17c5c43132c7049610bff9ba1f0b7d5b7887be0ae9f0bb93c",
+      "frontend/src/api-streams-independent.test.ts": "7c497477f39b66a39d03e11cc13fc0ef1c3c80f335d9a5a84261df125cc8b983",
+      "frontend/src/api-streams.test.ts": "f95ac32f83a2bf15b6d0cdea74fef8e1a37b185ced24bda8d2905f51a925dd2a",
+      "frontend/src/api.test.ts": "9b9777f8301373ca567c61c16979f3ddc83332a349f2b502bfd692d8ea0f1e2d",
+      "frontend/src/api.ts": "f643549a5a261718ea8ae55340f2c2b6744cb8410460e432847cfc5f82b94754",
+      "frontend/src/audit-regression.test.tsx": "ddd2c09752129a4fa8414ab1838910fdb6fbbea47a0e997fa2b219e5ca097ca9",
+      "frontend/src/components.tsx": "dec5b3fc41906e519b17f21bf55ed37a2b6aa908bceea1248f09be6e5356518a",
+      "frontend/src/main.tsx": "abc7e298b710728691c086198481215963c45f1a64b1d0592572eaa3c49dd210",
+      "frontend/src/response-secrecy.test.ts": "fda13b17380e013d9b77a620fe076c6c18dd8459e5ed07e65da7ab40ca00b540",
+      "frontend/src/scenarios.ts": "361aa8f57c9af290fadcb8ec201631416021c0741e861b668a19ccb99c7ed3d5",
+      "frontend/src/security-boundaries.test.tsx": "78b48fb3f72b9eabb9442320ac53c58615f05549fd7760e56004ecd603d66b06",
+      "frontend/src/security-fixes.test.tsx": "273f628e625580ed208ad0bf860d3b0a009bff4a786b9aa8530cdee8f978ceff",
+      "frontend/src/styles.css": "bb2accd7081852e8ae63eb86a5c7427ac156ab9c0fb6318c6370c3274921e432",
+      "frontend/src/test-fixtures.ts": "b4770eb36fe2496130b47b55edcf51badca6047e736666318071f0fe5f4ba956",
+      "frontend/src/test-setup.ts": "0b30b01251d90f032ea34d04e45dd5fa19f1e053749124fadc4bb2a813492886",
+      "frontend/src/types.ts": "92ef01a2e07a0e917ba0002a5aa22d870101e23fdda102857512210e5f9d941d",
+      "frontend/tsconfig.json": "78e546682776ed43a5d1fb2a4fe911023480844488a74b47a08d2112ab43f49d",
+      "frontend/vite.config.ts": "c3bfde35ddb79436d4cb0a9f687769836d669ad9da0e5745e677e1ce46a5e84f",
+      "frontend/vitest.config.ts": "0adf61be9cc2bea41e3735efe83eea626ac7c1b774cf8cca7c919106771c7d26",
+      "frontend/vitest.live.config.ts": "75f1deed28c75c8938021879ba49dfd7f0843a2fa005db1503d94dd7cd3a4f58",
+      "frontend/vitest.streams.config.ts": "1c79cf829430eeb547418ed35034463b20c49438115b81db2b08a0edc382ae52",
+      "policies/default.yaml": "58e1056de4028e59a480bb17a729ea3db8b2c68490ce32cfd8f4809db09aedc9",
+      "redteam/corpus.json": "29c49337d0fe469012715ddd4bfd88c3a6e59c3e81a374af434c81145c311921"
+    },
+    "relevant_untracked_source_sha256": {
+      "backend/tests/test_cp1_lifecycle.py": "6bd2751ab03a9462465e47a861b5ce47970b53a6b92cb1633d48d7b79b022cd0",
+      "backend/tests/test_encoded_credential_context.py": "e7300a778110137071d3fc07750582acb316b98b8e65a8ea17d394f85956b8c2",
+      "backend/tests/test_redteam_integrity.py": "92c004c949e3836853ab81d6b9af1c4b8bc6d0f8ab06993aa51f90e4b5e722b1",
+      "frontend/e2e/security-boundaries.spec.ts": "6018e09792e387207c67807f56415a20ab3f68b749cf61d8b05e3f95656065a3",
+      "frontend/scripts/offline-guard.py": "a53a5a4e8595e52e84113414523ff0f7eafeaf52c2d40417de0b375d3955f965",
+      "frontend/src/response-secrecy.test.ts": "fda13b17380e013d9b77a620fe076c6c18dd8459e5ed07e65da7ab40ca00b540",
+      "frontend/src/security-boundaries.test.tsx": "78b48fb3f72b9eabb9442320ac53c58615f05549fd7760e56004ecd603d66b06"
+    },
+    "generated_untracked_excluded": [],
+    "baseline": {
+      "isolated_head": "e52eb5059bba618db768c17353256d9eb516938c",
+      "original_checkout_head": "4e9a3ecbac6d685d49a6685635a9f58debefd787",
+      "original_checkout_branch": "main",
+      "original_tracked_edits_at_start": "none",
+      "contributor_worktrees_and_untracked_reports": "preserved; original plan updated by append only",
+      "current_pr3_ref": "refs/codex/security-cp1/pr3-head",
+      "current_pr3_head": "c49f1cf07b9e6faf053a5cbdc08c830be0a24da9",
+      "historical_plan_head": "141490f4df1cf4ee296b808626501f0dc9f2743b",
+      "target_choice": "Continued recommended hardened e52 target after optional clarification received no answer; PR3 diff reviewed separately",
+      "baseline_detail": "reviewer-baseline.json"
+    }
+  },
+  "checkpoint_record": {
+    "path": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\docs\\AEGIS_DELIVERY_PLAN.md",
+    "sha256": "3752a6ea5914f50b3358feecd3312af6b7d328701d5b925f638567990d66b180",
+    "update": "append-only working record; historical checklists and human gates preserved"
+  },
+  "verdict": {
+    "cp1_technical_readiness": "ready for reviewed deterministic synthetic demo controls",
+    "unresolved_confirmed_critical_high_in_tested_scope": 0,
+    "human_a_b_signoff": "pending",
+    "release_merge_production_certification": false,
+    "commit_push_merge_deploy_submission_performed_in_this_audit": false,
+    "scope": "isolated hardened e52 working tree, not original main/current PR3"
+  },
+  "results": {
+    "backend": {
+      "passed": 427,
+      "statement_coverage": 95.91,
+      "gate": 80,
+      "log": "backend-acceptance.log",
+      "coverage": "backend-coverage-acceptance.json"
+    },
+    "frontend": {
+      "unitTests": 100,
+      "unitFiles": 8,
+      "coverage": {
+        "statements": 97.78,
+        "branches": 94.26,
+        "functions": 98.33,
+        "lines": 99.34
+      },
+      "preservedThresholds": 80,
+      "fixtureBrowserTests": 6,
+      "realBackendIntegrationTests": 7,
+      "guardedBackendIntegrationTests": 7,
+      "realBrowserJourneys": [
+        "authenticated manager and disconnect",
+        "five fresh demo response/feed/detail cases",
+        "fresh ALLOW, ALLOW, THROTTLE"
+      ],
+      "offlineSimulation": "Passed same journeys with external browser requests denied and pre-import Python DNS/connect guard; no host-global disconnect or offline installation claim"
+    },
+    "actual_http": {
+      "cases": 54,
+      "fresh_services": 5,
+      "status": "passed",
+      "report": "backend-live-020850_626488-results.json"
+    },
+    "default_corpus": {
+      "total": 16,
+      "passed": 16,
+      "unexpected_allows": 0
+    },
+    "weakened_disposable_policy": {
+      "passed": 15,
+      "failed": 1,
+      "unexpected_allows": 1,
+      "evidence": "backend-live-020850_626488-results.json"
+    },
+    "normal_browser": {
+      "report": "frontend-real-browser-verification.json",
+      "api_responses_intercepted": false,
+      "requests_routed": false,
+      "unexpected_errors": 0,
+      "external_requests": 0
+    },
+    "guarded_runtime": {
+      "report": "frontend-offline-browser-verification.json",
+      "mode": "separate simulation of external-network unavailability",
+      "self_probes": "external browser.invalid aborted before outbound; four Python children reject DNS/connect before imports",
+      "api_response_fulfillment": false,
+      "host_globally_disconnected": false,
+      "offline_installation": false
+    },
+    "independent_review": {
+      "focused_tests": 37,
+      "different_frontend_probes": 7,
+      "source_review": "reviewer-final-state.json",
+      "harness_review": "reviewer-harness-review.json",
+      "report": "reviewer-independent-review.md"
+    },
+    "bandit": {
+      "runtime_findings": 0,
+      "report": "bandit-acceptance.json"
+    }
+  },
+  "commands": {
+    "primary_final": [
+      {
+        "command": [
+          "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\.worktrees\\b-dashboard-integration\\frontend\\.integration-venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "backend/tests",
+          "-q",
+          "-p",
+          "pytest_cov",
+          "--cov=backend",
+          "--cov-config=backend/.coveragerc",
+          "--cov-report=term-missing",
+          "--cov-report=json:C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\backend-coverage-acceptance.json",
+          "--basetemp=C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\backend-acceptance-tmp"
+        ],
+        "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+        "started_warsaw": "2026-10-04T02:07:31.562852+02:00",
+        "ended_warsaw": "2026-10-04T02:08:25.350116+02:00",
+        "exit_code": 0,
+        "log": "backend-acceptance.log"
+      },
+      {
+        "command": [
+          "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\.worktrees\\b-dashboard-integration\\frontend\\.integration-venv\\Scripts\\python.exe",
+          "-m",
+          "backend.demo"
+        ],
+        "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+        "started_warsaw": "2026-10-04T02:07:23.453591+02:00",
+        "ended_warsaw": "2026-10-04T02:07:23.905405+02:00",
+        "exit_code": 0,
+        "log": "backend-demo-acceptance.log"
+      },
+      {
+        "command": [
+          "C:\\Users\\admin\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+          "node_modules/typescript/bin/tsc",
+          "--noEmit"
+        ],
+        "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman\\frontend",
+        "started_warsaw": "2026-10-04T02:17:22.037935+02:00",
+        "ended_warsaw": "2026-10-04T02:17:23.357546+02:00",
+        "exit_code": 0,
+        "log": "frontend-typecheck-acceptance.log"
+      },
+      {
+        "command": [
+          "C:\\Users\\admin\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+          "node_modules/vite/bin/vite.js",
+          "build",
+          "--configLoader=runner"
+        ],
+        "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman\\frontend",
+        "started_warsaw": "2026-10-04T02:18:10.639108+02:00",
+        "ended_warsaw": "2026-10-04T02:18:12.201581+02:00",
+        "exit_code": 0,
+        "log": "frontend-build-verified.log"
+      },
+      {
+        "command": [
+          "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-audit\\.venv\\Scripts\\python.exe",
+          "-m",
+          "bandit",
+          "-r",
+          "backend",
+          "-x",
+          "backend/tests,backend/.venv",
+          "-f",
+          "json",
+          "-o",
+          "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\bandit-acceptance.json"
+        ],
+        "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+        "started_warsaw": "2026-10-04T02:17:22.203218+02:00",
+        "ended_warsaw": "2026-10-04T02:17:22.515207+02:00",
+        "exit_code": 0,
+        "log": "bandit-acceptance.log"
+      }
+    ],
+    "backend_owned": [
+      {
+        "command": [
+          "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\.worktrees\\b-dashboard-integration\\frontend\\.integration-venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "backend/tests/test_redteam_integrity.py",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "--tb=line"
+        ],
+        "exit_code": 1,
+        "expected_failure": true,
+        "failed": 4,
+        "passed": 5,
+        "log": "backend-nonfinite-red.log",
+        "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+        "log_last_write_warsaw": "2026-10-04T02:01:20.360851+02:00"
+      },
+      {
+        "command": [
+          "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\.worktrees\\b-dashboard-integration\\frontend\\.integration-venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "backend/tests/test_redteam_integrity.py",
+          "backend/tests/test_cp1_lifecycle.py",
+          "-q",
+          "-p",
+          "no:cacheprovider",
+          "--tb=line"
+        ],
+        "exit_code": 0,
+        "passed": 19,
+        "log": "backend-owned-green.log",
+        "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+        "log_last_write_warsaw": "2026-10-04T02:02:29.220378+02:00"
+      },
+      {
+        "command": [
+          "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\.worktrees\\b-dashboard-integration\\frontend\\.integration-venv\\Scripts\\python.exe",
+          "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\backend-corpus-reproduction.py",
+          "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman"
+        ],
+        "exit_code": 0,
+        "baseline_green_cases": 8,
+        "fixed_refusals": 8,
+        "log": "backend-corpus-reproduction.log",
+        "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+        "log_last_write_warsaw": "2026-10-04T02:06:37.038294+02:00"
+      },
+      {
+        "command": [
+          "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\.worktrees\\b-dashboard-integration\\frontend\\.integration-venv\\Scripts\\python.exe",
+          "-u",
+          "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\backend-live-checks.py",
+          "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman"
+        ],
+        "exit_code": 0,
+        "actual_http_cases": 54,
+        "log": "backend-live-console-final.log",
+        "started": "2026-10-04T02:08:50.627499+02:00",
+        "finished": "2026-10-04T02:09:05.001949+02:00",
+        "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+        "log_last_write_warsaw": "2026-10-04T02:09:04.995632+02:00"
+      }
+    ],
+    "frontend": [
+      {
+        "name": "required sensitive-field negative regression",
+        "executable": "C:/Users/admin/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+        "argv": [
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "src/response-secrecy.test.ts",
+          "--configLoader=runner"
+        ],
+        "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman\\frontend",
+        "exitCode": 1,
+        "wallSeconds": 1.2664982,
+        "startedUtc": "2026-10-03T23:57:47.714Z",
+        "endedUtc": "2026-10-03T23:57:48.981Z",
+        "startedWarsaw": "2026-10-04 01:57:47",
+        "endedWarsaw": "2026-10-04 01:57:48",
+        "timestampMethod": "Tool-reported command wall duration and retained log mtime; approximate at subsecond precision",
+        "log": "frontend-sensitive-fields-before.log"
+      },
+      {
+        "name": "unit tests and coverage",
+        "executable": "C:/Users/admin/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+        "argv": [
+          "node_modules/vitest/vitest.mjs",
+          "run",
+          "--configLoader=runner",
+          "--coverage"
+        ],
+        "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman\\frontend",
+        "exitCode": 0,
+        "wallSeconds": 3.4629363,
+        "startedUtc": "2026-10-04T00:06:06.759Z",
+        "endedUtc": "2026-10-04T00:06:10.222Z",
+        "startedWarsaw": "2026-10-04 02:06:06",
+        "endedWarsaw": "2026-10-04 02:06:10",
+        "timestampMethod": "Tool-reported command wall duration and retained log mtime; approximate at subsecond precision",
+        "log": "frontend-unit-coverage.log"
+      },
+      {
+        "name": "TypeScript plus build",
+        "executable": "C:/Users/admin/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+        "argv": [
+          "node_modules/typescript/bin/tsc",
+          "--noEmit",
+          "THEN",
+          "node_modules/vite/bin/vite.js",
+          "build",
+          "--configLoader=runner"
+        ],
+        "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman\\frontend",
+        "exitCode": 0,
+        "wallSeconds": 3.1623069,
+        "startedUtc": "2026-10-04T00:03:15.089Z",
+        "endedUtc": "2026-10-04T00:03:18.252Z",
+        "startedWarsaw": "2026-10-04 02:03:15",
+        "endedWarsaw": "2026-10-04 02:03:18",
+        "timestampMethod": "Tool-reported command wall duration and retained log mtime; approximate at subsecond precision",
+        "log": "frontend-build.log"
+      },
+      {
+        "name": "fixture browser",
+        "executable": "C:/Users/admin/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+        "argv": [
+          "node_modules/@playwright/test/cli.js",
+          "test",
+          "--reporter=line"
+        ],
+        "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman\\frontend",
+        "exitCode": 0,
+        "wallSeconds": 4.7989259,
+        "startedUtc": "2026-10-04T00:03:51.703Z",
+        "endedUtc": "2026-10-04T00:03:56.502Z",
+        "startedWarsaw": "2026-10-04 02:03:51",
+        "endedWarsaw": "2026-10-04 02:03:56",
+        "timestampMethod": "Tool-reported command wall duration and retained log mtime; approximate at subsecond precision",
+        "log": "frontend-fixture-browser.log",
+        "env": {
+          "AEGIS_FRONTEND_URL": "http://127.0.0.1:18349",
+          "AEGIS_EVIDENCE_DIR": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424",
+          "PLAYWRIGHT_CHANNEL": "chrome"
+        },
+        "ownedServerCommand": [
+          "C:/Users/admin/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+          "node_modules/vite/bin/vite.js",
+          "preview",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "18349",
+          "--strictPort",
+          "--configLoader=runner"
+        ]
+      },
+      {
+        "name": "normal real-backend browser and typed/live integration",
+        "executable": "C:/Users/admin/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+        "argv": [
+          "frontend/scripts/verify-security.mjs"
+        ],
+        "cwd": "C:/Users/admin/.codex/worktrees/aegis-security-cp1/Hackyeah 2026 goldman",
+        "env": {
+          "AEGIS_OFFLINE_GUARD": "0",
+          "AEGIS_TEST_PYTHON": "C:/Users/admin/Documents/ChatGPT/Hackyeah 2026 goldman/.worktrees/b-dashboard-integration/frontend/.integration-venv/Scripts/python.exe",
+          "PLAYWRIGHT_CHANNEL": "chrome",
+          "AEGIS_EVIDENCE_DIR": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424"
+        },
+        "exitCode": 0,
+        "startedUtc": "2026-10-04T00:12:13.800Z",
+        "endedUtc": "2026-10-04T00:12:19.802Z",
+        "startedWarsaw": "2026-10-04 02:12:13",
+        "endedWarsaw": "2026-10-04 02:12:19",
+        "wallSeconds": 6.538353,
+        "log": "frontend-real-browser.log",
+        "integrationLog": "frontend-integration.log"
+      },
+      {
+        "name": "separate guarded external-network-unavailability simulation",
+        "executable": "C:/Users/admin/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+        "argv": [
+          "frontend/scripts/verify-security.mjs"
+        ],
+        "cwd": "C:/Users/admin/.codex/worktrees/aegis-security-cp1/Hackyeah 2026 goldman",
+        "env": {
+          "AEGIS_OFFLINE_GUARD": "1",
+          "AEGIS_TEST_PYTHON": "C:/Users/admin/Documents/ChatGPT/Hackyeah 2026 goldman/.worktrees/b-dashboard-integration/frontend/.integration-venv/Scripts/python.exe",
+          "PLAYWRIGHT_CHANNEL": "chrome",
+          "AEGIS_EVIDENCE_DIR": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424"
+        },
+        "exitCode": 0,
+        "startedUtc": "2026-10-04T00:12:13.401Z",
+        "endedUtc": "2026-10-04T00:12:19.273Z",
+        "startedWarsaw": "2026-10-04 02:12:13",
+        "endedWarsaw": "2026-10-04 02:12:19",
+        "wallSeconds": 6.4310798,
+        "log": "frontend-offline-browser.log",
+        "integrationLog": "frontend-offline-integration.log"
+      }
+    ],
+    "dependency_checks": {
+      "checked_at_warsaw": "2026-10-04T01:56:56+02:00",
+      "target_head": "e52eb5059bba618db768c17353256d9eb516938c",
+      "target_directory": "C:/Users/admin/.codex/worktrees/aegis-security-cp1/Hackyeah 2026 goldman",
+      "environment": {
+        "python": "3.12.14",
+        "node": "22.22.0",
+        "pip_audit": "2.10.1"
+      },
+      "python_advisories": {
+        "command": "C:/Users/admin/Documents/ChatGPT/Hackyeah 2026 goldman/output/security-audit/.venv/Scripts/python.exe -m pip_audit -r C:/Users/admin/.codex/worktrees/aegis-security-cp1/Hackyeah 2026 goldman/backend/requirements-lock.txt --no-deps --disable-pip --cache-dir C:/Users/admin/Documents/ChatGPT/Hackyeah 2026 goldman/output/security-hardening/2026-10-04_014424/reviewer-pip-cache --format json --output C:/Users/admin/Documents/ChatGPT/Hackyeah 2026 goldman/output/security-hardening/2026-10-04_014424/reviewer-pip-audit.json",
+        "working_directory": "C:/Users/admin/Documents/ChatGPT/Hackyeah 2026 goldman",
+        "source": "https://pypi.org/",
+        "exit_code": 0,
+        "packages": 26,
+        "known_advisories": 0,
+        "evidence": "reviewer-pip-audit.json",
+        "installed_metadata_evidence": "reviewer-baseline.json#inventory.python",
+        "all_locked_installed_versions_match": true
+      },
+      "npm_advisories": {
+        "command": "npm.cmd audit --package-lock-only --json --cache C:/Users/admin/Documents/ChatGPT/Hackyeah 2026 goldman/output/security-hardening/2026-10-04_014424/reviewer-npm-cache",
+        "working_directory": "C:/Users/admin/.codex/worktrees/aegis-security-cp1/Hackyeah 2026 goldman/frontend",
+        "source": "https://registry.npmjs.org/",
+        "exit_code": 0,
+        "locked_entries_checked": 221,
+        "known_advisories": 0,
+        "evidence": "reviewer-npm-audit.json",
+        "installed_metadata_evidence": "reviewer-npm-inventory.json",
+        "nonoptional_installed_mismatch": 0,
+        "absent_platform_optional_entries": 50
+      },
+      "primary_advisory_reachability": [
+        {
+          "package": "vitest / @vitest/mocker",
+          "locked": "4.1.11",
+          "advisory": "https://github.com/vitest-dev/vitest/security/advisories/GHSA-82fw-gwwq-j7x9",
+          "patched": "4.1.11",
+          "result": "Patched; advisory requires a live Vitest mock interceptor WebSocket path"
+        },
+        {
+          "package": "vite",
+          "locked": "7.3.6",
+          "advisory": "https://github.com/vitejs/vite/security/advisories/GHSA-fx2h-pf6j-xcff",
+          "patched": "7.3.5 (7.x)",
+          "result": "Patched; documented dev/preview scripts bind loopback; Windows file serving applies to this platform"
+        },
+        {
+          "package": "starlette",
+          "locked": "1.7.0",
+          "advisory": "https://github.com/Kludex/starlette/security/advisories/GHSA-jp82-jpqv-5vv3",
+          "patched": "1.3.0",
+          "result": "Patched; application authentication middleware uses ASGI scope path and Host boundary"
+        },
+        {
+          "package": "starlette",
+          "locked": "1.7.0",
+          "advisory": "https://github.com/Kludex/starlette/security/advisories/GHSA-82w8-qh3p-5jfq",
+          "patched": "1.3.1",
+          "result": "Patched; no request.form endpoint; request bodies additionally capped65536bytes"
+        },
+        {
+          "package": "starlette",
+          "locked": "1.7.0",
+          "advisory": "https://github.com/Kludex/starlette/security/advisories/GHSA-wqp7-x3pw-xc5r",
+          "patched": "1.1.0",
+          "result": "Patched; backend has no StaticFiles mount and no actual HTTP/filesystem tool forwarding"
+        }
+      ],
+      "execution_notes": "Initial restricted-network audits failed. Approved read-only network escalation completed both official-registry scans without install/upgrade or lock changes. ECC documentation-lookup read; no Context7 tools are configured, so official maintainer advisories were inspected directly.",
+      "limitations": [
+        "Advisory databases and publication dates define this point-in-time result; zero records do not prove absence of unknown vulnerabilities",
+        "Python locks pin versions without artifact hashes",
+        "No hosted/proxy deployment or external service attack was performed"
+      ]
+    }
+  },
+  "component_manifests": {
+    "backend": "backend-VERIFICATION.json",
+    "frontend": "frontend-VERIFICATION.json",
+    "reviewer": "reviewer-final-state.json"
+  },
+  "environment": {
+    "os": "Windows, PowerShell",
+    "python": {
+      "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+      "executable": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\.worktrees\\b-dashboard-integration\\frontend\\.integration-venv\\Scripts\\python.exe",
+      "versions": {
+        "fastapi": "0.142.2",
+        "pydantic": "2.13.5",
+        "PyYAML": "6.0.3",
+        "httpx": "0.28.1",
+        "uvicorn": "0.54.0",
+        "pytest": "9.1.1"
+      }
+    },
+    "node_application_checks": "24.19.0",
+    "node_advisory_inventory": "22.22.0",
+    "chrome": "154.0.8037.97",
+    "prerequisites": "exact installed Python lock and npm nonoptional versions verified; reused read-only environment/node_modules junction; no installation claim",
+    "pytest_final_environment": {
+      "PYTHONPATH": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+      "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+      "PYTHONDONTWRITEBYTECODE": "1",
+      "coverage_plugin": "explicit -p pytest_cov"
+    },
+    "vite_config_loader": "runner",
+    "application_services": "fresh owned loopback ports, explicit one worker, disposable policies/shared SQLite"
+  },
+  "advisory_check_date_warsaw": "2026-10-04T01:56:56+02:00",
+  "secrets_review": {
+    "baseline_tracked_paths": 122,
+    "reachable_commits": 44,
+    "unique_history_blobs": 297,
+    "candidate_context": "only synthetic fixtures; no values printed",
+    "limitation": "heuristic patterns cannot prove absence of all arbitrary/encoded secrets",
+    "evidence": [
+      "reviewer-baseline.json",
+      "reviewer-expanded-secrets.json"
+    ]
+  },
+  "cleanup": {
+    "backend": true,
+    "normal": {
+      "ownedProcesses": [
+        {
+          "pid": 34920,
+          "stopped": true
+        },
+        {
+          "pid": 31304,
+          "stopped": true
+        },
+        {
+          "pid": 1780,
+          "stopped": true
+        },
+        {
+          "pid": 32448,
+          "stopped": true
+        },
+        {
+          "pid": 3684,
+          "stopped": true
+        }
+      ],
+      "ownedServersClosed": true
+    },
+    "guarded": {
+      "ownedProcesses": [
+        {
+          "pid": 1304,
+          "stopped": true
+        },
+        {
+          "pid": 16168,
+          "stopped": true
+        },
+        {
+          "pid": 32556,
+          "stopped": true
+        },
+        {
+          "pid": 18924,
+          "stopped": true
+        },
+        {
+          "pid": 32912,
+          "stopped": true
+        }
+      ],
+      "ownedServersClosed": true
+    },
+    "frontend_preview_and_exact_disposable_files": {
+      "browserChildren": {
+        "ownedProcesses": [
+          {
+            "pid": 34920,
+            "stopped": true
+          },
+          {
+            "pid": 31304,
+            "stopped": true
+          },
+          {
+            "pid": 1780,
+            "stopped": true
+          },
+          {
+            "pid": 32448,
+            "stopped": true
+          },
+          {
+            "pid": 3684,
+            "stopped": true
+          }
+        ],
+        "ownedServersClosed": true
+      },
+      "guardedChildren": {
+        "ownedProcesses": [
+          {
+            "pid": 1304,
+            "stopped": true
+          },
+          {
+            "pid": 16168,
+            "stopped": true
+          },
+          {
+            "pid": 32556,
+            "stopped": true
+          },
+          {
+            "pid": 18924,
+            "stopped": true
+          },
+          {
+            "pid": 32912,
+            "stopped": true
+          }
+        ],
+        "ownedServersClosed": true
+      },
+      "vitePreview": {
+        "sessionId": 76994,
+        "port": 18349,
+        "stoppedByOwnedSessionInterrupt": true,
+        "followupConnect": "ECONNREFUSED"
+      },
+      "disposableFiles": "frontend-scratch-cleanup.json"
+    }
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "high",
+      "status": "fixed and independently rechecked including full16k containers",
+      "before": [
+        "primary-encoding-before.log",
+        "primary-large-before.log",
+        "reviewer-large-encoded-before.json"
+      ],
+      "after": [
+        "primary-large-after.log",
+        "reviewer-large-encoded-after.json"
+      ]
+    },
+    {
+      "id": "F2",
+      "severity": "medium",
+      "status": "duplicate/nonfinite trusted corpus integrity fixed",
+      "before": [
+        "backend-corpus-reproduction.json",
+        "backend-nonfinite-red.log"
+      ],
+      "after": [
+        "backend-owned-green.log",
+        "reviewer-corpus-nonfinite-after.json",
+        "reviewer-final-probes.json"
+      ]
+    },
+    {
+      "id": "F3",
+      "severity": "low",
+      "status": "CSP font configuration fixed",
+      "before": "frontend-before-observations.json (tool transcript summary; raw original log unavailable)",
+      "after": "frontend-fixture-browser.log"
+    },
+    {
+      "id": "F4",
+      "classification": "required contract/defense-in-depth hardening; no displayed exploit reproduced",
+      "status": "sensitive response extras visibly rejected",
+      "before": "frontend-sensitive-fields-before.log",
+      "after": [
+        "frontend-unit-coverage.log",
+        "reviewer-frontend-probes.json"
+      ]
+    }
+  ],
+  "limitations_and_blockers": [
+    "Human A/B sign-off remains pending; agents cannot supply it",
+    "CP2/CP3 semantic requirements, allowed-model catalog and configurable semantic strictness remain unresolved; no model/semantic AI/real forwarding exists",
+    "CP4 reporting/export/CSV UI absent on target; current PR3 features require security-preserving integration and re-verification; generic administrative JSON schemas remain bounded/untyped/not rendered",
+    "CP5 release commit/integration and human CP6 startup/two-rehearsal not certified by this working-tree audit",
+    "Guarded runtime simulates external network unavailability; no host disconnect, native/UDP/subprocess egress certification or offline installation",
+    "No visual baseline/axe/screen-reader/CWV certification",
+    "Unknown/recursive/alternative secret encodings remain outside bounded pattern masker",
+    "Production identity/TLS/MFA/revocation/ACL/ingress, real sink authorization, immutable retention/backup/recovery remain gates; Python lock artifact hashes absent"
+  ],
+  "earlier_attempts": [
+    "Existing pre-audit reports/test counts are historical and do not substitute for final427/100 working-tree checks",
+    "Initial pytest temp-directory permissions and timestamp tzdata helper failures preceded application verification; unique owned temp paths and fixed Warsaw offset used",
+    "backend-live-results.json records initial SQLite handle-cleanup harness failure; final owned run closes handles, stops services and removes state",
+    "frontend-real-browser-harness-isolation-failed.log records telemetry sample exhaustion in reused test process; fresh independent browser demo fixes harness isolation",
+    "frontend-real-browser-fixture-favicon-failed.log and denied-cancellation observer failure are retained test-harness failures, not product leak bypasses",
+    "frontend-build-acceptance-command.json records actual Vite exit0; wrapper then hit Windows console UnicodeEncodeError. UTF8 output repaired; frontend-build-verified-command.json exits0 including wrapper",
+    "CSP before failure recorded honestly as transcript summary, not a claimed retained raw log"
+  ],
+  "evidence_files_sha256": {
+    "FINDINGS.md": "51d02ffde86ec605039d686562a0eacccae921927301d5ef993dec5aa54fe3ff",
+    "HARDENING_SUMMARY.md": "094a9d0d90e1cd229eb825e1702e21a48ebd700c8c758af5c6264517aad1b812",
+    "SECURITY_COVERAGE.md": "545c629fb0b2c51f26c67e40bf47570b826405c493030bf71487a840ac960312",
+    "THREAT_MODEL.md": "77652064b4bc2d421e0a73418f300ad077f98be7be1aa55e8ae6224c65067789",
+    "backend-FINDINGS.md": "854f40b200dadff88cb5f216ffa268854c31f98246afff1b1722046b3d9191f2",
+    "backend-SECURITY_COVERAGE.md": "f4bb0a6c2aaea9455f9b90f7f4425d01c1cbb27c42d76248e376e7158238a327",
+    "backend-VERIFICATION.json": "c0d2c81f4808b3d8ad58e086846675c43d98b515870ce6f593243389146b7192",
+    "backend-acceptance-command.json": "c4d7e5f54d304ccc102ff0f5df40b93e7323aeaf264bcd499e5007086f49e926",
+    "backend-acceptance.log": "887a50941bad5738bb5a9dcc27b6384a11bc319e24a13b92f6455077159a5f44",
+    "backend-corpus-reproduction.json": "52ac16e54f38f7e3ee2737e386e514388c588a194f2d6f976c61fe870ce70f0b",
+    "backend-corpus-reproduction.log": "2d99818376d2408a1f6b73ac55073b017d2486b8ade6ad04a0c2c51f83e67ae7",
+    "backend-corpus-reproduction.py": "d861c4b3879aace3ade57aac872a8474f41aacb4328e5a860ecfba52f235eae4",
+    "backend-coverage-acceptance.json": "2a7fdfdcdc22e33cf5a14f3a640a2366205c0071256eeea43e69d43e7eca9508",
+    "backend-coverage-final.json": "db2a5d72d4d716590f8ba37c9fd19efa88cb70530a708c2ce92d3cf0f954f47c",
+    "backend-coverage.json": "985d93c26c8ab4af535790aec9c3f1e4cfae61d4f8c8139fcb9c606392d47c54",
+    "backend-demo-acceptance-command.json": "5687a800896a1d4f3d1cdb2678455f2e08f44f0005da2fd2a375a26b8bd45cc2",
+    "backend-demo-acceptance.log": "d3fbcc0172533929097ad01a9276b6a5e4b46e7aab5150d87091bdedbb693afc",
+    "backend-demo-command.json": "64830c91bd4e38e05125a0c3a943e23692df36a115871cc6ac5db982dc864957",
+    "backend-demo.log": "bb726bd7c9951f87431a62cb5cae994ff1ff836109842fa6fcc3be94eb31c002",
+    "backend-live-020258_855184-authenticated.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend-live-020258_855184-expiry-restart.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend-live-020258_855184-fresh-quota.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend-live-020258_855184-policy-lifecycle.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend-live-020258_855184-quota-restart.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend-live-020258_855184-results.json": "7ab23f367478ed8326c87e718304959e454ecc0759ae547ec594cd0bfa2a5caa",
+    "backend-live-020850_626488-authenticated.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend-live-020850_626488-expiry-restart.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend-live-020850_626488-fresh-quota.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend-live-020850_626488-policy-lifecycle.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend-live-020850_626488-quota-restart.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend-live-020850_626488-results.json": "9e1208299cf07143ebe7091b0ad54b7f54677b97dd6160bbc043a1e252e029b3",
+    "backend-live-authenticated.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend-live-checks.py": "20ed0ea334bc49a890fc9a1ef682c5582fd61daf58384ef2b63de4de456f2b23",
+    "backend-live-console-final.log": "8cb22201608d523176a663688412315b4d8457e5280e558f1cc49574a39b6c90",
+    "backend-live-console-second.log": "ef9c07db5142790dedde94e69cedeb994366d7b43d7c949982b5dc4c3b0dffd1",
+    "backend-live-console.log": "9f312d50032133c64f3e59a4e0962db6efdaf8415d441401dc37eba0928e064f",
+    "backend-live-expiry-restart.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend-live-fresh-quota.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend-live-policy-lifecycle.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend-live-quota-restart.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "backend-live-results.json": "e859af3265f1722c4a2eb8f04333d7b023465c826d05d16f74124b4eac34e8a3",
+    "backend-nonfinite-red.log": "57c112f18dbb747c0aad7da2ad2f270bb888192e5b9682b39b367ca940c20cc2",
+    "backend-owned-green.log": "d3854ce66212a4cbc7a872e348cd07b46aa98c4a7736a99b0cff2451c887d2e7",
+    "backend-suite-command.json": "1d662b0ed51336656f2b5ef8194246c819dd329eb9d1b5a7ce4473410f7c20ef",
+    "backend-suite-final-command.json": "fb31a264f1176b7ffebf0d40371d8d74d106215f85f04e42f8f8424798ddb144",
+    "backend-suite-final.log": "1943c2ac0108c78aba0c29f0c7c149f066821ac65045bf60afcbe6fce4a3060d",
+    "backend-suite.log": "d2284db20ee80cd25695a538c0eefaea154b84cbc42d22c279a8fdaaca9f7d56",
+    "bandit-acceptance-command.json": "5b8121254ae24425660ea9252689f9d75057f3f337c1c3a7c623067465ad243d",
+    "bandit-acceptance.json": "efafba474c8c9ccb7f13f941681d314dedac0bd856b4a2b68d4aa4bb947ae7ef",
+    "bandit-acceptance.log": "c577975254bc56dcd47a929b23576d844262d524df919b81790c49e05659579d",
+    "bandit-command.json": "ccb4f60204f1bd59b415864958aebf220dda713aa53850024e9f0b1f1ad41ca9",
+    "bandit.json": "99b8e8ca0bbda74e40e2b557048d7756a4b7903f60761786d59b6dbf119cebfa",
+    "bandit.log": "dc07754942c5ab6ec01b4b448324ba56e0466bf5fcba0e7c8eb93a6dbe9cb403",
+    "capture_source.py": "33552d7587f3309046fc44c9765288160ba3314c216338c149f41d0e5a85f446",
+    "finalize_manifest.py": "b0e6e01f91f5f8455789b6a00b18c84187940ad02b44f3da57b71a9eaa69bdb3",
+    "frontend-REPORT.md": "da1869958d4ef48fe1873d26129033bccda751c3da4d62e957b5a30bfaacad67",
+    "frontend-VERIFICATION.json": "08b61ac1f5e9d0a89aea7474ff831bad03e2d18e545aee93811b11e301452524",
+    "frontend-before-observations.json": "79f89916fa8dfff738276d7d5c5b8b5da3ebde2ff201a1b05db88947584d3f12",
+    "frontend-build-acceptance-command.json": "731adb6cd1080d88cae078aee389871a6077da8e9d5f745e5a517900489507ad",
+    "frontend-build-acceptance.log": "f2f5ef39dda48b8c363c0878d4eaca53c97abf72240681e051ab2fbcd79adb1e",
+    "frontend-build-verified-command.json": "934f2e469e4b2a0be31d8acdb86a0d65a14c3d1756d775f0b5a320b3807db3cd",
+    "frontend-build-verified.log": "9f4f527f999f13d60b4cd52c9bb507233068862e132df150e846b8250c3610d4",
+    "frontend-build.log": "191fe97f0b98fdb410991dc53f453dedf08c21edabc44e33512e1a2bc7318f7d",
+    "frontend-create-evidence.mjs": "cff9ae545e762bb0cf2d1b19b065b74e4a70a3c1abe3c82534ebed946b523003",
+    "frontend-fixture-browser.log": "d32f43039a9c952a172b0a63c58886bd804ebf411ac96c24d3ee48f10a05fb31",
+    "frontend-fixture-disconnected-375.png": "d9b0dd5a9a4c7da428e030b426d00f794ca9296ce9667c45be7c1d2f95f2dd2d",
+    "frontend-fixture-security-1440.png": "cbc1abe720dfe06060f2237841139f0cff79326ec91a564ce3b1e9c35c47b536",
+    "frontend-fixture-security-375.png": "2285d53c9043c5c985a04c88c7fd907b2a4da5eff08984ad802c31f6cc2f0825",
+    "frontend-fixture-security-768.png": "34b85d0d6d28cd826d800bf6b7d36df11f9b14384836b9139991756daa30cd0c",
+    "frontend-integration.log": "0d68b317d39bfeca8efcd0bfdc8e9a194bd0f98f66a15b82f5441aaa915508d3",
+    "frontend-live-disconnected-375.png": "7336b0c1b6e76920a17bcadb2938784c5cb51b31466e5e8a1077cba8bf53e94c",
+    "frontend-live-quota-375.png": "ec4c2ba1dc3aa8dd1f98a608c0590487ff14cb079d3d59f8c20cb349ee955223",
+    "frontend-live-security-1440.png": "043e229caeeaf1c0ca41bd1c4a515fbada4abaca1b9cc2da0207ac850e5060a3",
+    "frontend-live-security-375.png": "8ac5b22c58e3648138d452fe82224cc518514c36082b5bac6d1eb8b11253d9cf",
+    "frontend-live-security-768.png": "b1c2f4c8c72d720f534b55ed9cb68b9796d267b7573976a967a5394050f78f9c",
+    "frontend-offline-browser-verification.json": "c2a792e311870ab36f406f8b3c12616acf6c60ef1757200f004f93f4d35a051c",
+    "frontend-offline-browser.log": "c7452d685184beec1417fe09e101bb53c816a8a1469162017fa221a1be4c2211",
+    "frontend-offline-disconnected-375.png": "7336b0c1b6e76920a17bcadb2938784c5cb51b31466e5e8a1077cba8bf53e94c",
+    "frontend-offline-integration.log": "6d5c978b42aae078efe8048f502fc9cf525fb521bfeda6803c3f55ef47aa0a1d",
+    "frontend-offline-quota-375.png": "e839d1cfd73cd95f6ae8c146dcf9d27176af58766fa08bb970615e625a5d8650",
+    "frontend-offline-security-1440.png": "dfea2d57b66625a0509a997c6e63962a07472e3629c1e1414a1a163a3ca440a1",
+    "frontend-offline-security-375.png": "0f49d85a84c9f4e70f520dd14e8ea81d5c0fe1ba1fba075b4482a810c0924d2d",
+    "frontend-offline-security-768.png": "96a00e5eba8df43cbf2604fffe04be02bd3f06b0dc69b96dbc1ce5f408142662",
+    "frontend-real-browser-denied-cancellation-observer-failed.log": "ea71964d53c10898f387f133c0713d6243feabf42246f50d277d6f2b7ae55309",
+    "frontend-real-browser-fixture-favicon-failed.log": "4a3f2ea70aac9cbf6243f3ab6948242df7cdc3b5802ff50f3f910c5a07113e1f",
+    "frontend-real-browser-harness-isolation-failed.log": "58f32ea9a526c3b658c2ec8b3be25440676127a1c1c1c99cf6e60f180aa0fe3e",
+    "frontend-real-browser-normal-before-offline-harness.json": "fde93d2b64dcbe5bba904dbcb518f30984605f73a7ba979f6dff2c7e32ca5764",
+    "frontend-real-browser-normal-before-offline-harness.log": "bb904a139c30f1960f039cbfd280b6e3c2750c01b7549e65f4f5a89536d78534",
+    "frontend-real-browser-verification.json": "1b19a33e3d68dfeee33aeb98710a0c52228a85023aeef456b375ede21d2d5b32",
+    "frontend-real-browser.log": "f8c4dfeec85ab672515bbb384e6b938a5311b6aee8b9bce400b912b085049035",
+    "frontend-scratch-cleanup.json": "8a8cda6218b8ff199092d7cec12d0a7d0a53a734e1817aa62d35bc08572cc5ed",
+    "frontend-sensitive-fields-before.log": "4d5dff29e154d67f4b21c7403c9d5a73e9a9042a695fbe7b1705f035085ae61e",
+    "frontend-typecheck-acceptance-command.json": "ae99207032736a367a6e557673d4e59be321c644f1d1d3f92c3ad526eb35f841",
+    "frontend-typecheck-acceptance.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "frontend-unit-coverage.log": "e5e5c0ba3b54d7c4df8c6f9cd5160e278d74daa362ea909ddfa909516e09c297",
+    "primary-encoding-after.log": "bbca6457721a69e99515d1ba8a274a1099f6b9b4bf70b9a57b3e6f6d1de40080",
+    "primary-encoding-before.log": "e22cd1017639602fd559fe45636a7bb865b8201225cff2a5bc1629c8fc6ba12b",
+    "primary-large-after.log": "024fd6275e8e7c0c88a974f17584768f315b0561925512ed2056b620a5b63c0c",
+    "primary-large-before.log": "deb5c7b54bd1d3c2052bd7f9786df71d8480cbd36326863e199d11a595f046cd",
+    "reviewer-baseline.json": "d4515a25ec130a874d7b505473b9c1c475d391b43604fb2c09a2f159802ea627",
+    "reviewer-challenges.py": "2218cca0736f18b39b542c91d6b0b4b94b758277c767790221c6b3036476dece",
+    "reviewer-corpus-nonfinite-after.json": "5ecc64880e7aca7b3f13309cd4e2fad22e90b2c3b32a6354e089d1a780c863b7",
+    "reviewer-corpus-nonfinite.py": "cc04c5d56f6e0d20636456a23acc5e522a9ed5f7e17f524ca0944fe06d1353fa",
+    "reviewer-dependency-verification.json": "d17e18652c966cbf7a84281c82b2e7377667aab6129d9eb5633af3f3e362ddb2",
+    "reviewer-encoded-after.json": "39883b956ca2cf246d9908cb9fa4429c31b8c759d38944a9f401b84bf01adcfe",
+    "reviewer-encoded-probe.py": "d411053f542e9859d41b5d8a217ba8100474fb5e703a62b9074d6e70fa043147",
+    "reviewer-expanded-secrets.json": "ff59d5ea2e25df8356ca39ac76a7c9834eaec02de81393afe49d764a0c08ea89",
+    "reviewer-expanded-secrets.py": "fc76e89ed10d45f518d66811552d47906230bc34538cc8a555697b1095f8ea60",
+    "reviewer-final-probes.json": "84eb9d959b7dc2f5c08a7e9d9c13ca8c23cefdd16ffcb5d1166b12e486b8eb7e",
+    "reviewer-final-probes.py": "770246e014eaceec878e10ddef5dde5f4e829f37222a0166044781d8ad092f6d",
+    "reviewer-final-state.json": "222a453246e6b9c72992955a29dee52441d4d7d297c79890a7faf95b6a2263b5",
+    "reviewer-final-state.py": "ac2b6f619dc170bf13ed18d6ec3992ea01afa96a5129c3db0451b7acf9ad067f",
+    "reviewer-focused-final-tests.json": "62547e6f6c248b80cf27082c745229a50df2ce670dc0f0d986c16d32bee08550",
+    "reviewer-focused-tests.json": "888212313f81749420cfdb351ccb1c7b466fda5e15c75e052599286de8db365d",
+    "reviewer-frontend-probes.json": "86a5ac34d5b401d59ad57da51bb8d34a4ff1a4342e5157eee97338365605d03d",
+    "reviewer-frontend-probes.mjs": "d3bd13193f68609276c03bd112b0d61c2e6fda233fe8fc9352306a78a2b7ea57",
+    "reviewer-harness-review.json": "6b744dd55ed8eee4053fb17d05399a9820eee8af24e60e56c91714d8488e2291",
+    "reviewer-http-challenges.json": "176b1a60900ea87166d953284d219fe30b5305f3ff854d8286349cb19644ff0d",
+    "reviewer-independent-review.md": "d2c9560380b6688eab3432dddd654b872e1fcc852f483afe9f927f475340991a",
+    "reviewer-large-encoded-after.json": "064c545b652cc2ec167b4aeb2b7598413b4b4c583b60281d624cb1729bbce043",
+    "reviewer-large-encoded-before.json": "c9b3da05f8395b0dd580ac8c079d5fd85cc6d17dc98860d249e1cf2dc666957b",
+    "reviewer-large-encoded.py": "1941042e6e33269ab41aa0a191ed3f46c78890ad419dbb0f86fc4af8aaecce27",
+    "reviewer-npm-audit.json": "24bf2f5fe3cd66975c7f7ea3eae4303973452eaa66955dbe0b8310729c56dce2",
+    "reviewer-npm-inventory.json": "36746fb6087bb368dd12183f028a14552f0fb7da1a7b754d24ae703b5f611747",
+    "reviewer-npm-inventory.mjs": "0b7c92a8497ff03838ad271c8c66925ddcb2bb2a44d659a78f529d38ceddde84",
+    "reviewer-pip-audit.json": "f677512d51d82c2169fc260e093a86afc9b48a48d0e896e0211f083c81c85fd7",
+    "run_command.py": "8dc739a72f4962d193985b04db3324eab1620df105951afb29703eba45f0ee88",
+    "source-identity.json": "aca85e790c722fa0860a0932bfc063011531f07c21dfd827900278bee6e2103a",
+    "working-tree.patch": "d8be38e97a90cf6c9b6d0276704ddb46ab2b2efa007f99e9cc8490648ade3333"
+  }
+}

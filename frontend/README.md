@@ -16,37 +16,9 @@ npm run dev -- --port 5173 --strictPort
 
 Start the backend separately following `../backend/README.md` and its locked requirements. Do not stop another developer's server. Choose unused ports and use `--strictPort` so Vite cannot silently move.
 
-For an isolated local backend, from the repository root:
+Configure the backend using [backend/README.md](../backend/README.md). Its default authenticated mode requires private credentials and shared state. Enter your operator-provided credential under **API credential**. It stays in memory, travels in Authorization, and clears on disconnect/reload. Cookies are omitted and API redirects refused. Each preset must match the credential's identity. Use explicit loopback `local-demo` for the multi-identity simulation checks.
 
-```powershell
-python -m venv frontend/.integration-venv
-frontend/.integration-venv/Scripts/python.exe -m pip install -r backend/requirements-lock.txt
-$env:PYTHONDONTWRITEBYTECODE='1'
-frontend/.integration-venv/Scripts/python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 8010
-```
-
-In a second terminal, from `frontend/`, set `AEGIS_BACKEND_URL=http://127.0.0.1:8010` and start Vite on an unused port. The backend proxy handles `/api`; it avoids changing backend CORS for isolated frontend ports.
-
-Configuration:
-
-| Setting | Purpose |
-| --- | --- |
-| AEGIS_BACKEND_URL | Vite development proxy target; default http://127.0.0.1:8000 |
-| VITE_API_BASE_URL | Optional browser API origin, set before build; empty uses same-origin /api |
-| AEGIS_API_URL | Live HTTP acceptance target; default http://127.0.0.1:8000 |
-| AEGIS_FRONTEND_PORT | Browser-suite Vite port; default 5174, strict and never reused automatically |
-| AEGIS_FRONTEND_URL | Explicit existing frontend URL; browser suite then starts no server |
-| PLAYWRIGHT_CHANNEL | chrome or msedge for an installed browser; otherwise install Playwright Chromium |
-| AEGIS_REAL_BROWSER | Set 1 for the separate real browser journey; remove for fixture browser tests |
-| AEGIS_QUOTA_FRONTEND_URL | Optional second frontend against a fresh isolated two-request policy; enables the real quota browser check |
-
-Production hosting must proxy `/api` when VITE_API_BASE_URL is empty. A direct API origin requires backend CORS permission. Environment settings are not credentials.
-
-## Checks
-
-Fixture unit/component tests and production build:
-
-```powershell
+```sh
 npm test
 npm run test
 npm run test:coverage
@@ -54,7 +26,11 @@ npm run build
 npm audit
 ```
 
-Fixture browser suite (intercepts API responses only in test code):
+The original multi-identity live check uses `AEGIS_API_URL` against an explicit `local-demo` backend and creates real synthetic events. `npm run test:integration` checks those events and presets through the adapter. For authenticated verification, build and run `node scripts/verify-security.mjs` with `AEGIS_TEST_PYTHON` set to the backend interpreter; it starts fresh services and tests credential use, event ownership, disconnect and the rejected hostile-origin trigger. Unit/default browser fixtures never enter application modules.
+
+Response cleanup regressions run with `npx vitest run src/api-streams.test.ts`. A bounded real loopback HTTP peer independently observes socket disconnection for finite, oversized, endless and stalled 503 bodies, including missing or misleading Content-Length: `npx vitest run --config vitest.streams.config.ts`. The HTTP tests also run with the existing integration suite and need no backend or credentials. If the sandbox prevents the default Vite config bundler from reading parent directories, add `--configLoader=runner` to the Vitest/Vite command.
+
+For the original simulation journey, set `AEGIS_REAL_BROWSER=1`, use an explicit `local-demo` backend and set `AEGIS_BACKEND_URL`, then run `npm run test:e2e`. Its Vite server uses 5174; add that exact origin to `AEGIS_ALLOWED_ORIGINS`, or select an already configured origin using `AEGIS_FRONTEND_PORT`/`AEGIS_FRONTEND_URL`.
 
 ```powershell
 $env:PLAYWRIGHT_CHANNEL='chrome'
@@ -64,19 +40,17 @@ npm run test:e2e
 
 If no supported browser is installed: `npx playwright install chromium`, then remove PLAYWRIGHT_CHANNEL.
 
-Separate real HTTP and browser checks, with a running backend and unused frontend port:
+Source of truth: [API contract v1.1](../docs/API_CONTRACT.md), including the security-remediation extensions.
 
-```powershell
-$env:AEGIS_API_URL='http://127.0.0.1:8010'
-$env:AEGIS_BACKEND_URL=$env:AEGIS_API_URL
-$env:AEGIS_FRONTEND_PORT='5174'
-$env:PLAYWRIGHT_CHANNEL='chrome'
-npm run test:live
-npm run test -- --config vitest.live.config.ts --reporter=verbose
-$env:AEGIS_REAL_BROWSER='1'
-npm run test:e2e
-Remove-Item Env:AEGIS_REAL_BROWSER
-```
+- Evaluate uses the contract's exact fields and canonical decision/classification/role values. All response payloads cross runtime validation before rendering. Extra event fields (including prompts and output) are discarded.
+- Events currently accept either a direct event array or `{ events: [...] }`, isolated in `src/adapter.ts`. Confirm the intended envelope. No other envelope is silently converted to an empty list.
+- Nullable context (`request_id`, user, role, action, resource, classification and destination) is normalized to absent values and renders `Not reported`. Action is optional for backend versions that omit it. ID, timestamp, category, decision, policy, reason and finite nonnegative measured latency remain required. Invalid enums and envelopes still produce contract errors.
+- Stats, policy status and red-team response schemas are unspecified. Their typed client methods return validated JSON values pending agreed field definitions. Dedicated summary UI is deferred until the actual schemas are available.
+- Approval body is `{ approve: boolean }`, sent with the bearer credential. The backend requires SECURITY_ADMIN; the resolver contract is tested. An approval UI remains deferred.
+- Collections are capped at 100 and have bounded strings. Resolution actor/approval ID are rendered separately from requester. Response bodies are capped at 512 KiB; other JSON has depth/node limits. Audit strings are rendered as text.
+- Presets use the registered public resource `public/market_summary` and manager `manager_1`. External and synthetic shell proposals begin with an authorized manager read so they reach `external_exfiltration` and `tool_guard`. Each preset records its expected decision and policy separately from the actual backend response. The frontend only submits proposals to the evaluation endpoint; it has no tool execution path.
+- Event detail must return an ID matching the selected event, and evaluation must return `event_id`, policy, reason and measured nonnegative latency.
+- Transport failures display `Backend unreachable`; non-2xx responses show the endpoint and HTTP status. Every failed response aborts its transport and initiates cancellation of unread body data before returning the safe error. Cancellation is best effort and never awaited, so a stalled or rejected cancel cannot hold the request open; cleanup rejections are handled, reader locks and abort listeners are released, and the ten-second timer is cleared. Successful responses retain the ten-second deadline and 512 KiB byte limit. Error bodies are never decoded or printed. Invalid schemas display a contract error. Failed refreshes clear rows; selection requests are guarded against stale responses.
 
 Real checks send proposals, create audit/approval records, consume real sliding-window quotas, and run the committed corpus. Use a dedicated backend process with the default policies for reproducible runs. They never intercept responses. Repeated runs against a heavily used process can legitimately throttle; that is a failure to meet demo expectations, not a reason to substitute results.
 

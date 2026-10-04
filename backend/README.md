@@ -1,174 +1,74 @@
-# AEGIS backend demo
+# AEGIS backend
 
-One Python process, deterministic policy decisions, no external model or paid API.
-The shared boundary is `docs/API_CONTRACT.md`, now documenting exact wire shapes and nullability.
+The gateway evaluates synthetic proposals deterministically. It never executes tools, loads confidential documents or calls a live model. The interface is [API contract v1.1](../docs/API_CONTRACT.md).
 
-## Start from repository root
+## Authenticated local setup
 
-Python 3.12+ is required. Install dependencies once (internet needed for installation);
-all evaluation, red-team cases and offline chat then run without network access.
+From the repository root, using Python 3.12+:
 
 ```powershell
 py -3.12 -m venv backend/.venv
 ./backend/.venv/Scripts/python.exe -m pip install -r backend/requirements-lock.txt
+./backend/.venv/Scripts/python.exe -m backend.credentials
+$env:AEGIS_PROFILE = 'authenticated'
+$env:AEGIS_AUTH_FILE = (Resolve-Path '.aegis/credentials.json').Path
+$env:AEGIS_STATE_PATH = Join-Path (Get-Location) '.aegis/state.sqlite3'
 ./backend/.venv/Scripts/python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --no-access-log
 ```
 
-Linux/macOS: use `python3 -m venv backend/.venv`, then
-`backend/.venv/bin/python` in place of the Windows interpreter path.
-Run a single worker. Events, approval records and budget counters are in memory,
-reset at process restart, and are not shared across workers. The event buffer retains
-the newest 2,000 events; lifetime decision counts may exceed retained events.
-Access logs are disabled to avoid recording credentials accidentally placed in URLs.
+The provisioner creates independent cryptographically random credentials in an exclusive file; it never prints their values or overwrites operator work. Keep `.aegis/` private to the operator account using filesystem permissions (on Windows, inspect its NTFS ACL). Git ignores it. Share only each user's own credential and protect policy files with the same operator boundary. Rotate by replacing the file privately and restarting every worker; removing identities from the policy denies subsequent admissions. These are service tokens, with no password login, session/MFA or identity-provider integration.
 
-## Automated verification
+In `frontend/`, run `npm ci` and `npm run dev`. Enter your token in **API credential** and choose **Connect**. It stays in memory until disconnect/reload. A preset must match its credential: a manager token cannot impersonate an analyst. An analyst requesting the restricted portfolio receives BLOCK; an authorized manager requesting INTERNAL receives ALLOW; RESTRICTED to EXTERNAL blocks regardless of role.
+
+CLI example (keep credentials out of URLs and Git):
+
+```powershell
+$credentialMap = Get-Content '.aegis/credentials.json' -Raw | ConvertFrom-Json
+$headers = @{ Authorization = 'Bearer ' + $credentialMap.manager_1 }
+$body = @{ action='read'; resource='portfolio/current_positions'; classification='RESTRICTED'; destination='INTERNAL' } | ConvertTo-Json
+Invoke-RestMethod http://127.0.0.1:8000/api/security/evaluate -Method Post -Headers $headers -ContentType application/json -Body $body
+Invoke-RestMethod http://127.0.0.1:8000/api/events -Headers $headers
+```
+
+User/role come from the verified credential and current policy registry. Conflicting claims block. `X-Aegis-User` grants nothing. Users read only their own events; SECURITY_ADMIN may inspect all sanitized events, global stats, policies and red-team results, run red-team cases and resolve approvals. Admin status grants no business-resource access. Health is public liveness only; docs/OpenAPI are disabled.
+
+## Explicit synthetic demo
+
+Set `$env:AEGIS_PROFILE='local-demo'` to exercise selectable demo identities from a loopback client. Public simulator evaluations and metadata reads are available; they do not authenticate an originating user. Admin writes still require a configured admin token. Without a state path, this profile uses bounded memory and one worker. Never publicly proxy it or connect real data.
+
+## Configuration and state
+
+`AEGIS_POLICY_PATH` selects YAML. `AEGIS_AUTH_FILE` selects the private identity-to-token JSON map; `AEGIS_AUTH_TOKENS` can instead supply that map as an environment value. Tokens must be unique URL-safe strings of 32–256 characters; use the generator rather than human-chosen values. Invalid/duplicate credentials fail startup. The default profile is authenticated; protected requests refuse missing state configuration (503) or missing/invalid credentials (401).
+
+`AEGIS_STATE_PATH` enables atomic SQLite state shared by workers on one host and across restarts. All workers must use the same absolute local-filesystem path, policy, credentials and code. Quota reservations, approval changes and protected audit updates commit before success; state failure returns sanitized 503 without output or an empty-quota fallback. Separate databases per worker, network filesystems and distributed deployment are unsupported. State retains the latest 2,000 protected events, separate bounded rejection telemetry, saturating lifetime counts, sliding usage windows, bounded approvals and latest red-team results. It is a bounded durable buffer, not an immutable forensic archive. Production needs retention/export/backup and recovery verification. Persisted windows use wall time; maintain a trustworthy host clock. Clock rollback expires pending approvals conservatively and grants no fresh admission allowance.
+
+Before policy/body work, admission allows 120 requests per ten seconds without a configured bearer credential, and separately 1,200 requests globally / 120 per credential principal per ten seconds. It covers health, preflight and administrative reads too. Refused requests return sanitized 429 plus Retry-After: 10. The fixed limits are defined in backend/admission.py; changing them requires consistent worker code and verification. IPs and forwarding headers are ignored for quotas; at most 1,002 keys exist. Cross-origin browser preflights share the untrusted quota; the recommended same-origin frontend proxy keeps authenticated calls independent of that bucket. A stolen credential can consume that principal's allowance. These bounds control accepted work and shared-state cardinality, not all incoming sockets or SQLite contention. Host/ingress connection limits remain a deployment requirement.
+
+Unauthenticated/access/body/schema rejection floods and public demo evaluations cannot evict protected evaluations or approvals. Rejection telemetry uses a separate SQLite security_controls row, up to 256 sanitized samples and at most 16 new samples per ten seconds, with fixed-category counts and dropped/overwritten-sample counts exposed to admins under stats.abuse. Early admission refusals count without event sampling. Protected decisions include authenticated BLOCK and THROTTLE as well as successful evaluations and approval evidence. Public demo event IDs and rejection IDs may no longer be retrievable when their sample is omitted or rotated. Legacy retained events are grandfathered into protected capacity without trusting old classification strings; metadata reports how many were preserved.
+
+SQLite uses immediate transactions and a five-second lock wait with full synchronous commits. Telemetry only rewrites its small bounded row; protected writes use the existing bounded gateway row. Database page allocation may keep a prior high-water mark rather than shrink automatically; growth from these event/limiter pools is bounded. Budget keys are capped at 1,000 live reservations and expire without clearing active quotas. Do not delete or recreate state to clear limits. Locked, unavailable or corrupt state produces refusal with no-store and all API security headers, including middleware body errors; the outage fallback never audits into the failed store. Invalid persisted schemas are refused while preserving stored bytes. Failures after response headers start close the response and cannot emit a second status. Stop all workers before operator-controlled backup/recovery/maintenance; protect database/credentials with filesystem ACLs. Recovery remains a production gate.
+
+Hosts default to localhost and IPv4/IPv6 loopback; `AEGIS_ALLOWED_HOSTS` is the operator-controlled comma-separated list. `AEGIS_ALLOWED_ORIGINS` lists exact frontend HTTP(S) origins without paths, wildcards or null origin; defaults are localhost/127.0.0.1:5173. For the optional live browser suite on 5174, explicitly include its origin. Actual browser requests are checked in addition to CORS, including bodyless POSTs. Any future proxy needs deliberate forwarding trust. API/error headers include no-store, nosniff, frame denial, no-referrer and a restrictive API CSP; configure effective frontend/ingress headers separately.
+
+## Enforcement and audit
+
+Invalid/missing/duplicate-key/aliased/oversized policy fails closed. Evaluation captures config/digest together; pending approval cannot adopt a concurrently reloaded digest. Each red-team run pins one policy and reports its version/digest. Trusted classification, registered roles, destination restrictions, exact allowlisted tool proposals and conservative character quotas remain authoritative. Only matching read/export resource proposals are admitted; tools never execute.
+
+Masking recognizes temporary ASIA AWS keys and one bounded base64/base64url decoding layer containing recognizable credential patterns or a configured service token embedded in surrounding text. Encoded candidates cover the full 16,000-character API text limit, and each credential substring search is limited to 32,768 comparisons with conservative masking on exhaustion. Configured opaque service tokens are recognized by digest/length, including tokens embedded in longer URL-safe audit metadata or output. Only digest/length pairs remain in memory for this check. Unknown formats, recursive encoding and arbitrary encodings remain outside this masker; authoritative data boundaries are still required. Raw prompt/output/source are excluded from audit and pending state. Resolution records preserve requester/action and add actor/approval correlation. Denied privileged attempts and replay/expiry failures are audited. Resolution expires after five minutes and is evidence only, without execution or a reusable grant.
+
+Body safeguards use the installed FastAPI MIME parser for application/json and accepted application/*+json variants, with duplicate-key rejection at every level. Case/parameters and valid UTF encodings preserve framework behavior. Nonempty missing/empty Content-Type is sanitized 422 with strict FastAPI parsing; bodyless red-team requests remain supported. Actual chunks enforce 64 KiB even with false/missing Content-Length; nesting32, nodes10,000 and the full ten-second deadline apply before endpoint parsing. Duplicate Content-Type headers are refused. See the API contract for canonical 422/413/408 BLOCK responses and storage-outage precedence.
+
+Red-team runs require SECURITY_ADMIN, admit one run per ten seconds and do not hold the live gateway lock. Cases use isolated quotas; invalid corpus returns 503. `unexpected_allows` counts expected BLOCK / actual ALLOW.
+
+## Verification
 
 ```powershell
 ./backend/.venv/Scripts/python.exe -m pytest backend/tests -q --cov=backend --cov-config=backend/.coveragerc --cov-report=term-missing
 ./backend/.venv/Scripts/python.exe -m backend.demo
+$env:AEGIS_TEST_PYTHON = (Resolve-Path 'backend/.venv/Scripts/python.exe').Path
+node frontend/scripts/verify-security.mjs
 ```
 
-The second command exercises the API in process and prints real decisions, measured
-latencies and the actual red-team summary. It does not seed a separately running server.
-The tested dependency set emits a Starlette deprecation warning for httpx TestClient;
-tests remain executable with the committed lock file.
+Build the frontend first. The browser verifier uses fresh ephemeral loopback services, synthetic credentials and headless Chrome. Set `PLAYWRIGHT_CHANNEL=chromium` after installing Playwright Chromium when Chrome is unavailable. Historical characterization tests in `frontend/audit/` describe the old revision and stay outside the active regression suite.
 
-## First dashboard integration
-
-Base URL: `http://127.0.0.1:8000`. CORS allows localhost/127.0.0.1 on port 5173.
-Send the shared contract example unchanged:
-
-```powershell
-$body = @{
-  user = 'analyst_42'; role = 'ANALYST'; action = 'read'
-  resource = 'portfolio/current_positions'; classification = 'RESTRICTED'
-  destination = 'INTERNAL'
-} | ConvertTo-Json
-Invoke-RestMethod http://127.0.0.1:8000/api/security/evaluate -Method Post -ContentType application/json -Body $body
-Invoke-RestMethod http://127.0.0.1:8000/api/events
-```
-
-For the ALLOW control use `user: manager_1`, `role: PORTFOLIO_MANAGER`.
-For the unconditional exfiltration block use that same manager with `destination: EXTERNAL`.
-
-Developer B integration details (full schemas are in the API contract):
-
-| Endpoint | Response shape / behavior |
-| --- | --- |
-| `GET /health` | `{status: "ok"}`; liveness, not policy readiness |
-| `POST /api/security/evaluate` | Contract fields: decision, policy, reason, event_id, latency_ms |
-| `GET /api/events?limit=100` | `{events: [...]}`, newest first; limit 1–2,000 |
-| `GET /api/events/{id}` | Event object directly; 404 if unavailable |
-| `GET /api/stats` | total_events, retained_events, decisions, latency_ms, budgets, approvals, redteam, unexpected_allows |
-| `GET /api/policies/status` | loaded, version, rule_count, last_reload, error |
-| `POST /api/redteam/run` | No body or `{}`; full actual run summary with results |
-| `GET /api/redteam/results` | Latest run; status `not_run`, `completed`, or `failed` |
-| `POST /api/approvals/{id}` | Body `{approve: true}` or `{approve: false}`; header `X-Aegis-User: security_admin_1` |
-| `POST /v1/chat/completions` | Non-streaming demo; messages plus required security context; choices and aegis decision metadata |
-
-These envelopes are documented here for the dashboard adapter; no shared-contract
-fields were removed or renamed. Decisions are HTTP 200 on evaluation, including
-BLOCK/THROTTLE. Malformed input returns HTTP 422 with a sanitized BLOCK event;
-an oversized body returns 413 with a sanitized BLOCK event. Display the backend decision directly.
-For authorized `output` evaluation, `sanitized_output` is returned as an additional
-response field; output contents never appear in event views. Blocked, throttled or
-pending requests never return output. Chat returns 403 on BLOCK/REQUIRE_APPROVAL,
-429 on THROTTLE, and a minimal completion on ALLOW/REDACT. The offline completion
-is explicitly labeled and contains no live portfolio data or model-generated answer.
-
-Events include a validated attempted `action` (`read`, `export` or null). Missing or
-malformed context is null on the wire, including request_id on ordinary requests;
-the dashboard should normalize these values for display. See
-[Developer B handoff](DEVELOPER_B_HANDOFF.md) for captured payloads and scenario inputs.
-
-## Real HTTP rehearsal
-
-Use an available isolated port if another developer already has a server running.
-Do not stop their service. In two terminals, from this checkout's root:
-
-```powershell
-./backend/.venv/Scripts/python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 18001 --no-access-log
-./backend/.venv/Scripts/python.exe -m backend.live_check --url http://127.0.0.1:18001
-```
-
-The rehearsal checks 19 real HTTP paths, asserting both decision and deciding policy,
-event/action/nullability, output sanitization, proposed tools, quotas, approvals and
-actual red-team results. It creates synthetic events and consumes that process's quota;
-use a fresh isolated process for repeatable evidence. It does not run a browser or
-prove frontend rendering. The test suite also starts and cleans up its own disposable
-backend on an automatically selected loopback port for this regression.
-
-For the dashboard's existing Vite `/api` proxy, set
-`AEGIS_BACKEND_URL=http://127.0.0.1:18001` when using that port. The existing proxy
-does not include `/health` or `/v1`; those require direct backend calls or a separate
-proxy configuration. No frontend files are changed by the backend handoff.
-
-## Identity and policy configuration
-
-This is a loopback demo and policy-evaluation simulator. Its identity selector is
-not a login mechanism: local callers can choose a registered demo user. The engine
-checks that the requested role exactly matches the trusted YAML identity registry;
-it never takes authorization from a prompt or LLM. Before serving real data or
-exposing the service beyond localhost, bind identity to an authenticated principal
-and protect audit/admin routes. No actual confidential document store is connected.
-
-| Demo user | Server-registered role |
-| --- | --- |
-| intern_1 | INTERN |
-| analyst_42 | ANALYST |
-| senior_1 | SENIOR_ANALYST |
-| manager_1 | PORTFOLIO_MANAGER |
-| security_admin_1 | SECURITY_ADMIN |
-
-`policies/default.yaml` is the trusted local policy catalog; set `AEGIS_POLICY_PATH`
-to select another file. Resource classification is authoritative: caller downgrades
-are blocked. Unknown identities/resources and missing or malformed context fail
-closed. SECURITY_ADMIN has no default business-restricted access. Non-public data
-cannot leave INTERNAL destinations; the RESTRICTED-to-EXTERNAL guard is hard-coded
-and independent of RBAC, prompt wording, semantic detection, or proposed tools.
-
-Edit YAML while running: each evaluation and status read checks file contents,
-validates the whole file, and replaces the snapshot only on success. Invalid,
-missing, duplicate-key, aliased or oversized files disable evaluation; status retains
-the last successfully loaded version with `loaded: false`. Repairing the file
-restores evaluation. Use atomic file replacement to avoid temporary partial saves.
-Policy changes do not reset consumed budgets. No semantic detector is enabled.
-
-## Tool, output and budget controls
-
-Only `read_resource` and `export_resource` proposals are recognized. Both require
-exactly `{resource, destination}` arguments matching the outer security context
-and the corresponding read/export action. Other tools or unknown arguments block.
-No proposal is executed, including approved proposals.
-
-Secret inspection redacts recognizable API keys, AWS keys, GitHub/Slack tokens,
-JWTs, credential assignments, bearer tokens, private keys and database URLs.
-Fixtures are synthetic. Pattern matching cannot identify every arbitrary secret;
-authorization and classification controls still run before any output is returned.
-Prompts, sources, model output, tool arguments and confidential contents are never
-retained in audits; validation errors omit their raw inputs.
-
-Quotas use a sliding per-user window with an atomic lock. Authorized requests reserve
-one request and at least one token-budget unit; units are the larger of declared
-estimated_tokens and prompt/source/output character count. Stats label this as
-`conservative_character_units`, not actual tokenizer usage or model billing. Denied
-requests are audited but do not consume model budget. Exceeding a budget returns
-THROTTLE without returning output. Lower `budgets.requests` to 2 for a quick demo.
-
-Authorized portfolio export to INTERNAL requires approval. The returned event_id
-is also the approval id. Approvals expire after five minutes, reject replay,
-and invalidate when policy changes. Admin approval records a sanitized audit event
-and resolves the proposal only; it does not grant business access or execute tools.
-Requests to export continue to require approval because there is no execution lane.
-
-## Real red-team evidence
-
-`redteam/corpus.json` includes positive and negative cases and is executed by
-the same Gateway implementation in an isolated instance with fresh counters.
-Runs do not drain live users' budgets or insert test cases into the live audit feed.
-Stats expose the latest actual run separately. `unexpected_allows` counts exactly
-expected BLOCK / actual ALLOW; all other mismatches count as failed cases.
-Missing/invalid corpora return 503 and a failed run status, never simulated success.
-Tests intentionally weaken a portfolio policy and check that the runner reports
-one unexpected ALLOW. Latencies use perf_counter; mean/max reflect retained live
-event samples, not a promised throughput benchmark or network round-trip time.
+Production remains gated: `AEGIS_PROFILE=production` is rejected. Verified TLS ingress, enterprise identity/MFA/revocation, least-privilege runtime/ACLs, protected audit retention/recovery, hosted repository controls and authorization at real data/tool sinks are still required before production/confidential integrations.

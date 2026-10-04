@@ -1,0 +1,13 @@
+{
+  "command": [
+    "C:\\Users\\admin\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+    "node_modules/vite/bin/vite.js",
+    "build",
+    "--configLoader=runner"
+  ],
+  "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman\\frontend",
+  "started_warsaw": "2026-10-04T02:17:24.006558+02:00",
+  "ended_warsaw": "2026-10-04T02:17:25.566317+02:00",
+  "exit_code": 0,
+  "log": "frontend-build-acceptance.log"
+}

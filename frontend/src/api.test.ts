@@ -2,11 +2,12 @@ import { describe, expect, it, vi } from 'vitest';
 import { createApi } from './api';
 import { normalizeEvent, normalizeEvents } from './adapter';
 import { event, result } from './test-fixtures';
-import { stats, policyStatus, completed, notRun } from './summary-fixtures';
+import type { EvaluateRequest } from './types';
 
 describe('typed backend adapter', () => {
-  it('accepts sanitized events and strips restricted extra payloads', () => {
-    expect(normalizeEvent({ ...event, prompt: 'secret', output: 'restricted' })).toEqual(event);
+  it('accepts sanitized events, omits benign extras and rejects restricted payloads', () => {
+    expect(normalizeEvent({ ...event, evidence_class: 'protected' })).toEqual(event);
+    expect(() => normalizeEvent({ ...event, prompt: 'secret', output: 'restricted' })).toThrow(/contract/i);
   });
   it('supports a direct list and an explicit events envelope', () => {
     expect(normalizeEvents([event])).toEqual([event]);
@@ -28,7 +29,7 @@ describe('API requests', () => {
     const responses = [[event], { ...event, id: 'a/b' }, stats, policyStatus, result, completed, notRun, { id: 'a/b', status: 'denied', resolved_by: 'security_admin_1', executed: false }];
     const fetcher = vi.fn().mockImplementation(async () => new Response(JSON.stringify(responses.shift())));
     const api = createApi('http://localhost:8000/', fetcher);
-    const request = { user: 'analyst_42', role: 'ANALYST' as const, action: 'read' as const, resource: event.resource, classification: 'RESTRICTED' as const, destination: 'INTERNAL' as const };
+    const request: EvaluateRequest = { user: 'analyst_42', role: 'ANALYST', action: 'read', resource: event.resource, classification: 'RESTRICTED', destination: 'INTERNAL' };
     expect(await api.events()).toEqual([event]);
     expect(await api.event('a/b')).toEqual({ ...event, id: 'a/b' });
     expect(await api.stats()).toEqual(stats);

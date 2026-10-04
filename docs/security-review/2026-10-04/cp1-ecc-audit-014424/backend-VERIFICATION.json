@@ -1,0 +1,143 @@
+{
+  "recorded_at": "2026-10-04T02:11:40.507229+02:00",
+  "scope": "backend ownership handoff; current full acceptance and one source manifest supplied by primary",
+  "head": "e52eb5059bba618db768c17353256d9eb516938c",
+  "working_directory": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+  "working_tree": true,
+  "owned_tracked_diff_sha256": "2042769766568ab1d19dcaa18745d56dd7747ffe1a671d84e1d3835fb0dab6dc",
+  "owned_file_sha256": {
+    "backend/redteam.py": "0295d9fe517753db7348e62ca3040ef43c6fa26ff394388e1843498796c02e77",
+    "backend/tests/test_cp1_lifecycle.py": "6bd2751ab03a9462465e47a861b5ce47970b53a6b92cb1633d48d7b79b022cd0",
+    "backend/tests/test_redteam_integrity.py": "92c004c949e3836853ab81d6b9af1c4b8bc6d0f8ab06993aa51f90e4b5e722b1"
+  },
+  "evidence_script_sha256": {
+    "backend-live-checks.py": "20ed0ea334bc49a890fc9a1ef682c5582fd61daf58384ef2b63de4de456f2b23",
+    "backend-corpus-reproduction.py": "d861c4b3879aace3ade57aac872a8474f41aacb4328e5a860ecfba52f235eae4"
+  },
+  "runtime": {
+    "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+    "executable": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\.worktrees\\b-dashboard-integration\\frontend\\.integration-venv\\Scripts\\python.exe",
+    "versions": {
+      "fastapi": "0.142.2",
+      "pydantic": "2.13.5",
+      "PyYAML": "6.0.3",
+      "httpx": "0.28.1",
+      "uvicorn": "0.54.0",
+      "pytest": "9.1.1"
+    }
+  },
+  "test_environment": {
+    "PYTHONPATH": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1"
+  },
+  "commands": [
+    {
+      "command": [
+        "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\.worktrees\\b-dashboard-integration\\frontend\\.integration-venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "backend/tests/test_redteam_integrity.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=line"
+      ],
+      "exit_code": 1,
+      "expected_failure": true,
+      "failed": 4,
+      "passed": 5,
+      "log": "backend-nonfinite-red.log",
+      "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+      "log_last_write_warsaw": "2026-10-04T02:01:20.360851+02:00"
+    },
+    {
+      "command": [
+        "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\.worktrees\\b-dashboard-integration\\frontend\\.integration-venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "backend/tests/test_redteam_integrity.py",
+        "backend/tests/test_cp1_lifecycle.py",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "--tb=line"
+      ],
+      "exit_code": 0,
+      "passed": 19,
+      "log": "backend-owned-green.log",
+      "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+      "log_last_write_warsaw": "2026-10-04T02:02:29.220378+02:00"
+    },
+    {
+      "command": [
+        "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\.worktrees\\b-dashboard-integration\\frontend\\.integration-venv\\Scripts\\python.exe",
+        "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\backend-corpus-reproduction.py",
+        "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman"
+      ],
+      "exit_code": 0,
+      "baseline_green_cases": 8,
+      "fixed_refusals": 8,
+      "log": "backend-corpus-reproduction.log",
+      "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+      "log_last_write_warsaw": "2026-10-04T02:06:37.038294+02:00"
+    },
+    {
+      "command": [
+        "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\.worktrees\\b-dashboard-integration\\frontend\\.integration-venv\\Scripts\\python.exe",
+        "-u",
+        "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\backend-live-checks.py",
+        "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman"
+      ],
+      "exit_code": 0,
+      "actual_http_cases": 54,
+      "log": "backend-live-console-final.log",
+      "started": "2026-10-04T02:08:50.627499+02:00",
+      "finished": "2026-10-04T02:09:05.001949+02:00",
+      "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+      "log_last_write_warsaw": "2026-10-04T02:09:04.995632+02:00"
+    }
+  ],
+  "final_actual_http": {
+    "report": "backend-live-020850_626488-results.json",
+    "status": "passed",
+    "cases": 54,
+    "owned_services": 5,
+    "all_owned_processes_stopped": true
+  },
+  "primary_final_backend_acceptance": {
+    "commands": "backend-acceptance-command.json",
+    "log": "backend-acceptance.log",
+    "coverage": "backend-coverage-acceptance.json",
+    "passed": 427,
+    "percent": 95.91
+  },
+  "independent_review": [
+    "reviewer-final-probes.json",
+    "reviewer-corpus-nonfinite-after.json",
+    "reviewer-focused-final-tests.json"
+  ],
+  "earlier_attempts": [
+    {
+      "report": "backend-live-results.json",
+      "status": "harness_cleanup_failed",
+      "application_cases_passed": 52,
+      "cause": "SQLite context did not close connection on Windows; handles now explicitly closed; owned old temp directory removed"
+    },
+    {
+      "report": "backend-live-020258_855184-results.json",
+      "status": "passed",
+      "cases": 52,
+      "superseded_by": "final54case run after decoder cap expansion"
+    }
+  ],
+  "limitations": [
+    "No enterprise identity or production integration",
+    "Approval expiry ages a stopped disposable state's timestamp rather than waiting five minutes",
+    "Policy readiness checks use the explicit loopback local-demo profile; authenticated invalid-policy requests refuse credentials",
+    "No live model or real business data",
+    "Fixture ASGI regressions are separate from real HTTP checks",
+    "No human A/B sign-off",
+    "No commit/push/merge/deploy by this subagent"
+  ]
+}

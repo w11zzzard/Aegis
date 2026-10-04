@@ -10,7 +10,7 @@ from backend.main import ROOT, create_app
 def client(tmp_path):
     policy = tmp_path / "policy.yaml"
     policy.write_bytes((ROOT / "policies/default.yaml").read_bytes())
-    with TestClient(create_app(policy)) as client:
+    with TestClient(create_app(policy, profile="local-demo", auth_tokens={"security_admin_1": "a" * 48}), base_url="http://localhost", client=("127.0.0.1", 50000)) as client:
         yield client
 
 

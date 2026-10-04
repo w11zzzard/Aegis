@@ -1,0 +1,28 @@
+{
+  "requests": 2050,
+  "statuses": {
+    "401": 240,
+    "429": 1810
+  },
+  "elapsed_seconds": 12.725,
+  "workers": 2,
+  "restart_owner_and_admin": "PASS",
+  "cross_user": "404",
+  "retention": {
+    "protected_limit": 2000,
+    "protected_retained": 1,
+    "rejection_limit": 256,
+    "rejection_retained": 32,
+    "legacy_preserved": 0
+  },
+  "abuse": {
+    "admission_denied": 1810,
+    "rejections": {
+      "api_access_denied": 240
+    },
+    "dropped_samples": 2018
+  },
+  "limiter_keys": 5,
+  "sqlite_bytes": 36864,
+  "scope": "Synthetic credentials; ephemeral loopback workers and SQLite; bounded sequential flood."
+}

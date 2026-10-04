@@ -24,6 +24,7 @@ export function SecurityEventTable({ events, selectedId, onSelect }: { events: S
 export function EventDetails({ event }: { event: SecurityEvent }) {
   const fields = [
     ['User', display(event.user)], ['Role', display(event.role)], ['Attempted action', display(event.action)],
+    ['Resolution actor', display(event.actor)], ['Approval ID', display(event.approval_id)],
     ['Resource', display(event.resource)], ['Classification', display(event.classification)],
     ['Destination', display(event.destination)], ['Policy', display(event.policy)],
     ['Measured latency', event.latency_ms === undefined ? 'Not reported' : `${event.latency_ms} ms`],
@@ -56,7 +57,7 @@ export function EvaluationConsole({ api, onEvaluated, onInspect }: { api: Securi
         <select id="scenario" value={scenario.id} disabled={pending} onChange={event => { setIndex(scenarios.findIndex(s => s.id === event.target.value)); setResult(null); setError(null); }}>
           {scenarios.map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
         </select>
-        <p className="expectation">Expected policy behavior: <strong>{scenario.expected}</strong> via {scenario.expectedPolicy} · not a result</p>
+        <p className="expectation">Expected policy behavior: <strong>{scenario.expected}</strong> · {scenario.expectedPolicy} · not a result</p>
         <pre aria-label="Proposed request payload">{JSON.stringify(scenario.request, null, 2)}</pre>
         <p className="scenario-note">{scenario.note}</p>
         <button className="primary" disabled={pending} onClick={() => void evaluate()}>{pending ? 'Evaluating…' : 'Evaluate proposal'}</button>

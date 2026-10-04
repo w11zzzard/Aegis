@@ -42,24 +42,7 @@ First shared milestone: analyst requests restricted portfolio → backend blocks
 
 ## Local setup
 
-Backend requires Python 3.12+. From the repository root:
-
-```powershell
-py -3.12 -m venv backend/.venv
-./backend/.venv/Scripts/python.exe -m pip install -r backend/requirements-lock.txt
-./backend/.venv/Scripts/python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --no-access-log
-```
-
-For Linux/macOS, create the environment with Python 3.12+ and use `backend/.venv/bin/python`.
-Use one process/worker: audit events, budgets and approval records are in memory and reset on restart.
-Policy configuration is `policies/default.yaml` (or `AEGIS_POLICY_PATH`); valid changes hot reload on the next evaluation/status call, while invalid files disable evaluation. Demo identity selection is not authentication. CORS permits loopback dashboard origins on port 5173. Chat returns a labeled offline fixture, with no semantic classifier, model call or real portfolio access.
-
-```powershell
-./backend/.venv/Scripts/python.exe -m pytest backend/tests -q --cov=backend --cov-config=backend/.coveragerc --cov-report=term-missing
-./backend/.venv/Scripts/python.exe -m backend.demo
-```
-
-See [backend setup and HTTP rehearsal](backend/README.md), the [exact wire contract](docs/API_CONTRACT.md), and the [Developer B handoff](backend/DEVELOPER_B_HANDOFF.md). The competition review identified unresolved semantic-control, coding-window and scoring requirements; mentor questions are in the handoff. This implementation does not establish eligibility against those unresolved requirements.
+Backend: follow [backend/README.md](backend/README.md) to install locked dependencies, provision credentials and set a shared SQLite state path. The default authenticated profile refuses protected requests until configured. Use `AEGIS_PROFILE=local-demo` only for an explicit loopback simulation.
 
 Frontend: in a second terminal, enter frontend/, install npm dependencies, then run npm run dev.
 

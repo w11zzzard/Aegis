@@ -1,0 +1,19 @@
+{
+  "reviewed_at_warsaw": "2026-10-04T02:14:47+02:00",
+  "scope": "Independent source review and comparison of frontend owner's completed normal/guarded evidence; reviewer did not rerun those browser executions",
+  "reviewed_files": ["frontend/scripts/verify-security.mjs", "frontend/scripts/offline-guard.py", "docs/API_CONTRACT.md"],
+  "normal_evidence": "frontend-real-browser-verification.json",
+  "guarded_evidence": "frontend-offline-browser-verification.json",
+  "all_11_recorded_source_hashes_identical": true,
+  "normal_has_request_routing": false,
+  "guarded_has_request_routing": true,
+  "api_responses_mocked_or_fulfilled": false,
+  "guarded_browser_self_probe": {"origin": "https://aegis-owned-negative.invalid", "blocked_before_outbound": true},
+  "guarded_python_self_probes": {"unique_children": 4, "dns_and_connect_before_os_networking": true, "installed_before_uvicorn_application_import": true},
+  "matching_runtime_results": {"canonical_scenarios": 5, "fresh_quota": ["ALLOW", "ALLOW", "THROTTLE"], "corpus_passed": 16, "integration_exit": 0, "permitted_secret": "REDACT", "restricted_external": "BLOCK"},
+  "unexpected_page_or_network_errors": 0,
+  "expected_denial_cancellations_disclosed": true,
+  "all_owned_children_stopped_and_servers_closed": true,
+  "claim_review": "Evidence explicitly describes guarded run as a per-context/per-child simulation after installed prerequisites. Normal run has no request/response routing. Neither evidence claims global host disconnection, offline installation or production certification. Corpus finite/duplicate paragraph matches actual boundary and independent prior probes.",
+  "limitations": ["Browser routing and Python audit hook are verification tools, not product controls or an OS network firewall", "Guard does not certify arbitrary UDP/native/subprocess networking or browser background services", "No host-wide disconnected-network or offline-installation test"]
+}

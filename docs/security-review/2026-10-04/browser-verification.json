@@ -1,0 +1,20 @@
+{
+  "browser": "154.0.8037.97",
+  "hostileResponse": {
+    "type": "opaque",
+    "status": 0
+  },
+  "hostileRunStatus": "not_run",
+  "authenticatedRedteam": {
+    "total": 16,
+    "passed": 16,
+    "failed": 0
+  },
+  "dashboard": "PASS: authenticated manager evaluation, own event detail, action, disconnect",
+  "storage": {
+    "local": 0,
+    "session": 0
+  },
+  "frontendIntegrationExit": 0,
+  "scope": "Fresh loopback HTTP services; production TLS/identity-provider/runtime deployment not verified."
+}

@@ -1,0 +1,33 @@
+
+ RUN  v4.1.11 C:/Users/admin/Documents/ChatGPT/Hackyeah 2026 goldman/frontend
+
+stdout | integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects finite 503 before the peer watchdog or byte budget
+{"mode":"finite","status":503,"aborted":true,"socketDisconnected":true,"bytesSent":4096,"completeBodySent":false}
+
+stdout | integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects oversized 503 before the peer watchdog or byte budget
+{"mode":"oversized","status":503,"aborted":true,"socketDisconnected":true,"bytesSent":65536,"completeBodySent":false}
+
+stdout | integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects endless 503 before the peer watchdog or byte budget
+{"mode":"endless","status":503,"aborted":true,"socketDisconnected":true,"bytesSent":4096,"completeBodySent":false}
+
+stdout | integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects stalled 503 before the peer watchdog or byte budget
+{"mode":"stalled","status":503,"aborted":true,"socketDisconnected":true,"bytesSent":0,"completeBodySent":false}
+
+stdout | integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects false-small 503 before the peer watchdog or byte budget
+{"mode":"false-small","status":503,"aborted":true,"socketDisconnected":true,"bytesSent":4096,"completeBodySent":false}
+
+stdout | integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects false-large 503 before the peer watchdog or byte budget
+{"mode":"false-large","status":503,"aborted":true,"socketDisconnected":true,"bytesSent":4096,"completeBodySent":false}
+
+ ✓ integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects finite 503 before the peer watchdog or byte budget 34ms
+ ✓ integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects oversized 503 before the peer watchdog or byte budget 5ms
+ ✓ integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects endless 503 before the peer watchdog or byte budget 6ms
+ ✓ integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects stalled 503 before the peer watchdog or byte budget 4ms
+ ✓ integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects false-small 503 before the peer watchdog or byte budget 5ms
+ ✓ integration/http-streams.test.ts > real HTTP error stream disconnection > disconnects false-large 503 before the peer watchdog or byte budget 5ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  00:35:35
+   Duration  328ms (transform 50ms, setup 0ms, import 130ms, tests 61ms, environment 0ms)
+

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { api as defaultApi } from './api';
+import { api as defaultApi, setSessionToken } from './api';
 import type { SecurityApi } from './api';
 import type { SecurityEvent } from './types';
 import { EvaluationConsole, EventDetails, SecurityEventTable } from './components';
@@ -7,6 +7,8 @@ import { SummaryPanels } from './SummaryPanels';
 
 export default function App({ api = defaultApi }: { api?: SecurityApi }) {
   const [events, setEvents] = useState<SecurityEvent[]>([]);
+  const [credential, setCredential] = useState('');
+  const [credentialVersion, setCredentialVersion] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -39,6 +41,11 @@ export default function App({ api = defaultApi }: { api?: SecurityApi }) {
     </header>
     <div className="principles-grid grid-flow-dense"><div><span className="principle-line" /><h2>Backend decisions.</h2><p>Authorization comes from the engine. The dashboard makes it visible.</p></div><div><span className="principle-line" /><h2>Traceable reasons.</h2><p>Inspect the policy and reason returned with each audit event.</p></div><div><span className="principle-line" /><h2>Evaluation only.</h2><p>Test proposed actions through the API. No tools run from this console.</p></div></div>
     <section id="audit" aria-labelledby="audit-heading" className="audit-section">
+      {api === defaultApi && <form onSubmit={event => { event.preventDefault(); setSessionToken(credential); setCredential(''); setCredentialVersion(value => value + 1); void refresh(); }}>
+        <label htmlFor="credential">API credential</label> <input id="credential" type="password" autoComplete="off" value={credential} onChange={event => setCredential(event.target.value)} />
+        <button className="secondary" type="submit">Connect</button> <button className="secondary" type="button" onClick={() => { setSessionToken(''); setCredential(''); setCredentialVersion(value => value + 1); void refresh(); }}>Disconnect</button>
+        <p>Use the credential provided by your operator. It stays in memory until you disconnect or reload.</p>
+      </form>}
       <div className="section-header"><div><p className="eyebrow">Sanitized backend evidence</p><h2 id="audit-heading">The audit trail.</h2><p>Choose an event to inspect the decision in context.</p></div><button className="secondary" disabled={loading} onClick={() => void refresh()}>Refresh events</button></div>
       <div className="audit-grid"><div className="events-panel"><div className="panel-header"><h3>Security events</h3><span className="source-label">GET /api/events</span></div>
         <div aria-live="polite" aria-busy={loading}>{error ? <p role="alert" className="error-message">{error}</p> : loading ? <p className="loading">Loading backend audit events…</p> : <SecurityEventTable events={events} selectedId={selectedId} onSelect={id => void inspect(id)} />}</div>
@@ -46,8 +53,7 @@ export default function App({ api = defaultApi }: { api?: SecurityApi }) {
         {detailError ? <p role="alert" className="error-message">{detailError}</p> : detailLoading ? <p className="loading">Loading event details…</p> : detail ? <EventDetails event={detail} /> : <div className="detail-empty"><div className="context-lines" aria-hidden="true"><i /><i /><i /></div><h4>Follow the evidence.</h4><p>Select an audit event to see the user, action, policy and reason.</p></div>}
       </div></aside></div>
     </section>
-    <EvaluationConsole api={api} onEvaluated={() => void refresh()} onInspect={id => { void inspect(id); document.getElementById('audit')?.scrollIntoView({ behavior: 'instant' }); }} />
-    <SummaryPanels api={api} revision={eventVersion.current} />
+    <EvaluationConsole key={credentialVersion} api={api} onEvaluated={() => void refresh()} onInspect={id => { void inspect(id); document.getElementById('audit')?.scrollIntoView({ behavior: 'instant' }); }} />
     <footer><a href="#" className="footer-brand">AEGIS</a><p>Agent Enforcement Gateway for Intelligent Systems</p><a href="#console">Evaluate a proposal <span aria-hidden="true">↗</span></a></footer>
   </main>;
 }

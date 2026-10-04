@@ -1,0 +1,5 @@
+[main]	INFO	profile include tests: None
+[main]	INFO	profile exclude tests: None
+[main]	INFO	cli include tests: None
+[main]	INFO	cli exclude tests: None
+[json]	INFO	JSON output written to file: C:\Users\admin\Documents\ChatGPT\Hackyeah 2026 goldman\output\security-hardening\2026-10-04_014424\bandit.json

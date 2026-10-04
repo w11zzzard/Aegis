@@ -6,7 +6,6 @@ import { createApi } from './api';
 import App from './App';
 import { event } from './test-fixtures';
 import { scenarios } from './scenarios';
-vi.mock('./SummaryPanels', () => ({ SummaryPanels: () => null }));
 
 export const malformedEvent = { ...event, id: 'malformed', category: 'fail_closed', policy: 'fail_closed', reason: 'Malformed request', request_id: null, user: null, role: null, action: null, resource: null, classification: null, destination: null };
 const unknownActor = { ...event, id: 'unknown', user: null, request_id: null, policy: 'identity', reason: 'Unknown identity or claimed role mismatch' };
@@ -29,8 +28,8 @@ describe('backend audit regression', () => {
   });
   it.each(['read', 'export'])('preserves documented action %s', action => expect(normalizeEvent({ ...event, action }).action).toBe(action));
   it.each([{ ...event, action: 'execute' }, { ...event, role: 'ADMIN' }, { ...event, decision: null }, { ...event, latency_ms: Infinity }, { ...event, latency_ms: -1 }, { id: 'only-id' }])('keeps required structure strict %j', value => expect(() => normalizeEvent(value)).toThrow(/contract/i));
-  it('strips untrusted output even when metadata is null', () => {
-    expect(normalizeEvent({ ...malformedEvent, sanitized_output: 'restricted', prompt: 'secret' })).not.toHaveProperty('sanitized_output');
+  it('rejects untrusted output even when metadata is null', () => {
+    expect(() => normalizeEvent({ ...malformedEvent, sanitized_output: 'restricted', prompt: 'secret' })).toThrow(/contract/i);
   });
 });
 describe('backend-aligned demo proposals', () => {

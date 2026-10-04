@@ -10,7 +10,8 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
-    "test:live": "node scripts/live-check.mjs"
+    "test:live": "node scripts/live-check.mjs",
+    "test:integration": "vitest run --config vitest.live.config.ts"
   },
   "dependencies": {
     "@fontsource/geist": "^5.2.0",
@@ -20,6 +21,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
+    "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.0.0",

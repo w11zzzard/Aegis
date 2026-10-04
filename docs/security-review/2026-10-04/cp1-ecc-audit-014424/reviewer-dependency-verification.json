@@ -1,0 +1,38 @@
+{
+  "checked_at_warsaw": "2026-10-04T01:56:56+02:00",
+  "target_head": "e52eb5059bba618db768c17353256d9eb516938c",
+  "target_directory": "C:/Users/admin/.codex/worktrees/aegis-security-cp1/Hackyeah 2026 goldman",
+  "environment": {"python": "3.12.14", "node": "22.22.0", "pip_audit": "2.10.1"},
+  "python_advisories": {
+    "command": "C:/Users/admin/Documents/ChatGPT/Hackyeah 2026 goldman/output/security-audit/.venv/Scripts/python.exe -m pip_audit -r C:/Users/admin/.codex/worktrees/aegis-security-cp1/Hackyeah 2026 goldman/backend/requirements-lock.txt --no-deps --disable-pip --cache-dir C:/Users/admin/Documents/ChatGPT/Hackyeah 2026 goldman/output/security-hardening/2026-10-04_014424/reviewer-pip-cache --format json --output C:/Users/admin/Documents/ChatGPT/Hackyeah 2026 goldman/output/security-hardening/2026-10-04_014424/reviewer-pip-audit.json",
+    "working_directory": "C:/Users/admin/Documents/ChatGPT/Hackyeah 2026 goldman",
+    "source": "https://pypi.org/",
+    "exit_code": 0,
+    "packages": 26,
+    "known_advisories": 0,
+    "evidence": "reviewer-pip-audit.json",
+    "installed_metadata_evidence": "reviewer-baseline.json#inventory.python",
+    "all_locked_installed_versions_match": true
+  },
+  "npm_advisories": {
+    "command": "npm.cmd audit --package-lock-only --json --cache C:/Users/admin/Documents/ChatGPT/Hackyeah 2026 goldman/output/security-hardening/2026-10-04_014424/reviewer-npm-cache",
+    "working_directory": "C:/Users/admin/.codex/worktrees/aegis-security-cp1/Hackyeah 2026 goldman/frontend",
+    "source": "https://registry.npmjs.org/",
+    "exit_code": 0,
+    "locked_entries_checked": 221,
+    "known_advisories": 0,
+    "evidence": "reviewer-npm-audit.json",
+    "installed_metadata_evidence": "reviewer-npm-inventory.json",
+    "nonoptional_installed_mismatch": 0,
+    "absent_platform_optional_entries": 50
+  },
+  "primary_advisory_reachability": [
+    {"package": "vitest / @vitest/mocker", "locked": "4.1.11", "advisory": "https://github.com/vitest-dev/vitest/security/advisories/GHSA-82fw-gwwq-j7x9", "patched": "4.1.11", "result": "Patched; advisory requires a live Vitest mock interceptor WebSocket path"},
+    {"package": "vite", "locked": "7.3.6", "advisory": "https://github.com/vitejs/vite/security/advisories/GHSA-fx2h-pf6j-xcff", "patched": "7.3.5 (7.x)", "result": "Patched; documented dev/preview scripts bind loopback; Windows file serving applies to this platform"},
+    {"package": "starlette", "locked": "1.7.0", "advisory": "https://github.com/Kludex/starlette/security/advisories/GHSA-jp82-jpqv-5vv3", "patched": "1.3.0", "result": "Patched; application authentication middleware uses ASGI scope path and Host boundary"},
+    {"package": "starlette", "locked": "1.7.0", "advisory": "https://github.com/Kludex/starlette/security/advisories/GHSA-82w8-qh3p-5jfq", "patched": "1.3.1", "result": "Patched; no request.form endpoint; request bodies additionally capped65536bytes"},
+    {"package": "starlette", "locked": "1.7.0", "advisory": "https://github.com/Kludex/starlette/security/advisories/GHSA-wqp7-x3pw-xc5r", "patched": "1.1.0", "result": "Patched; backend has no StaticFiles mount and no actual HTTP/filesystem tool forwarding"}
+  ],
+  "execution_notes": "Initial restricted-network audits failed. Approved read-only network escalation completed both official-registry scans without install/upgrade or lock changes. ECC documentation-lookup read; no Context7 tools are configured, so official maintainer advisories were inspected directly.",
+  "limitations": ["Advisory databases and publication dates define this point-in-time result; zero records do not prove absence of unknown vulnerabilities", "Python locks pin versions without artifact hashes", "No hosted/proxy deployment or external service attack was performed"]
+}

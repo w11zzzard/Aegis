@@ -1,0 +1,27 @@
+
+ RUN  v4.1.11 C:/Users/admin/.codex/worktrees/aegis-security-cp1/Hackyeah 2026 goldman/frontend
+      Coverage enabled with v8
+
+
+ Test Files  8 passed (8)
+      Tests  100 passed (100)
+   Start at  02:06:07
+   Duration  2.87s (transform 573ms, setup 1.72s, import 1.62s, tests 3.59s, environment 3.95s)
+
+ % Coverage report from v8
+----------------|---------|----------|---------|---------|-------------------
+File            | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+----------------|---------|----------|---------|---------|-------------------
+All files       |   97.78 |    94.26 |   98.33 |   99.34 |                   
+ App.tsx        |     100 |       92 |     100 |     100 | 24,32             
+ adapter.ts     |     100 |     97.5 |     100 |     100 | 60                
+ api.ts         |   94.25 |    94.28 |   95.83 |   98.43 | 46                
+ components.tsx |     100 |     90.9 |     100 |     100 | 8,30              
+----------------|---------|----------|---------|---------|-------------------
+
+=============================== Coverage summary ===============================
+Statements   : 97.78% ( 221/226 )
+Branches     : 94.26% ( 115/122 )
+Functions    : 98.33% ( 59/60 )
+Lines        : 99.34% ( 151/152 )
+================================================================================

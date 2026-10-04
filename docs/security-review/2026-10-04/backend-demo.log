@@ -1,0 +1,6 @@
+C:\Users\admin\Documents\ChatGPT\Hackyeah 2026 goldman\.worktrees\b-dashboard-integration\frontend\.integration-venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+{"scenario": "analyst_restricted", "decision": "BLOCK", "policy": "portfolio_restricted", "reason": "ANALYST cannot access RESTRICTED resource", "event_id": "37f416d8-5790-46c8-80eb-138ff11d8fc8", "latency_ms": 0.3176}
+{"scenario": "manager_authorized", "decision": "ALLOW", "policy": "portfolio_restricted", "reason": "Authorized by resource policy", "event_id": "f238cecb-442e-4d9b-987b-1f7a1db15fd3", "latency_ms": 0.2353}
+{"scenario": "manager_external", "decision": "BLOCK", "policy": "external_exfiltration", "reason": "RESTRICTED data cannot leave INTERNAL destinations", "event_id": "14f72147-be3e-431a-9f4d-4282f05e7542", "latency_ms": 0.1757}
+{"status": "completed", "run_id": "9c1cf55a-8b38-44f0-9bb1-4e4bc481e99d", "timestamp": "2026-10-03T22:49:22.804245+00:00", "policy_version": "demo-v1", "policy_digest": "58e1056de4028e59a480bb17a729ea3db8b2c68490ce32cfd8f4809db09aedc9", "total": 16, "passed": 16, "failed": 0, "unexpected_allows": 0, "latency_ms": 2.5368}

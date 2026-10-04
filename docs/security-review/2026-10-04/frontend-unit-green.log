@@ -1,0 +1,25 @@
+
+ RUN  v4.1.11 C:/Users/admin/Documents/ChatGPT/Hackyeah 2026 goldman/frontend
+
+ ✓ src/api-streams.test.ts > response stream lifecycle > aborts and cancels unread finite HTTP errors without reading private content 5ms
+ ✓ src/api-streams.test.ts > response stream lifecycle > aborts and cancels unread oversized HTTP errors without reading private content 1ms
+ ✓ src/api-streams.test.ts > response stream lifecycle > aborts and cancels unread endless HTTP errors without reading private content 1ms
+ ✓ src/api-streams.test.ts > response stream lifecycle > aborts and cancels unread stalled HTTP errors without reading private content 1ms
+ ✓ src/api-streams.test.ts > response stream lifecycle > settles a sanitized HTTP error even when cancellation rejects 1ms
+ ✓ src/api-streams.test.ts > response stream lifecycle > settles a sanitized HTTP error even when cancellation stalls 0ms
+ ✓ src/api-streams.test.ts > response stream lifecycle > settles a sanitized HTTP error even when cancellation throws 0ms
+ ✓ src/api-streams.test.ts > response stream lifecycle > aborts advertised oversized success and releases its body 1ms
+ ✓ src/api-streams.test.ts > response stream lifecycle > aborts streamed oversized success and releases its body 4ms
+ ✓ src/api-streams.test.ts > response stream lifecycle > releases timeout listeners and reader locks even when read/cancel never settle 4ms
+ ✓ src/api-streams.test.ts > response stream lifecycle > unlocks a real timed-out reader even when its cancellation rejects 1ms
+ ✓ src/api-streams.test.ts > response stream lifecycle > unlocks a real timed-out reader even when its cancellation stalls 1ms
+ ✓ src/api-streams.test.ts > response stream lifecycle > releases consumed invalid JSON responses with safe errors 1ms
+ ✓ src/api-streams.test.ts > response stream lifecycle > releases consumed invalid UTF-8 responses with safe errors 0ms
+ ✓ src/api-streams.test.ts > response stream lifecycle > releases consumed invalid contract responses with safe errors 3ms
+ ✓ src/api-streams.test.ts > response stream lifecycle > accepts valid UTF-8 JSON at the exact byte budget despite a false smaller length 3ms
+
+ Test Files  1 passed (1)
+      Tests  16 passed (16)
+   Start at  00:41:12
+   Duration  1.07s (transform 65ms, setup 211ms, import 127ms, tests 29ms, environment 550ms)
+

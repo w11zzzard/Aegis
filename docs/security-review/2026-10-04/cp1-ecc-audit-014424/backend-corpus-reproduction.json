@@ -1,0 +1,129 @@
+{
+  "timestamp": "2026-10-04T02:06:37.036889+02:00",
+  "baseline_commit": "e52eb5059bba618db768c17353256d9eb516938c",
+  "baseline_runner_sha256": "4308aee4284e2f0bb967a0b73bcc3b04b9c2c75d314c5291a376b53e7bf06944",
+  "working_tree_runner_sha256": "0295d9fe517753db7348e62ca3040ef43c6fa26ff394388e1843498796c02e77",
+  "scope": "isolated immutable baseline corpus runner loaded from git; unchanged authorization engine and committed policy; visible API failed-state tested separately",
+  "cases": [
+    {
+      "case": "duplicate expectation",
+      "raw_sha256": "91ea72c4f2623aae44a41eb1270b70f92ae0a32680bd80bda68a150d7255543b",
+      "baseline": {
+        "status": "completed",
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "unexpected_allows": 0
+      },
+      "fixed": {
+        "refused": true,
+        "error": "ValueError: Duplicate corpus key"
+      }
+    },
+    {
+      "case": "duplicate request",
+      "raw_sha256": "5ef1821e122bc9758344b6762c8e4f1d65d8414e8995f652cdb8998062bcd13f",
+      "baseline": {
+        "status": "completed",
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "unexpected_allows": 0
+      },
+      "fixed": {
+        "refused": true,
+        "error": "ValueError: Duplicate corpus key"
+      }
+    },
+    {
+      "case": "duplicate cases",
+      "raw_sha256": "6e4f0976b95f3a9f23a16ec3cc1becd05e12dd1dbc578de7527154edcf9a22b7",
+      "baseline": {
+        "status": "completed",
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "unexpected_allows": 0
+      },
+      "fixed": {
+        "refused": true,
+        "error": "ValueError: Duplicate corpus key"
+      }
+    },
+    {
+      "case": "duplicate tool argument",
+      "raw_sha256": "2995b198541f083a0faca1f7c53eb262b91a6308e6e1a9920f43e65a56a01153",
+      "baseline": {
+        "status": "completed",
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "unexpected_allows": 0
+      },
+      "fixed": {
+        "refused": true,
+        "error": "ValueError: Duplicate corpus key"
+      }
+    },
+    {
+      "case": "nonfinite NaN",
+      "raw_sha256": "defee2fe9fa20b1d0ba1f6a61e4284547070a1710c37a13f4d7bdd58b9b788cb",
+      "baseline": {
+        "status": "completed",
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "unexpected_allows": 0
+      },
+      "fixed": {
+        "refused": true,
+        "error": "ValueError: Nonfinite corpus number"
+      }
+    },
+    {
+      "case": "nonfinite Infinity",
+      "raw_sha256": "74539eaa8620716d6c9f2d63c9202a9fc596b2193bd791adf3d50af873b3ff90",
+      "baseline": {
+        "status": "completed",
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "unexpected_allows": 0
+      },
+      "fixed": {
+        "refused": true,
+        "error": "ValueError: Nonfinite corpus number"
+      }
+    },
+    {
+      "case": "nonfinite -Infinity",
+      "raw_sha256": "7765d73684702308f9ef3a6f607f90e72de5a8227b0a7c74b1f10ee4e0468928",
+      "baseline": {
+        "status": "completed",
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "unexpected_allows": 0
+      },
+      "fixed": {
+        "refused": true,
+        "error": "ValueError: Nonfinite corpus number"
+      }
+    },
+    {
+      "case": "nonfinite 1e400",
+      "raw_sha256": "456013e523272d108eb4b2552ac964e16e48c16099afc8b0e8138062f0303e2b",
+      "baseline": {
+        "status": "completed",
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "unexpected_allows": 0
+      },
+      "fixed": {
+        "refused": true,
+        "error": "ValueError: Nonfinite corpus number"
+      }
+    }
+  ]
+}

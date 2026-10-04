@@ -1,0 +1,693 @@
+{
+  "head": "e52eb5059bba618db768c17353256d9eb516938c",
+  "challenges": [
+    {
+      "name": "benign-control",
+      "profile": "authenticated",
+      "route": "/api/security/evaluate",
+      "status": 200,
+      "decision": "ALLOW",
+      "policy": "portfolio_restricted",
+      "cache_control": "no-store",
+      "response_secret_present": false,
+      "encoded_secret_present": false,
+      "response_output_retained": true,
+      "event_status": 200,
+      "events_secret_present": false,
+      "retained_events": 1
+    },
+    {
+      "name": "unpaired-surrogate-output",
+      "profile": "authenticated",
+      "route": "/api/security/evaluate",
+      "status": 422,
+      "decision": "BLOCK",
+      "policy": "fail_closed",
+      "cache_control": "no-store",
+      "response_secret_present": false,
+      "encoded_secret_present": false,
+      "response_output_retained": false,
+      "event_status": 200,
+      "events_secret_present": false,
+      "retained_events": 0
+    },
+    {
+      "name": "unpaired-surrogate-output-local",
+      "profile": "local-demo",
+      "route": "/api/security/evaluate",
+      "status": 422,
+      "decision": "BLOCK",
+      "policy": "fail_closed",
+      "cache_control": "no-store",
+      "response_secret_present": false,
+      "encoded_secret_present": false,
+      "response_output_retained": false,
+      "event_status": 200,
+      "events_secret_present": false,
+      "retained_events": 0
+    },
+    {
+      "name": "unpaired-surrogate-chat",
+      "profile": "authenticated",
+      "route": "/v1/chat/completions",
+      "status": 422,
+      "decision": "BLOCK",
+      "policy": "fail_closed",
+      "cache_control": "no-store",
+      "response_secret_present": false,
+      "encoded_secret_present": false,
+      "response_output_retained": false,
+      "event_status": 200,
+      "events_secret_present": false,
+      "retained_events": 0
+    },
+    {
+      "name": "configured-credential-one-layer-with-punctuation",
+      "profile": "authenticated",
+      "route": "/api/security/evaluate",
+      "status": 200,
+      "decision": "ALLOW",
+      "policy": "portfolio_restricted",
+      "cache_control": "no-store",
+      "response_secret_present": false,
+      "encoded_secret_present": true,
+      "response_output_retained": true,
+      "event_status": 200,
+      "events_secret_present": false,
+      "retained_events": 1
+    },
+    {
+      "name": "configured-credential-one-layer-with-prose",
+      "profile": "authenticated",
+      "route": "/api/security/evaluate",
+      "status": 200,
+      "decision": "ALLOW",
+      "policy": "portfolio_restricted",
+      "cache_control": "no-store",
+      "response_secret_present": false,
+      "encoded_secret_present": false,
+      "response_output_retained": true,
+      "event_status": 200,
+      "events_secret_present": false,
+      "retained_events": 1
+    },
+    {
+      "name": "configured-credential-one-layer-exact",
+      "profile": "authenticated",
+      "route": "/api/security/evaluate",
+      "status": 200,
+      "decision": "REDACT",
+      "policy": "output_secrets",
+      "cache_control": "no-store",
+      "response_secret_present": false,
+      "encoded_secret_present": false,
+      "response_output_retained": false,
+      "event_status": 200,
+      "events_secret_present": false,
+      "retained_events": 1
+    }
+  ],
+  "inventory": {
+    "python": [
+      {
+        "package": "annotated-doc",
+        "locked": "0.0.5",
+        "installed": "0.0.5",
+        "matches": true
+      },
+      {
+        "package": "annotated-types",
+        "locked": "0.8.0",
+        "installed": "0.8.0",
+        "matches": true
+      },
+      {
+        "package": "anyio",
+        "locked": "4.15.1",
+        "installed": "4.15.1",
+        "matches": true
+      },
+      {
+        "package": "certifi",
+        "locked": "2026.7.22",
+        "installed": "2026.7.22",
+        "matches": true
+      },
+      {
+        "package": "click",
+        "locked": "8.5.0",
+        "installed": "8.5.0",
+        "matches": true
+      },
+      {
+        "package": "colorama",
+        "locked": "0.4.6",
+        "installed": "0.4.6",
+        "matches": true
+      },
+      {
+        "package": "coverage",
+        "locked": "7.16.2",
+        "installed": "7.16.2",
+        "matches": true
+      },
+      {
+        "package": "fastapi",
+        "locked": "0.142.2",
+        "installed": "0.142.2",
+        "matches": true
+      },
+      {
+        "package": "h11",
+        "locked": "0.16.0",
+        "installed": "0.16.0",
+        "matches": true
+      },
+      {
+        "package": "httpcore",
+        "locked": "1.0.9",
+        "installed": "1.0.9",
+        "matches": true
+      },
+      {
+        "package": "httpx",
+        "locked": "0.28.1",
+        "installed": "0.28.1",
+        "matches": true
+      },
+      {
+        "package": "idna",
+        "locked": "3.20",
+        "installed": "3.20",
+        "matches": true
+      },
+      {
+        "package": "iniconfig",
+        "locked": "2.3.0",
+        "installed": "2.3.0",
+        "matches": true
+      },
+      {
+        "package": "opentelemetry-api",
+        "locked": "1.45.0",
+        "installed": "1.45.0",
+        "matches": true
+      },
+      {
+        "package": "packaging",
+        "locked": "26.3",
+        "installed": "26.3",
+        "matches": true
+      },
+      {
+        "package": "pluggy",
+        "locked": "1.6.0",
+        "installed": "1.6.0",
+        "matches": true
+      },
+      {
+        "package": "pydantic",
+        "locked": "2.13.5",
+        "installed": "2.13.5",
+        "matches": true
+      },
+      {
+        "package": "pydantic_core",
+        "locked": "2.46.5",
+        "installed": "2.46.5",
+        "matches": true
+      },
+      {
+        "package": "Pygments",
+        "locked": "2.21.0",
+        "installed": "2.21.0",
+        "matches": true
+      },
+      {
+        "package": "pytest",
+        "locked": "9.1.1",
+        "installed": "9.1.1",
+        "matches": true
+      },
+      {
+        "package": "pytest-cov",
+        "locked": "7.1.0",
+        "installed": "7.1.0",
+        "matches": true
+      },
+      {
+        "package": "PyYAML",
+        "locked": "6.0.3",
+        "installed": "6.0.3",
+        "matches": true
+      },
+      {
+        "package": "starlette",
+        "locked": "1.7.0",
+        "installed": "1.7.0",
+        "matches": true
+      },
+      {
+        "package": "typing-inspection",
+        "locked": "0.4.4",
+        "installed": "0.4.4",
+        "matches": true
+      },
+      {
+        "package": "typing_extensions",
+        "locked": "4.16.0",
+        "installed": "4.16.0",
+        "matches": true
+      },
+      {
+        "package": "uvicorn",
+        "locked": "0.54.0",
+        "installed": "0.54.0",
+        "matches": true
+      }
+    ],
+    "frontend_locked": {
+      "node_modules/@adobe/css-tools": "4.5.0",
+      "node_modules/@asamuzakjp/css-color": "3.2.0",
+      "node_modules/@asamuzakjp/css-color/node_modules/lru-cache": "10.4.3",
+      "node_modules/@babel/code-frame": "7.29.7",
+      "node_modules/@babel/compat-data": "7.29.7",
+      "node_modules/@babel/core": "7.29.7",
+      "node_modules/@babel/generator": "7.29.8",
+      "node_modules/@babel/helper-compilation-targets": "7.29.7",
+      "node_modules/@babel/helper-globals": "7.29.7",
+      "node_modules/@babel/helper-module-imports": "7.29.7",
+      "node_modules/@babel/helper-module-transforms": "7.29.7",
+      "node_modules/@babel/helper-plugin-utils": "7.29.7",
+      "node_modules/@babel/helper-string-parser": "7.29.7",
+      "node_modules/@babel/helper-validator-identifier": "7.29.7",
+      "node_modules/@babel/helper-validator-option": "7.29.7",
+      "node_modules/@babel/helpers": "7.29.7",
+      "node_modules/@babel/parser": "7.29.9",
+      "node_modules/@babel/plugin-transform-react-jsx-self": "7.29.7",
+      "node_modules/@babel/plugin-transform-react-jsx-source": "7.29.7",
+      "node_modules/@babel/runtime": "7.29.7",
+      "node_modules/@babel/template": "7.29.7",
+      "node_modules/@babel/traverse": "7.29.8",
+      "node_modules/@babel/types": "7.29.8",
+      "node_modules/@bcoe/v8-coverage": "1.0.2",
+      "node_modules/@csstools/color-helpers": "5.1.0",
+      "node_modules/@csstools/css-calc": "2.1.4",
+      "node_modules/@csstools/css-color-parser": "3.1.0",
+      "node_modules/@csstools/css-parser-algorithms": "3.0.5",
+      "node_modules/@csstools/css-tokenizer": "3.0.4",
+      "node_modules/@esbuild/aix-ppc64": "0.28.2",
+      "node_modules/@esbuild/android-arm": "0.28.2",
+      "node_modules/@esbuild/android-arm64": "0.28.2",
+      "node_modules/@esbuild/android-x64": "0.28.2",
+      "node_modules/@esbuild/darwin-arm64": "0.28.2",
+      "node_modules/@esbuild/darwin-x64": "0.28.2",
+      "node_modules/@esbuild/freebsd-arm64": "0.28.2",
+      "node_modules/@esbuild/freebsd-x64": "0.28.2",
+      "node_modules/@esbuild/linux-arm": "0.28.2",
+      "node_modules/@esbuild/linux-arm64": "0.28.2",
+      "node_modules/@esbuild/linux-ia32": "0.28.2",
+      "node_modules/@esbuild/linux-loong64": "0.28.2",
+      "node_modules/@esbuild/linux-mips64el": "0.28.2",
+      "node_modules/@esbuild/linux-ppc64": "0.28.2",
+      "node_modules/@esbuild/linux-riscv64": "0.28.2",
+      "node_modules/@esbuild/linux-s390x": "0.28.2",
+      "node_modules/@esbuild/linux-x64": "0.28.2",
+      "node_modules/@esbuild/netbsd-arm64": "0.28.2",
+      "node_modules/@esbuild/netbsd-x64": "0.28.2",
+      "node_modules/@esbuild/openbsd-arm64": "0.28.2",
+      "node_modules/@esbuild/openbsd-x64": "0.28.2",
+      "node_modules/@esbuild/openharmony-arm64": "0.28.2",
+      "node_modules/@esbuild/sunos-x64": "0.28.2",
+      "node_modules/@esbuild/win32-arm64": "0.28.2",
+      "node_modules/@esbuild/win32-ia32": "0.28.2",
+      "node_modules/@esbuild/win32-x64": "0.28.2",
+      "node_modules/@fontsource/geist": "5.3.0",
+      "node_modules/@jridgewell/gen-mapping": "0.3.13",
+      "node_modules/@jridgewell/remapping": "2.3.5",
+      "node_modules/@jridgewell/resolve-uri": "3.1.2",
+      "node_modules/@jridgewell/sourcemap-codec": "1.6.0",
+      "node_modules/@jridgewell/trace-mapping": "0.3.31",
+      "node_modules/@napi-rs/lzma-linux-x64-gnu": "1.5.1",
+      "node_modules/@playwright/test": "1.63.0",
+      "node_modules/@rolldown/pluginutils": "1.0.0-rc.3",
+      "node_modules/@rollup/rollup-android-arm-eabi": "4.64.0",
+      "node_modules/@rollup/rollup-android-arm64": "4.64.0",
+      "node_modules/@rollup/rollup-darwin-arm64": "4.64.0",
+      "node_modules/@rollup/rollup-darwin-x64": "4.64.0",
+      "node_modules/@rollup/rollup-freebsd-arm64": "4.64.0",
+      "node_modules/@rollup/rollup-freebsd-x64": "4.64.0",
+      "node_modules/@rollup/rollup-linux-arm-gnueabihf": "4.64.0",
+      "node_modules/@rollup/rollup-linux-arm-musleabihf": "4.64.0",
+      "node_modules/@rollup/rollup-linux-arm64-gnu": "4.64.0",
+      "node_modules/@rollup/rollup-linux-arm64-musl": "4.64.0",
+      "node_modules/@rollup/rollup-linux-loong64-gnu": "4.64.0",
+      "node_modules/@rollup/rollup-linux-loong64-musl": "4.64.0",
+      "node_modules/@rollup/rollup-linux-ppc64-gnu": "4.64.0",
+      "node_modules/@rollup/rollup-linux-ppc64-musl": "4.64.0",
+      "node_modules/@rollup/rollup-linux-riscv64-gnu": "4.64.0",
+      "node_modules/@rollup/rollup-linux-riscv64-musl": "4.64.0",
+      "node_modules/@rollup/rollup-linux-s390x-gnu": "4.64.0",
+      "node_modules/@rollup/rollup-linux-x64-gnu": "4.64.0",
+      "node_modules/@rollup/rollup-linux-x64-musl": "4.64.0",
+      "node_modules/@rollup/rollup-openbsd-x64": "4.64.0",
+      "node_modules/@rollup/rollup-openharmony-arm64": "4.64.0",
+      "node_modules/@rollup/rollup-win32-arm64-msvc": "4.64.0",
+      "node_modules/@rollup/rollup-win32-ia32-msvc": "4.64.0",
+      "node_modules/@rollup/rollup-win32-x64-gnu": "4.64.0",
+      "node_modules/@rollup/rollup-win32-x64-msvc": "4.64.0",
+      "node_modules/@standard-schema/spec": "1.1.0",
+      "node_modules/@testing-library/dom": "10.4.2",
+      "node_modules/@testing-library/jest-dom": "6.9.1",
+      "node_modules/@testing-library/jest-dom/node_modules/dom-accessibility-api": "0.6.3",
+      "node_modules/@testing-library/react": "16.3.3",
+      "node_modules/@testing-library/user-event": "14.6.7",
+      "node_modules/@types/aria-query": "5.0.4",
+      "node_modules/@types/babel__core": "7.20.5",
+      "node_modules/@types/babel__generator": "7.27.0",
+      "node_modules/@types/babel__template": "7.4.4",
+      "node_modules/@types/babel__traverse": "7.28.0",
+      "node_modules/@types/chai": "5.2.3",
+      "node_modules/@types/deep-eql": "4.0.2",
+      "node_modules/@types/estree": "1.0.9",
+      "node_modules/@types/react": "19.3.0",
+      "node_modules/@types/react-dom": "19.3.0",
+      "node_modules/@vitejs/plugin-react": "5.2.0",
+      "node_modules/@vitest/coverage-v8": "4.1.11",
+      "node_modules/@vitest/expect": "4.1.11",
+      "node_modules/@vitest/mocker": "4.1.11",
+      "node_modules/@vitest/pretty-format": "4.1.11",
+      "node_modules/@vitest/runner": "4.1.11",
+      "node_modules/@vitest/snapshot": "4.1.11",
+      "node_modules/@vitest/spy": "4.1.11",
+      "node_modules/@vitest/utils": "4.1.11",
+      "node_modules/agent-base": "7.1.4",
+      "node_modules/ansi-regex": "5.0.1",
+      "node_modules/ansi-styles": "5.2.0",
+      "node_modules/aria-query": "5.3.0",
+      "node_modules/assertion-error": "2.0.1",
+      "node_modules/ast-v8-to-istanbul": "1.0.7",
+      "node_modules/ast-v8-to-istanbul/node_modules/js-tokens": "10.0.0",
+      "node_modules/baseline-browser-mapping": "2.11.27",
+      "node_modules/browserslist": "4.29.3",
+      "node_modules/caniuse-lite": "1.0.30001814",
+      "node_modules/chai": "6.3.0",
+      "node_modules/convert-source-map": "2.0.0",
+      "node_modules/css.escape": "1.5.1",
+      "node_modules/cssstyle": "4.6.0",
+      "node_modules/csstype": "3.2.3",
+      "node_modules/data-urls": "5.0.0",
+      "node_modules/debug": "4.4.3",
+      "node_modules/decimal.js": "10.6.0",
+      "node_modules/dequal": "2.0.3",
+      "node_modules/dom-accessibility-api": "0.5.16",
+      "node_modules/electron-to-chromium": "1.5.444",
+      "node_modules/entities": "6.0.1",
+      "node_modules/es-module-lexer": "2.3.2",
+      "node_modules/esbuild": "0.28.2",
+      "node_modules/escalade": "3.2.0",
+      "node_modules/estree-walker": "3.0.3",
+      "node_modules/expect-type": "1.4.0",
+      "node_modules/fdir": "6.5.0",
+      "node_modules/fsevents": "2.3.3",
+      "node_modules/gensync": "1.0.0-beta.2",
+      "node_modules/has-flag": "4.0.0",
+      "node_modules/html-encoding-sniffer": "4.0.0",
+      "node_modules/html-escaper": "2.0.2",
+      "node_modules/http-proxy-agent": "7.0.2",
+      "node_modules/https-proxy-agent": "7.0.6",
+      "node_modules/iconv-lite": "0.6.3",
+      "node_modules/indent-string": "4.0.0",
+      "node_modules/is-potential-custom-element-name": "1.0.1",
+      "node_modules/istanbul-lib-coverage": "3.2.2",
+      "node_modules/istanbul-lib-report": "3.0.1",
+      "node_modules/istanbul-reports": "3.2.0",
+      "node_modules/js-tokens": "4.0.0",
+      "node_modules/jsdom": "26.1.0",
+      "node_modules/jsesc": "3.1.0",
+      "node_modules/json5": "2.2.3",
+      "node_modules/lru-cache": "5.1.1",
+      "node_modules/lz-string": "1.5.0",
+      "node_modules/magic-string": "0.30.21",
+      "node_modules/magicast": "0.5.5",
+      "node_modules/make-dir": "4.0.0",
+      "node_modules/make-dir/node_modules/semver": "7.8.5",
+      "node_modules/min-indent": "1.0.1",
+      "node_modules/ms": "2.1.3",
+      "node_modules/nanoid": "3.3.19",
+      "node_modules/node-releases": "2.0.57",
+      "node_modules/nwsapi": "2.2.28",
+      "node_modules/obug": "2.2.1",
+      "node_modules/parse5": "7.3.0",
+      "node_modules/pathe": "2.0.3",
+      "node_modules/picocolors": "1.1.1",
+      "node_modules/picomatch": "4.0.7",
+      "node_modules/playwright": "1.63.0",
+      "node_modules/playwright-core": "1.63.0",
+      "node_modules/postcss": "8.5.28",
+      "node_modules/pretty-format": "27.5.1",
+      "node_modules/punycode": "2.3.1",
+      "node_modules/react": "19.3.0",
+      "node_modules/react-dom": "19.3.0",
+      "node_modules/react-is": "17.0.2",
+      "node_modules/react-refresh": "0.18.0",
+      "node_modules/redent": "3.0.0",
+      "node_modules/rollup": "4.64.0",
+      "node_modules/rrweb-cssom": "0.8.0",
+      "node_modules/safer-buffer": "2.1.2",
+      "node_modules/saxes": "6.0.0",
+      "node_modules/scheduler": "0.28.0",
+      "node_modules/semver": "6.3.1",
+      "node_modules/siginfo": "2.0.0",
+      "node_modules/source-map-js": "1.2.2",
+      "node_modules/stackback": "0.0.2",
+      "node_modules/std-env": "4.3.0",
+      "node_modules/strip-indent": "3.0.0",
+      "node_modules/supports-color": "7.2.0",
+      "node_modules/symbol-tree": "3.2.4",
+      "node_modules/tinybench": "2.9.0",
+      "node_modules/tinyexec": "1.3.1",
+      "node_modules/tinyglobby": "0.2.17",
+      "node_modules/tinyrainbow": "3.2.0",
+      "node_modules/tldts": "6.1.86",
+      "node_modules/tldts-core": "6.1.86",
+      "node_modules/tough-cookie": "5.1.2",
+      "node_modules/tr46": "5.1.1",
+      "node_modules/typescript": "5.9.3",
+      "node_modules/update-browserslist-db": "1.3.3",
+      "node_modules/vite": "7.3.6",
+      "node_modules/vitest": "4.1.11",
+      "node_modules/w3c-xmlserializer": "5.0.0",
+      "node_modules/webidl-conversions": "7.0.0",
+      "node_modules/whatwg-encoding": "3.1.1",
+      "node_modules/whatwg-mimetype": "4.0.0",
+      "node_modules/whatwg-url": "14.2.0",
+      "node_modules/why-is-node-running": "2.3.0",
+      "node_modules/ws": "8.22.0",
+      "node_modules/xml-name-validator": "5.0.0",
+      "node_modules/xmlchars": "2.2.0",
+      "node_modules/yallist": "3.1.1",
+      "node_modules/zod": "4.6.5"
+    }
+  },
+  "secret_audit": {
+    "tracked_file_count": 122,
+    "history_commit_count": 44,
+    "rules": "private-key markers and known token provider shapes; no candidate text emitted",
+    "candidates": [
+      {
+        "revision": "HEAD",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "HEAD",
+        "path": "backend/tests/test_security_fixes.py",
+        "candidate_count": 2,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "e52eb5059bba618db768c17353256d9eb516938c",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "e52eb5059bba618db768c17353256d9eb516938c",
+        "path": "backend/tests/test_security_fixes.py",
+        "candidate_count": 2,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "c49f1cf07b9e6faf053a5cbdc08c830be0a24da9",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "c49f1cf07b9e6faf053a5cbdc08c830be0a24da9",
+        "path": "backend/tests/test_security_live.py",
+        "candidate_count": 1,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "659b468edadf68e33e01d4d1eea10475102b11e6",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "141490f4df1cf4ee296b808626501f0dc9f2743b",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "11be7d066cc7e99c668bb1c15dde79b3186e5bee",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "be12bcb0c354a5a79c1da148ae331e1e6069705b",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "96069315bfc6b57e5717eb6e0aa1d62b6e029e58",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "0369002a3393da7833e7d6e091dc5a71db04116d",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "23f4c20bc9915258396b38b1d454bcfafd3930c3",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "f51dfa9bfc4eb0e57dffafdd46ce438d7600de3d",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "ae7089903fd9955f7488774c481e41f110c9ab6e",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "f4502bbf913ef820b6e2d4741ec3490fd42f7392",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "f576258fac47488a43600130e365966c9fff2430",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "849729b3e858d6aa46a2112884f8ea603435e422",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "90684aca60e0f5f3db305c5acb5f55644ca0b8e1",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "43765cb75e7432be726bf64fb9fab3dc5acfe4ed",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "d99cbce984a4adb160bc33fdd83eca112f2192fa",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "6a443d3a047ba1782955220ca1fcf89e15d9de8a",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "071e57e18a1dc600b86945637ae2243edb873168",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "dc6ad3e8c07f0b1093fc0d636cd5f717f30449a5",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "836282ee3dc0e6affbeecbd55bbdd8e0a4eb2cac",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "43233bbb3db6a02d5fa6753c249e659cc67c7e01",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "2c85e66ef9ef607662e1fd5a76e47dc4fe917de5",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "9c5e2484d30cda0c5f4ab6b5ef747f5786033e34",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "4aee78c08644223253f939d33def104c923441b2",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "0f2bb00f4a53ff54135ff5e11bc130d4259377a3",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "4e9a3ecbac6d685d49a6685635a9f58debefd787",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      },
+      {
+        "revision": "39749c49ff6538ee0616eef0d6e756aaaeac7f1c",
+        "path": "backend/tests/test_guards.py",
+        "candidate_count": 4,
+        "fixture_or_test_location": true
+      }
+    ],
+    "limitations": "Pattern scan cannot prove absence of arbitrary opaque/encoded credentials; fixtures require source review."
+  }
+}
