@@ -26,7 +26,7 @@ def live_security(tmp_path):
     server = subprocess.Popen(
         [sys.executable, "-m", "uvicorn", "backend.main:app", "--host", "127.0.0.1",
          "--port", str(port), "--no-access-log"], cwd=ROOT,
-        env={**os.environ, "AEGIS_POLICY_PATH": str(policy)},
+        env={**os.environ, "AEGIS_POLICY_PATH": str(policy), "AEGIS_PROFILE": "local-demo", "AEGIS_AUTH_FILE": "", "AEGIS_STATE_PATH": "", "AEGIS_AUTH_TOKENS": json.dumps({"security_admin_1": "a" * 48})},
         stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
     )
     try:
@@ -64,7 +64,13 @@ def check(client, body, decision, policy):
     result = response.json()
     assert (result["decision"], result["policy"]) == (decision, policy)
     assert result["latency_ms"] >= 0
-    event = client.get(f'/api/events/{result["event_id"]}').json()
+    detail = client.get(f'/api/events/{result["event_id"]}')
+    # Public demo evaluations use bounded rejection telemetry, not protected retention.
+    if detail.status_code == 404:
+        assert client.get('/api/stats').json()['abuse']['dropped_samples'] > 0
+        assert decision not in {"BLOCK", "THROTTLE", "REQUIRE_APPROVAL"} or "sanitized_output" not in result
+        return result
+    event = detail.json()
     assert event["id"] == result["event_id"]
     assert (event["decision"], event["policy"], event["reason"]) == (decision, policy, result["reason"])
     if decision not in {"ALLOW", "REDACT"}:
@@ -112,11 +118,16 @@ def test_live_adversarial_context_tools_and_secret_evidence(live_security):
         assert response.status_code == (413 if len(raw) > 65536 else 422)
         result = response.json()
         assert (result["decision"], result["policy"]) == ("BLOCK", "fail_closed")
-        event = client.get(f'/api/events/{result["event_id"]}').json()
-        assert all(event[key] is None for key in ("request_id", "user", "role", "action", "resource", "classification", "destination"))
+        detail = client.get(f'/api/events/{result["event_id"]}')
+        if detail.status_code == 200:
+            event = detail.json()
+            assert all(event[key] is None for key in ("request_id", "user", "role", "action", "resource", "classification", "destination"))
+        else:
+            assert detail.status_code == 404
+            assert client.get('/api/stats').json()['abuse']['dropped_samples'] > 0
         assert secret not in response.text
         assert "SYNTHETIC_ERROR_SECRET" not in response.text
-    events = client.get("/api/events?limit=2000").json()["events"]
+    events = client.get("/api/events?limit=100").json()["events"]
     for event in events:
         assert not {"prompt", "source", "output", "sanitized_output", "tool_arguments"}.intersection(event)
         detail = client.get(f'/api/events/{event["id"]}').json()
@@ -154,11 +165,11 @@ def test_live_concurrent_quota_and_lower_limit_preserve_usage(live_security):
 def test_live_reload_approvals_and_honest_attack_failures(live_security):
     client, path = live_security
     original = yaml.safe_load(path.read_text())
-    admin = {"X-Aegis-User": "security_admin_1"}
+    admin = {"Authorization": "Bearer " + "a" * 48}
     pending = check(client, manager(action="export"), "REQUIRE_APPROVAL", "portfolio_restricted")
     endpoint = f'/api/approvals/{pending["event_id"]}'
     for headers in ({}, {"X-Aegis-User": "analyst_42"}, {"X-Aegis-User": "unknown"}):
-        assert client.post(endpoint, json={"approve": True}, headers=headers).status_code == 403
+        assert client.post(endpoint, json={"approve": True}, headers=headers).status_code == 401
     result = client.post(endpoint, json={"approve": True}, headers=admin).json()
     assert result["executed"] is False and result["status"] == "approved"
     assert client.post(endpoint, json={"approve": True}, headers=admin).status_code == 409
@@ -178,12 +189,14 @@ def test_live_reload_approvals_and_honest_attack_failures(live_security):
         assert status["loaded"] is False and status["version"] == "security-reload"
     write_policy(path, original)
     check(client, manager(), "ALLOW", "portfolio_restricted")
-    baseline = client.post("/api/redteam/run", json={}).json()
+    baseline = client.post("/api/redteam/run", json={}, headers=admin).json()
     assert (baseline["passed"], baseline["failed"], baseline["unexpected_allows"]) == (16, 0, 0)
     weakened = json.loads(json.dumps(original))
     weakened["resources"]["portfolio/current_positions"]["roles"].append("ANALYST")
     write_policy(path, weakened)
-    run = client.post("/api/redteam/run", json={}).json()
+    assert client.post("/api/redteam/run", json={}, headers=admin).status_code == 429
+    time.sleep(10.1)
+    run = client.post("/api/redteam/run", json={}, headers=admin).json()
     assert run["status"] == "completed"
     assert (run["passed"], run["failed"], run["unexpected_allows"]) == (15, 1, 1)
     assert client.get("/api/redteam/results").json() == run

@@ -54,6 +54,7 @@ export default function App({ api = defaultApi }: { api?: SecurityApi }) {
       </div></aside></div>
     </section>
     <EvaluationConsole key={credentialVersion} api={api} onEvaluated={() => void refresh()} onInspect={id => { void inspect(id); document.getElementById('audit')?.scrollIntoView({ behavior: 'instant' }); }} />
+    <SummaryPanels key={'summaries-' + credentialVersion} api={api} revision={eventVersion.current} />
     <footer><a href="#" className="footer-brand">AEGIS</a><p>Agent Enforcement Gateway for Intelligent Systems</p><a href="#console">Evaluate a proposal <span aria-hidden="true">↗</span></a></footer>
   </main>;
 }

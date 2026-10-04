@@ -60,7 +60,7 @@ export function createApi(baseUrl = '', fetcher: FetchTransport = (url, options)
         for (const chunk of chunks) { raw.set(chunk, offset); offset += chunk.byteLength; }
         const parsed: unknown = JSON.parse(new TextDecoder('utf-8', { fatal: true }).decode(raw));
         completed = true;
-        return parsed;
+        return { data: parsed, status: response.status };
       } catch { throw new ContractError(); }
     } finally {
       clearTimeout(timeout);

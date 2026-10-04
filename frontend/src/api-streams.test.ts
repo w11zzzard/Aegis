@@ -107,14 +107,15 @@ describe('response stream lifecycle', () => {
   it('accepts valid UTF-8 JSON at the exact byte budget despite a false smaller length', async () => {
     vi.useFakeTimers();
     const cancel = vi.fn();
-    const valid = new TextEncoder().encode('["\u00f3"]' + ' '.repeat(524288 - new TextEncoder().encode('["\u00f3"]').byteLength));
+    const payload = JSON.stringify({ loaded: true, version: '\u00f3', rule_count: 1, last_reload: null, error: null });
+    const valid = new TextEncoder().encode(payload + ' '.repeat(524288 - new TextEncoder().encode(payload).byteLength));
     const stream = new ReadableStream<Uint8Array>({ start(controller) { controller.enqueue(valid.slice(0, 3)); controller.enqueue(valid.slice(3)); controller.close(); }, cancel });
     let signal!: AbortSignal;
     const value = await createApi('', async (_url, options) => {
       signal = options.signal as AbortSignal;
       return new Response(stream, { headers: { 'Content-Length': '1' } });
-    }).stats();
-    expect(value).toEqual(['\u00f3']);
+    }).policyStatus();
+    expect(value).toEqual(JSON.parse(payload));
     expect(signal.aborted).toBe(false);
     expect(cancel).not.toHaveBeenCalled();
     expect(stream.locked).toBe(false);

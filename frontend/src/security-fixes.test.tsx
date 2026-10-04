@@ -36,7 +36,7 @@ describe('security remediation', () => {
     } finally { vi.useRealTimers(); }
   });
   it('uses the agreed approval body and bearer header without cookie credentials', async () => {
-    const transport = vi.fn(async (_url: string, _options: RequestInit) => new Response('{}'));
+    const transport = vi.fn(async (_url: string, _options: RequestInit) => new Response(JSON.stringify({ id: 'synthetic/id', status: 'approved', resolved_by: 'security_admin_1', executed: false })));
     await createApi('', transport, () => 'synthetic-test-credential').resolveApproval('synthetic/id', { approve: true });
     const options = transport.mock.calls[0][1];
     expect(options.headers).toHaveProperty('Authorization', 'Bearer synthetic-test-credential');

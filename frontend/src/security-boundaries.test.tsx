@@ -2,11 +2,16 @@ import { act, render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 import App from './App';
-import { createApi, setSessionToken } from './api';
+import { createApi as makeApi, setSessionToken } from './api';
+import { stats, policyStatus, notRun } from './summary-fixtures';
 import { ContractError, normalizeEvent, normalizeEvaluation } from './adapter';
 import { event, result } from './test-fixtures';
 
 const encoded = (value: unknown) => new Response(JSON.stringify(value));
+const summaries: Record<string, unknown> = { '/api/stats': stats, '/api/policies/status': policyStatus, '/api/redteam/results': notRun };
+function createApi(base: string, fetcher: (url: string, options: RequestInit) => Promise<Response>) {
+  return makeApi(base, (url, options) => url in summaries ? Promise.resolve(encoded(summaries[url])) : fetcher(url, options));
+}
 
 describe('browser security boundary invariants', () => {
   it('renders attacker-controlled audit and evaluation strings as inert text and omits content extras', async () => {
@@ -87,6 +92,7 @@ describe('browser security boundary invariants', () => {
     let resolveEvaluation!: (response: Response) => void;
     let authenticatedFeeds = 0;
     const fetcher = vi.fn((url: string, options: RequestInit) => {
+      if (url in summaries) return Promise.resolve(encoded(summaries[url]));
       const authenticated = new Headers(options.headers).has('Authorization');
       if (url === '/api/events') {
         if (!authenticated) return Promise.resolve(encoded({ events: [] }));

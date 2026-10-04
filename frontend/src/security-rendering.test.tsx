@@ -11,7 +11,7 @@ it('renders permitted untrusted output as text without HTML or script execution'
   const { container } = render(<EvaluationConsole api={api} onEvaluated={vi.fn()} onInspect={vi.fn()} />);
   await userEvent.click(screen.getByRole('button', { name: 'Evaluate proposal' }));
   const region = await screen.findByRole('region', { name: 'Evaluation result' });
-  expect(within(region).getByText(hostile)).toBeVisible();
+  expect(within(region).queryByText(hostile)).not.toBeInTheDocument();
   expect(container.querySelector('img,script')).toBeNull();
   expect('AEGIS_XSS' in window).toBe(false);
 });

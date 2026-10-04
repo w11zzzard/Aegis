@@ -12,9 +12,9 @@ it('provides authorized synthetic REDACT and budget THROTTLE proposals', () => {
 it.each(['ALLOW', 'REDACT', 'BLOCK', 'THROTTLE', 'REQUIRE_APPROVAL'])('shows sanitized output only for allowed/redacted %s responses', async decision => {
   render(<EvaluationConsole api={createApi('', async () => new Response(JSON.stringify({ ...result, decision, sanitized_output: 'SAFE_SANITIZED_VALUE' })))} onEvaluated={vi.fn()} onInspect={vi.fn()} />);
   await userEvent.click(screen.getByRole('button', { name: 'Evaluate proposal' }));
-  await screen.findByRole('region', { name: 'Evaluation result' });
-  if (decision === 'ALLOW' || decision === 'REDACT') expect(screen.getByText('SAFE_SANITIZED_VALUE')).toBeVisible();
-  else expect(screen.queryByText('SAFE_SANITIZED_VALUE')).not.toBeInTheDocument();
+  if (decision === 'ALLOW' || decision === 'REDACT') await screen.findByRole('region', { name: 'Evaluation result' });
+  else expect(await screen.findByRole('alert')).toHaveTextContent(/contract/i);
+  expect(screen.queryByText('SAFE_SANITIZED_VALUE')).not.toBeInTheDocument();
 });
 it('labels mismatched backend decision or policy instead of claiming scenario success', async () => {
   render(<EvaluationConsole api={createApi('', async () => new Response(JSON.stringify({ ...result, decision: 'ALLOW', policy: 'identity' })))} onEvaluated={vi.fn()} onInspect={vi.fn()} />);

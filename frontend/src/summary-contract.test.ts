@@ -5,7 +5,7 @@ import { stats, policyStatus, notRun, completed } from './summary-fixtures';
 import { result } from './test-fixtures';
 describe('validated summary boundaries', () => {
   it('accepts backend summaries, nullable latency and strips payloads', () => {
-    expect(normalizeStats({ ...stats, prompt: 'secret' })).toEqual(stats);
+    expect(() => normalizeStats({ ...stats, prompt: 'secret' })).toThrow(/contract/i);
     expect(normalizePolicyStatus(policyStatus)).toEqual(policyStatus);
     expect(normalizeRedteam(notRun)).toEqual(notRun);
     expect(normalizeRedteam(completed)).toEqual(completed);
@@ -24,18 +24,19 @@ describe('validated summary boundaries', () => {
     expect(() => normalizePolicyStatus({ loaded: 'true' })).toThrow(/contract/i);
   });
   it('never admits sanitized output on blocked or pending responses', () => {
-    for (const decision of ['BLOCK', 'REQUIRE_APPROVAL', 'THROTTLE']) expect(normalizeEvaluation({ ...result, decision, sanitized_output: 'secret' })).not.toHaveProperty('sanitized_output');
-    expect(normalizeEvaluation({ ...result, decision: 'REDACT', sanitized_output: '[REDACTED]' }).sanitized_output).toBe('[REDACTED]');
+    for (const decision of ['BLOCK', 'REQUIRE_APPROVAL', 'THROTTLE']) expect(() => normalizeEvaluation({ ...result, decision, sanitized_output: 'secret' })).toThrow(/contract/i);
+    expect(normalizeEvaluation({ ...result, decision: 'REDACT', sanitized_output: '[REDACTED]' })).not.toHaveProperty('sanitized_output');
   });
 });
 describe('demo approval boundary', () => {
   it('sends approve boolean and admin identity only on approval, verifies response id', async () => {
     const approved = { id: 'approval-1', status: 'approved', resolved_by: 'security_admin_1', executed: false };
     const fetcher = vi.fn().mockResolvedValueOnce(new Response(JSON.stringify(policyStatus))).mockResolvedValueOnce(new Response(JSON.stringify(approved)));
-    const api = createApi('', fetcher);
+    const api = createApi('', fetcher, () => 'synthetic-admin-token');
     await api.policyStatus(); expect(fetcher.mock.calls[0][1].headers).not.toHaveProperty('X-Aegis-User');
     expect(await api.resolveApproval('approval-1', { approve: true })).toEqual(approved);
-    expect(fetcher.mock.calls[1][1].headers).toHaveProperty('X-Aegis-User', 'security_admin_1');
+    expect(fetcher.mock.calls[1][1].headers).toHaveProperty('Authorization', 'Bearer synthetic-admin-token');
+    expect(fetcher.mock.calls[1][1].headers).not.toHaveProperty('X-Aegis-User');
     expect(JSON.parse(fetcher.mock.calls[1][1].body)).toEqual({ approve: true });
     await expect(createApi('', async () => new Response(JSON.stringify(approved))).resolveApproval('other', { approve: false })).rejects.toThrow(/contract/i);
   });

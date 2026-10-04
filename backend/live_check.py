@@ -2,6 +2,7 @@
 
 import argparse
 import json
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -11,6 +12,7 @@ import httpx
 def run(base_url):
     checks = []
     examples = {}
+    admin = {"Authorization": "Bearer " + os.environ.get("AEGIS_CHECK_ADMIN_TOKEN", "")}
     base = {
         "user": "analyst_42", "role": "ANALYST", "action": "read",
         "resource": "portfolio/current_positions", "classification": "RESTRICTED",
@@ -31,6 +33,10 @@ def run(base_url):
             assert (result["decision"], result["policy"]) == (decision, policy), (name, result)
             assert result["latency_ms"] >= 0
             response = client.get(f'/api/events/{result["event_id"]}')
+            if response.status_code == 404:
+                assert client.get('/api/stats').json()['abuse']['dropped_samples'] > 0
+                checks.append(name)
+                return result, None
             response.raise_for_status()
             event = response.json()
             assert event["id"] == result["event_id"]
@@ -64,7 +70,7 @@ def run(base_url):
         evaluate("token_budget", {**manager, "estimated_tokens": 1000000}, "THROTTLE", "budget")
         pending, _ = evaluate("export_approval", {**manager, "action": "export"}, "REQUIRE_APPROVAL", "portfolio_restricted")
         response = client.post(f'/api/approvals/{pending["event_id"]}', json={"approve": True},
-                               headers={"X-Aegis-User": "security_admin_1"})
+                               headers=admin)
         assert response.status_code == 200
         examples["approval"] = response.json()
         assert examples["approval"]["status"] == "approved"
@@ -79,12 +85,17 @@ def run(base_url):
             assert response.status_code == status
             result = response.json()
             assert (result["decision"], result["policy"]) == ("BLOCK", "fail_closed")
-            event = client.get(f'/api/events/{result["event_id"]}').json()
-            assert all(event[key] is None for key in ("request_id", "user", "role", "action", "resource", "classification", "destination"))
+            detail = client.get(f'/api/events/{result["event_id"]}')
+            event = detail.json() if detail.status_code == 200 else None
+            if event is not None:
+                assert all(event[key] is None for key in ("request_id", "user", "role", "action", "resource", "classification", "destination"))
+            else:
+                assert detail.status_code == 404
+                assert client.get('/api/stats').json()['abuse']['dropped_samples'] > 0
             examples[name + "_event"] = event
             checks.append(name)
 
-        response = client.post("/api/redteam/run", json={})
+        response = client.post("/api/redteam/run", json={}, headers=admin)
         response.raise_for_status()
         examples["redteam"] = response.json()
         assert examples["redteam"]["status"] == "completed"

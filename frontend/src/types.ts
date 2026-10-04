@@ -57,8 +57,8 @@ export interface EvaluateResponse {
 }
 
 // These responses have no field schema in v1; do not invent metric/status types.
-export type StatsResponse = JsonValue;
-export type PolicyStatusResponse = JsonValue;
-export type RedteamResponse = JsonValue;
-export type ApprovalResponse = JsonValue;
+export type StatsResponse = import('zod').infer<typeof import('./schemas').statsSchema>;
+export type PolicyStatusResponse = import('zod').infer<typeof import('./schemas').policySchema>;
+export type RedteamResponse = import('zod').infer<typeof import('./schemas').redteamSchema>;
+export type ApprovalResponse = import('zod').infer<typeof import('./schemas').approvalSchema>;
 export interface ApprovalRequest { approve: boolean }

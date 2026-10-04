@@ -78,7 +78,7 @@ def test_approval_resolution_preserves_original_attempted_action(client):
         user="manager_1", role="PORTFOLIO_MANAGER", action="export",
     )).json()
     result = client.post(f'/api/approvals/{pending["event_id"]}', json={"approve": True},
-                         headers={"X-Aegis-User": "security_admin_1"})
+                         headers={"Authorization": "Bearer " + "a" * 48})
     assert result.status_code == 200
     assert result.json()["executed"] is False
     event = client.get("/api/events").json()["events"][0]

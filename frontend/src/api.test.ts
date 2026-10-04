@@ -76,3 +76,4 @@ describe('API requests', () => {
     vi.useRealTimers();
   });
 });
+import { stats, policyStatus, completed, notRun } from './summary-fixtures';

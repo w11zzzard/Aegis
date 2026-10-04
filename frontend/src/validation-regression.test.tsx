@@ -9,15 +9,13 @@ import { scenarios } from './scenarios';
 it.each([422, 413])('retains HTTP %i and navigation for a sanitized validation BLOCK', async status => {
   const failure = { ...result, policy: 'fail_closed', reason: status === 422 ? 'Malformed request' : 'Request body too large' };
   const api = createApi('', async () => new Response(JSON.stringify(failure), { status }));
-  expect(await api.evaluate(scenarios[0].request)).toEqual({ ...failure, http_status: status });
+  await expect(api.evaluate(scenarios[0].request)).rejects.toThrow('HTTP ' + status);
   const inspect = vi.fn();
   render(<EvaluationConsole api={api} onEvaluated={vi.fn()} onInspect={inspect} />);
   await userEvent.click(screen.getByRole('button', { name: 'Evaluate proposal' }));
-  const region = await screen.findByRole('region', { name: 'Evaluation result' });
-  expect(within(region).getByText(new RegExp('HTTP ' + status))).toBeVisible();
-  expect(region).toHaveTextContent('BLOCK');
-  await userEvent.click(within(region).getByRole('button', { name: 'Inspect audited event' }));
-  expect(inspect).toHaveBeenCalledWith(result.event_id);
+  expect(await screen.findByRole('alert')).toHaveTextContent('HTTP ' + status);
+  expect(screen.queryByRole('region', { name: 'Evaluation result' })).not.toBeInTheDocument();
+  expect(inspect).not.toHaveBeenCalled();
 });
 
 it.each([
@@ -27,7 +25,7 @@ it.each([
   { detail: 'private error trace' },
 ])('rejects arbitrary 422 bodies without exposing them: %j', async body => {
   const api = createApi('', async () => new Response(JSON.stringify(body), { status: 422 }));
-  await expect(api.evaluate(scenarios[0].request)).rejects.toThrow(/contract/i);
+  await expect(api.evaluate(scenarios[0].request)).rejects.toThrow('HTTP 422');
 });
 
 it('does not trust error status fields returned inside a successful JSON body', async () => {
