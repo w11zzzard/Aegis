@@ -68,6 +68,20 @@ def create_app(policy_path=None, *, profile=None, auth_tokens=None, state_path=N
     def health():
         return {"status": "ok"}
 
+    @app.get("/api/session")
+    def session(request: Request):
+        # Caller-scoped display hints only. Every protected endpoint still
+        # performs its own authorization; never expose the credential catalog.
+        principal = getattr(request.state, "principal", None)
+        admin = principal is not None and principal[1] == "SECURITY_ADMIN"
+        return {
+            "profile": profile,
+            "user": principal[0] if principal else None,
+            "role": principal[1] if principal else None,
+            "can_observe": admin or (profile == "local-demo" and principal is None),
+            "can_admin": admin,
+        }
+
     @app.get("/api/events")
     def events(request: Request, limit: int = Query(100, ge=1, le=100)):
         principal = getattr(request.state, "principal", None)

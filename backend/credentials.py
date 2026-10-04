@@ -14,7 +14,9 @@ def main():
     if not policy.config:
         raise SystemExit("Valid policy required to provision credentials")
     path = root / ".aegis/credentials.json"
-    path.parent.mkdir(parents=True, exist_ok=True)
+    path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+    if os.name != "nt" and (path.parent.stat().st_mode & 0o077 or path.parent.stat().st_uid != os.getuid()):
+        raise SystemExit("Credential directory must be private to its operator (mode 0700)")
     # Exclusive create prevents accidental rotation or overwriting operator work.
     descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     with os.fdopen(descriptor, "w", encoding="utf-8") as handle:

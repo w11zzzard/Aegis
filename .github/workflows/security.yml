@@ -55,3 +55,14 @@ jobs:
           AEGIS_TEST_PYTHON: python
           PLAYWRIGHT_CHANNEL: chromium
         run: node frontend/scripts/verify-security.mjs
+      - name: Browser rendering and disconnect regressions
+        working-directory: frontend
+        env:
+          PLAYWRIGHT_CHANNEL: chromium
+        run: npm run test:e2e
+      - name: Offline-runtime browser verification
+        env:
+          AEGIS_TEST_PYTHON: python
+          PLAYWRIGHT_CHANNEL: chromium
+          AEGIS_OFFLINE_GUARD: '1'
+        run: node frontend/scripts/verify-security.mjs

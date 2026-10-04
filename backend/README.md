@@ -18,7 +18,11 @@ $env:AEGIS_STATE_PATH = Join-Path (Get-Location) '.aegis/state.sqlite3'
 
 The provisioner creates independent cryptographically random credentials in an exclusive file; it never prints their values or overwrites operator work. Keep `.aegis/` private to the operator account using filesystem permissions (on Windows, inspect its NTFS ACL). Git ignores it. Share only each user's own credential and protect policy files with the same operator boundary. Rotate by replacing the file privately and restarting every worker; removing identities from the policy denies subsequent admissions. These are service tokens, with no password login, session/MFA or identity-provider integration.
 
+On POSIX, new credential/state directories use 0700 and new files use 0600 regardless of process umask. The provisioner refuses a public credential directory; SQLite refuses symlink/non-regular files, existing database files accessible to other accounts or owned by another user, and state directories owned or writable by other accounts. It does not chmod, truncate or reset operator state. If migrating an older database, stop all workers, verify ownership and set the specific database's permissions to 0600 before restarting. Windows mode bits are not NTFS ACLs: the operator must restrict the credential/state directory to the intended service account. These checks do not replace a least-privilege host/runtime.
+
 In `frontend/`, run `npm ci` and `npm run dev`. Enter your token in **API credential** and choose **Connect**. It stays in memory until disconnect/reload. A preset must match its credential: a manager token cannot impersonate an analyst. An analyst requesting the restricted portfolio receives BLOCK; an authorized manager requesting INTERNAL receives ALLOW; RESTRICTED to EXTERNAL blocks regardless of role.
+
+The dashboard gets caller-scoped display permissions from `/api/session`. Managers/analysts do not automatically request global administrative summaries; administrators can load them and run the corpus. Disconnect clears views and cancels pending requests. Session metadata contains no token or identity catalog and does not grant authorization: each protected route still checks it independently.
 
 CLI example (keep credentials out of URLs and Git):
 

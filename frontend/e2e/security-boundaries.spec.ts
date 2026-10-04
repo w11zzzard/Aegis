@@ -3,6 +3,10 @@ import path from 'node:path';
 import { test, expect } from '@playwright/test';
 import { event, result } from '../src/test-fixtures';
 
+test.beforeEach(async ({ page }) => {
+  await page.route('**/api/session', route => route.fulfill({ json: { profile: 'authenticated', user: 'manager_1', role: 'PORTFOLIO_MANAGER', can_observe: false, can_admin: false } }));
+});
+
 test('fixture security fields stay inert and content extras never reach the dashboard at three widths', async ({ page }, testInfo) => {
   const payload = '<img data-aegis-xss="1" src=x onerror="alert(1)">';
   const raw = { ...event, reason: payload, resource: payload, actor: payload };

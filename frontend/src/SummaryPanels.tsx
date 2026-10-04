@@ -67,12 +67,26 @@ function Redteam({ data }: { data: RedteamResponse }) {
 }
 export function SummaryPanels({ api, revision = 0 }: { api: SecurityApi; revision?: number }) {
   const [refresh, setRefresh] = useState(0);
+  const [session, setSession] = useState<Awaited<ReturnType<SecurityApi['session']>> | null>(null);
+  const [sessionError, setSessionError] = useState<string | null>(null);
+  useEffect(() => {
+    let active = true;
+    setSession(null); setSessionError(null);
+    void api.session().then(value => { if (active) setSession(value); }, failure => {
+      if (active) setSessionError((failure as Error).message);
+    });
+    return () => { active = false; };
+  }, [api, refresh]);
   return <section aria-label="Security summaries" className="summary-section">
     <div className="section-header"><div><p className="eyebrow">Current backend state</p><h2>Security summaries.</h2></div><button className="secondary" onClick={() => setRefresh(value => value + 1)}>Refresh summaries</button></div>
-    <div className="summary-grid">
+    {!session && !sessionError && <p className="loading">Checking summary access…</p>}
+    {sessionError && <p role="alert" className="error-message">{sessionError}</p>}
+    {session && !session.can_observe && <p>Global security summaries require a SECURITY_ADMIN credential. Your own audit trail and proposal evaluations remain available.</p>}
+    {session?.profile === 'local-demo' && <p>Synthetic local demo — identities are not authenticated without a credential. Admin operations still require an administrator credential.</p>}
+    {session?.can_observe && <div className="summary-grid">
       <ResourcePanel title="Decisions and budget" loader={api.stats} revision={revision + refresh} render={data => <Stats data={data} />} />
       <ResourcePanel title="Policy status" loader={api.policyStatus} revision={revision + refresh} render={data => <Policy data={data} />} />
-      <ResourcePanel title="Red-team evidence" loader={api.redteamResults} run={api.runRedteam} revision={revision + refresh} render={data => <Redteam data={data} />} />
-    </div>
+      <ResourcePanel title="Red-team evidence" loader={api.redteamResults} run={session.can_admin ? api.runRedteam : undefined} revision={revision + refresh} render={data => <Redteam data={data} />} />
+    </div>}
   </section>;
 }

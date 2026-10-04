@@ -20,3 +20,4 @@ build/
 *.sqlite3-shm
 coverage.xml
 htmlcov/
+output/

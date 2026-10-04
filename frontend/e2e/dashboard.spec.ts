@@ -4,6 +4,7 @@ import { stats, policyStatus, notRun } from '../src/summary-fixtures';
 
 test('backend event → selected detail → actual evaluation → audited refresh', async ({ page }) => {
   // Isolated browser test transport. Application has no mock mode.
+  await page.route('**/api/session', route => route.fulfill({ json: { profile: 'local-demo', user: null, role: null, can_observe: true, can_admin: false } }));
   await page.route('**/api/events', route => route.fulfill({ json: [event] }));
   await page.route('**/api/stats', route => route.fulfill({ json: stats }));
   await page.route('**/api/policies/status', route => route.fulfill({ json: policyStatus }));

@@ -1,7 +1,9 @@
 """Atomic shared state for workers on one host, on a local SQLite filesystem."""
 
 import json
+import os
 import sqlite3
+import stat
 from contextlib import closing, contextmanager
 from pathlib import Path
 from typing import Annotated, Literal
@@ -73,7 +75,7 @@ class StoredGateway(StrictModel):
     schema_version: Literal[2] = 2
     events: Annotated[list[StoredEvent], Field(max_length=2000)]
     counts: dict[Decision, CounterValue]
-    usage: dict[Identifier, Annotated[list[tuple[ClockValue, Annotated[int, Field(ge=1, le=1000000)]]], Field(max_length=100000)]]
+    usage: Annotated[dict[Identifier, Annotated[list[tuple[ClockValue, Annotated[int, Field(ge=1, le=1000000)]]], Field(max_length=100000)]], Field(max_length=1000)]
     approvals: Annotated[dict[AuditText, StoredApproval], Field(max_length=2000)]
     admin_last_run: ClockValue = 0
     redteam_last: StoredRedteam = Field(default_factory=lambda: StoredRedteam(status="not_run", results=[], total=0, unexpected_allows=0))
@@ -114,8 +116,27 @@ def decode_state(raw, schema):
 
 class StateStore:
     def __init__(self, path):
+        # Reject file aliases before resolve; the parent directory remains an
+        # operator-controlled boundary, not an attacker-writable location.
+        if Path(path).is_symlink():
+            raise sqlite3.DatabaseError("Security state must be a private regular file")
         self.path = Path(path).resolve()
-        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+        directory = self.path.parent.stat()
+        if os.name != "nt" and (directory.st_mode & 0o022 or directory.st_uid != os.getuid()):
+            raise sqlite3.DatabaseError("Security state directory must be private to its operator")
+        try:
+            descriptor = os.open(self.path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        except FileExistsError:
+            pass
+        else:
+            os.close(descriptor)
+        metadata = self.path.stat()
+        if not stat.S_ISREG(metadata.st_mode) or (os.name != "nt" and (
+            metadata.st_mode & 0o077 or metadata.st_uid != os.getuid()
+        )):
+            # Refuse rather than silently chmod, truncate, or reset existing state.
+            raise sqlite3.DatabaseError("Security state must be a private regular file")
         with closing(sqlite3.connect(self.path, timeout=5)) as db:
             db.execute("CREATE TABLE IF NOT EXISTS gateway_state (id INTEGER PRIMARY KEY CHECK(id=1), body TEXT NOT NULL)")
             db.execute("CREATE TABLE IF NOT EXISTS security_controls (id INTEGER PRIMARY KEY CHECK(id=1), body TEXT NOT NULL)")

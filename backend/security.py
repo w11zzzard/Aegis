@@ -110,7 +110,10 @@ class SecurityMiddleware:
         if path == "/health" or scope["method"] == "OPTIONS":
             return await self.app(scope, receive, secure_send)
         admin = path == "/api/redteam/run" or path.startswith("/api/approvals/")
-        protected = self.profile == "authenticated" or admin
+        # A demo's optional session credential must be verified, not silently
+        # reported as anonymous. Public simulation evaluations still use demo
+        # claims; this display endpoint grants no business/tool authorization.
+        protected = self.profile == "authenticated" or admin or (path == "/api/session" and bool(authorization))
         if protected:
             if self.profile == "authenticated" and not self.state_ready:
                 return await deny(503, "Authenticated mode requires AEGIS_STATE_PATH")

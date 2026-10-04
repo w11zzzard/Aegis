@@ -1,14 +1,40 @@
-import { ContractError, normalizeEvent, normalizeEvents, normalizeEvaluation, normalizeStats, normalizePolicyStatus, normalizeRedteam, normalizeApproval } from './adapter';
+import { ContractError, normalizeEvent, normalizeEvents, normalizeEvaluation, normalizeStats, normalizePolicyStatus, normalizeRedteam, normalizeApproval, normalizeSession } from './adapter';
 import type { ApprovalRequest, ApprovalResponse, EvaluateRequest, EvaluateResponse, PolicyStatusResponse, RedteamResponse, StatsResponse } from './types';
 
 type FetchTransport = (url: string, options: RequestInit) => Promise<Response>;
 const MAX_RESPONSE_BYTES = 524288;
 let sessionToken = '';
-export function setSessionToken(token: string) { sessionToken = token; }
-export function createApi(baseUrl = '', fetcher: FetchTransport = (url, options) => fetch(url, options), token: () => string = () => sessionToken) {
+let sessionRevision = 0;
+const sessionRequests = new Set<AbortController>();
+const currentToken = () => sessionToken;
+export function setSessionToken(token: string) {
+  sessionToken = token;
+  ++sessionRevision;
+  for (const controller of sessionRequests) controller.abort();
+  sessionRequests.clear();
+}
+function validateBase(base: string) {
+  const invalid = () => { throw new Error('Invalid API base: use a same-origin path, HTTPS, or loopback HTTP.'); };
+  if (/\s|\\/.test(base) || base.startsWith('//')) invalid();
+  if (!base) return;
+  let url: URL;
+  try { url = new URL(base, 'https://aegis-relative.invalid'); } catch { return invalid(); }
+  const relative = base.startsWith('/');
+  if ((!relative && !/^https?:\/\//.test(base)) || url.username || url.password || url.search || url.hash ||
+    (!relative && url.protocol === 'http:' && !['127.0.0.1', 'localhost', '[::1]'].includes(url.hostname))) invalid();
+}
+export function createApi(baseUrl = '', fetcher: FetchTransport = (url, options) => fetch(url, options), token: () => string = currentToken) {
+  validateBase(baseUrl);
   const base = baseUrl.replace(/\/$/, '');
-  async function request(path: string, body?: unknown, extraHeaders: Record<string, string> = {}): Promise<{ data: unknown; status: number }> {
+  async function request(path: string, body?: unknown): Promise<{ data: unknown; status: number }> {
     const controller = new AbortController();
+    const revision = sessionRevision;
+    const usesSession = token === currentToken;
+    const credential = token();
+    if (usesSession) sessionRequests.add(controller);
+    const assertSession = () => {
+      if (usesSession && revision !== sessionRevision) throw new Error('Session changed; previous request refused. Retry with the current credential.');
+    };
     const timeout = setTimeout(() => controller.abort(), 10000);
     let response: Response | undefined;
     let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
@@ -18,12 +44,14 @@ export function createApi(baseUrl = '', fetcher: FetchTransport = (url, options)
       try {
         response = await fetcher(`${base}${path}`, {
           method: body === undefined ? 'GET' : 'POST', signal: controller.signal,
-          headers: { Accept: 'application/json', ...(body === undefined ? {} : { 'Content-Type': 'application/json' }), ...(token() ? { Authorization: `Bearer ${token()}` } : {}) },
+          headers: { Accept: 'application/json', ...(body === undefined ? {} : { 'Content-Type': 'application/json' }), ...(credential ? { Authorization: `Bearer ${credential}` } : {}) },
           body: body === undefined ? undefined : JSON.stringify(body), cache: 'no-store', credentials: 'omit', redirect: 'error',
         });
       } catch {
+        assertSession();
         throw new Error(`Backend unreachable: ${path}. Check the API server and connection, then retry.`);
       }
+      assertSession();
       if (!response.ok) throw new Error(`Backend request failed: ${path} (HTTP ${response.status}). Check the API server and proxy, then retry.`);
       const size = Number(response.headers.get('content-length'));
       if (size > MAX_RESPONSE_BYTES) throw new ContractError();
@@ -51,9 +79,11 @@ export function createApi(baseUrl = '', fetcher: FetchTransport = (url, options)
           chunks.push(value);
         }
       } catch (error) {
+        assertSession();
         if (error instanceof ContractError) throw error;
         throw new Error(`Backend unreachable: ${path}. Response interrupted or timed out; retry.`);
       }
+      assertSession();
       try {
         const raw = new Uint8Array(bytes);
         let offset = 0;
@@ -63,6 +93,7 @@ export function createApi(baseUrl = '', fetcher: FetchTransport = (url, options)
         return { data: parsed, status: response.status };
       } catch { throw new ContractError(); }
     } finally {
+      sessionRequests.delete(controller);
       clearTimeout(timeout);
       if (!completed) {
         controller.abort();
@@ -76,6 +107,7 @@ export function createApi(baseUrl = '', fetcher: FetchTransport = (url, options)
     }
   }
   return {
+    session: async () => normalizeSession((await request('/api/session')).data),
     events: async () => normalizeEvents((await request('/api/events')).data),
     event: async (id: string) => {
       const event = normalizeEvent((await request(`/api/events/${encodeURIComponent(id)}`)).data);
@@ -85,19 +117,12 @@ export function createApi(baseUrl = '', fetcher: FetchTransport = (url, options)
     stats: async (): Promise<StatsResponse> => normalizeStats((await request('/api/stats')).data),
     policyStatus: async (): Promise<PolicyStatusResponse> => normalizePolicyStatus((await request('/api/policies/status')).data),
     evaluate: async (body: EvaluateRequest): Promise<EvaluateResponse> => {
-      const { data, status } = await request('/api/security/evaluate', body);
-      const result = normalizeEvaluation(data);
-      if (status === 422 || status === 413) {
-        const reason = status === 422 ? 'Malformed request' : 'Request body too large';
-        if (result.decision !== 'BLOCK' || result.policy !== 'fail_closed' || result.reason !== reason) throw new ContractError();
-        return { ...result, http_status: status };
-      }
-      return result;
+      return normalizeEvaluation((await request('/api/security/evaluate', body)).data);
     },
     runRedteam: async (): Promise<RedteamResponse> => normalizeRedteam((await request('/api/redteam/run', {})).data),
     redteamResults: async (): Promise<RedteamResponse> => normalizeRedteam((await request('/api/redteam/results')).data),
     resolveApproval: async (id: string, body: ApprovalRequest): Promise<ApprovalResponse> => {
-      const response = normalizeApproval((await request(`/api/approvals/${encodeURIComponent(id)}`, body, { 'X-Aegis-User': 'security_admin_1' })).data);
+      const response = normalizeApproval((await request(`/api/approvals/${encodeURIComponent(id)}`, body)).data);
       if (response.id !== id || response.status !== (body.approve ? 'approved' : 'denied')) throw new ContractError();
       return response;
     },

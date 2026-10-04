@@ -8,9 +8,26 @@ import sys
 import time
 
 import httpx
+import pytest
 
+from backend import live_check
 from backend.live_check import main, run
 from backend.main import ROOT
+
+
+def test_verification_conditions_are_unconditional_and_errors_are_sanitized():
+    live_check.require(True)
+    with pytest.raises(AssertionError, match='^Live verification failed$'):
+        live_check.require(False)
+
+
+@pytest.mark.parametrize('base', ['https://example.com', 'http://192.0.2.1', 'http://token@localhost:8000', 'http://localhost:8000?secret=x', 'http://localhost:8000/proxy', 'file:///tmp/api'])
+def test_rehearsal_never_sends_admin_credentials_outside_loopback(base, monkeypatch):
+    def forbidden(*_args, **_kwargs):
+        raise AssertionError('Unsafe URL reached the HTTP transport')
+    monkeypatch.setattr(httpx, 'Client', forbidden)
+    with pytest.raises(ValueError, match='loopback HTTP origin'):
+        run(base)
 
 
 def test_real_http_guard_and_contract_rehearsal(tmp_path, monkeypatch, capsys):

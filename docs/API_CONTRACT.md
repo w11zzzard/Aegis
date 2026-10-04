@@ -4,7 +4,7 @@ Source of truth: the FastAPI implementation and trusted YAML catalog. All decisi
 
 ## Local integration and canonical values
 
-Base URL: `http://127.0.0.1:8000`. CORS allows `http://localhost:5173` and `http://127.0.0.1:5173`, GET/POST, Content-Type and X-Aegis-User. The existing Vite configuration proxies `/api` to that backend; set `AEGIS_BACKEND_URL` when using an isolated backend port. `/health` and `/v1` currently require direct backend calls or a separately configured proxy.
+Base URL: `http://127.0.0.1:8000`. Default CORS origins are `http://localhost:5173` and `http://127.0.0.1:5173`, GET/POST, Content-Type and Authorization. Vite development and build-preview servers proxy `/api` to that backend; set `AEGIS_BACKEND_URL` when using an isolated backend port. `/health` and `/v1` require direct backend calls or a separately configured proxy. The browser client refuses non-local plain HTTP, protocol-relative URLs, embedded URL credentials, query/fragment API bases and redirects.
 
 | Type | Accepted values |
 | --- | --- |
@@ -19,6 +19,8 @@ Base URL: `http://127.0.0.1:8000`. CORS allows `http://localhost:5173` and `http
 The default `authenticated` profile requires `Authorization: Bearer <credential>` for every route except minimal `/health` and CORS preflight. Independently generated credentials map to the trusted identity registry; `X-Aegis-User` never authorizes requests. User/role may be omitted in authenticated evaluations: the server derives them from the credential. Conflicting claims return a canonical BLOCK; invalid credentials return 401. Missing `AEGIS_STATE_PATH` or unavailable security state returns sanitized 503 without output.
 
 Users can read only their own event collections/details. SECURITY_ADMIN can inspect all sanitized events, global stats, policy status and red-team results, run red-team cases and resolve approvals. Inaccessible event IDs return 404; docs/OpenAPI are disabled.
+
+GET `/api/session` returns only the caller's verified `user`, `role`, selected `profile` (`authenticated` or `local-demo`), `can_observe` and `can_admin` booleans. Authenticated regular users have both flags false; SECURITY_ADMIN has both true. An explicit anonymous loopback demo returns null user/role, can_observe true and can_admin false. A supplied demo session credential must verify against the registry; it is not silently ignored. The flags help the dashboard avoid forbidden requests; every protected route independently authorizes access. The endpoint never returns credentials or the identity registry, and uses no-store. Invalid/absent authenticated credentials return 401; missing persistent configuration returns 503. Invalid policy prevents verifying authenticated identities and returns 401 until repaired.
 
 Explicit `local-demo` is a loopback-only synthetic evaluation profile with public simulator reads and selectable demo identities. Administrative writes still require a SECURITY_ADMIN bearer credential. Actual browser requests require an exact configured origin, including bodyless POSTs; defaults are localhost/127.0.0.1:5173. This profile must not be publicly proxied or connected to real data. `production` is unsupported and rejected at startup until its identity/TLS/runtime requirements are implemented and verified.
 
@@ -248,7 +250,7 @@ Use event_id from an authorized REQUIRE_APPROVAL evaluation as `{id}`. Demo requ
 ```http
 POST /api/approvals/<event_id>
 Content-Type: application/json
-X-Aegis-User: security_admin_1
+Authorization: Bearer <operator-provided-admin-credential>
 
 {"approve":true}
 ```
@@ -263,13 +265,15 @@ status is approved or denied; id matches the pending event, resolved_by is the r
 
 | HTTP | Outcome |
 | --- | --- |
-| 403 | Missing/non-admin identity or invalid policy: detail `A valid SECURITY_ADMIN identity is required` |
+| 401 | Missing/invalid bearer credential or identity unavailable in the current policy |
+| 403 | Valid non-admin credential: detail `SECURITY_ADMIN access is required` |
+| 503 | Missing persistent state in authenticated mode or unavailable security storage |
 | 404 | With valid admin context, unknown id: detail `Approval not found` |
 | 409 | Expired/resolved/replayed: detail `Approval is no longer pending` |
 | 409 | Changed policy/authorization: detail `Policy or authorization changed; evaluate again`; record invalidated |
 | 422 | Missing/wrong approve or unknown body fields: sanitized Evaluation BLOCK envelope |
 
-Authorization is checked before id lookup, so missing identity returns 403 even for an unknown id.
+Authorization is checked before ID lookup: an unauthenticated request returns 401 even for an unknown ID.
 
 ## Minimal offline chat
 
@@ -279,4 +283,4 @@ The backend combines message content, replaces security.prompt/output with its o
 
 ## State and setup
 
-Use backend/requirements-lock.txt for reproducible installation; see backend/README.md. One process/worker only: audit, approval and quota state are bounded in memory and reset on restart. Semantic checks, authentication and real model/data integrations are not established by this demo. Confirm competition scope with the mentor before making claims about them.
+Use backend/requirements-lock.txt for reproducible installation; see backend/README.md. The authenticated default requires private service credentials and `AEGIS_STATE_PATH`. Local-filesystem SQLite transactions share quotas, approvals, audit and admission controls across workers on one host and across restarts. Separate worker databases, network filesystems and distributed deployments are unsupported. The explicit in-memory local demo uses one worker and resets on restart. New POSIX database files are owner-only (0600); permissive/non-owned/non-regular existing files and file symlinks are refused without alteration. Windows needs operator-managed NTFS ACLs. Persisted budget-principal cardinality is capped at 1,000 and invalid state is refused without resetting it. Production TLS, enterprise identity/MFA, protected audit archival/recovery, real data/tool sink authorization and semantic/model integrations are not established by this local demo.

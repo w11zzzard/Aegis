@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { classifications, decisions, roles } from './types';
 import type { SecurityEvent, EvaluateResponse, JsonValue } from './types';
-import { statsSchema, policySchema, redteamSchema, approvalSchema } from './schemas';
+import { statsSchema, policySchema, redteamSchema, approvalSchema, sessionSchema } from './schemas';
 
 const eventSchema = z.object({
   id: z.string().min(1).max(128), timestamp: z.string().min(1).max(64), request_id: z.string().max(128).nullish(),
@@ -76,3 +76,4 @@ export function normalizeStats(value: unknown) { rejectSensitiveFields(value); r
 export function normalizePolicyStatus(value: unknown) { rejectSensitiveFields(value); return parse(policySchema, value); }
 export function normalizeRedteam(value: unknown) { rejectSensitiveFields(value); return parse(redteamSchema, value); }
 export function normalizeApproval(value: unknown) { rejectSensitiveFields(value); return parse(approvalSchema, value); }
+export function normalizeSession(value: unknown) { rejectSensitiveFields(value); return parse(sessionSchema, value); }

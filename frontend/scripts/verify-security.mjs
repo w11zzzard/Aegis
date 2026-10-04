@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
-const evidenceDir = process.env.AEGIS_EVIDENCE_DIR || path.join(root, 'docs/security-review/2026-10-04');
+const evidenceDir = process.env.AEGIS_EVIDENCE_DIR || path.join(root, 'output/release-verification');
 const python = process.env.AEGIS_TEST_PYTHON || path.join(root, 'backend/.venv/Scripts/python.exe');
 const offlineGuard = process.env.AEGIS_OFFLINE_GUARD === '1';
 const evidencePrefix = offlineGuard ? 'frontend-offline' : 'frontend-live';
@@ -24,6 +24,15 @@ let browser;
 let evidence;
 const startedAt = new Date().toISOString();
 const hostile = http.createServer((_request, response) => response.end('<!doctype html><title>Synthetic untrusted origin</title>'));
+const guardedBrowserBlocks = [];
+const offlineProxy = http.createServer((request, response) => {
+  guardedBrowserBlocks.push(new URL(request.url).origin);
+  response.writeHead(403, { Connection: 'close' }); response.end();
+});
+offlineProxy.on('connect', (request, socket) => {
+  guardedBrowserBlocks.push(new URL('https://' + request.url).origin);
+  socket.end('HTTP/1.1 403 Forbidden\r\nConnection: close\r\n\r\n');
+});
 let backendPort;
 const dist = path.join(root, 'frontend/dist');
 const frontend = http.createServer(async (request, response) => {
@@ -78,6 +87,36 @@ async function startBackend(profile, port, frontendOrigin, policyPath = path.joi
   throw new Error('Dedicated backend readiness timeout');
 }
 
+async function verifyBuildPreview(targetPort) {
+  const probe = http.createServer(); const port = await listen(probe); await close(probe);
+  const child = spawn(process.execPath, ['node_modules/vite/bin/vite.js', 'preview', '--host', '127.0.0.1', '--port', String(port), '--strictPort'], {
+    cwd: path.join(root, 'frontend'), windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'],
+    env: { ...process.env, AEGIS_BACKEND_URL: `http://127.0.0.1:${targetPort}`, VITE_API_BASE_URL: '' },
+  });
+  children.push(child);
+  let failure;
+  child.once('error', error => { failure = error; });
+  child.stdout.on('data', () => {}); child.stderr.on('data', () => {});
+  for (let attempt = 0; attempt < 80; attempt++) {
+    if (failure) throw failure;
+    if (child.exitCode !== null) throw new Error('Dedicated preview failed to start');
+    let response;
+    try { response = await fetch(`http://127.0.0.1:${port}/`); } catch {}
+    if (response) {
+      assert.equal(response.status, 200);
+      assert.equal(response.headers.get('cache-control'), 'no-store');
+      assert.ok(response.headers.get('content-security-policy')?.includes("frame-ancestors 'none'"));
+      await response.body?.cancel();
+      const session = await fetch(`http://127.0.0.1:${port}/api/session`, { headers: { Authorization: 'Bearer ' + tokens.manager_1 } });
+      assert.equal(session.status, 200, 'Build preview must proxy protected API requests');
+      assert.deepEqual(await session.json(), { profile: 'authenticated', user: 'manager_1', role: 'PORTFOLIO_MANAGER', can_observe: false, can_admin: false });
+      return { servedBuild: true, securityHeaders: true, authenticatedApiProxy: true };
+    }
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+  throw new Error('Dedicated preview readiness timeout');
+}
+
 try {
   await mkdir(evidenceDir, { recursive: true });
   await mkdir(path.join(root, 'output/security-audit'), { recursive: true });
@@ -87,21 +126,17 @@ try {
   const frontendPort = await listen(frontend);
   const base = `http://127.0.0.1:${backendPort}`;
   await startBackend('authenticated', backendPort, `http://127.0.0.1:${frontendPort}`);
+  const buildPreview = await verifyBuildPreview(backendPort);
   const adminHeaders = { Authorization: 'Bearer ' + tokens.security_admin_1 };
   assert.equal((await fetch(base + '/api/events')).status, 401);
-  browser = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL || 'chrome', headless: true });
+  const offlineProxyPort = offlineGuard ? await listen(offlineProxy) : null;
+  browser = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL || 'chrome', headless: true,
+    ...(offlineGuard ? { proxy: { server: `http://127.0.0.1:${offlineProxyPort}`, bypass: '127.0.0.1,localhost,[::1]' } } : {}) });
   const context = await browser.newContext();
-  const guardedBrowserBlocks = [];
   if (offlineGuard) {
-    await context.route('**/*', route => {
-      const url = new URL(route.request().url());
-      if (['127.0.0.1', 'localhost', '[::1]'].includes(url.hostname)) return route.continue();
-      guardedBrowserBlocks.push(url.origin);
-      return route.abort('internetdisconnected');
-    });
     const probePage = await context.newPage();
-    await assert.rejects(probePage.goto('https://aegis-owned-negative.invalid/'), /ERR_INTERNET_DISCONNECTED/);
-    assert.deepEqual(guardedBrowserBlocks, ['https://aegis-owned-negative.invalid']);
+    await assert.rejects(probePage.goto('https://aegis-owned-negative.invalid/'), /ERR_TUNNEL_CONNECTION_FAILED/);
+    assert.ok(guardedBrowserBlocks.includes('https://aegis-owned-negative.invalid'));
     await probePage.close();
   }
   const page = await context.newPage();
@@ -133,8 +168,12 @@ try {
   const hostileConsoleErrors = consoleErrors.splice(0);
   assert.ok(hostileConsoleErrors.every(message => /^Failed to load resource: the server responded with a status of 403\b/.test(message)));
   await page.goto(`http://127.0.0.1:${frontendPort}`);
+  await page.getByRole('alert').filter({ hasText: '/api/events (HTTP 401)' }).waitFor();
+  await page.getByRole('alert').filter({ hasText: '/api/session (HTTP 401)' }).waitFor();
   await page.getByLabel('API credential').fill(tokens.manager_1);
   await page.getByRole('button', { name: 'Connect', exact: true }).click();
+  await page.getByText(/Global security summaries require/).waitFor();
+  await expect(page.getByRole('button', { name: 'Run red-team' })).toHaveCount(0);
   await page.getByLabel('Demo scenario').selectOption('manager');
   await page.getByRole('button', { name: 'Evaluate proposal', exact: true }).click();
   const result = page.getByRole('region', { name: 'Evaluation result' });
@@ -145,11 +184,25 @@ try {
   await detail.getByText('read', { exact: true }).waitFor();
   const storage = await page.evaluate(() => ({ local: localStorage.length, session: sessionStorage.length }));
   assert.deepEqual(storage, { local: 0, session: 0 });
+  await page.waitForLoadState('networkidle');
   await page.getByRole('button', { name: 'Disconnect', exact: true }).click();
-  await page.getByRole('alert').filter({ hasText: 'HTTP 401' }).waitFor();
+  await page.getByRole('alert').filter({ hasText: '/api/events (HTTP 401)' }).waitFor();
   await expect(result).toHaveCount(0);
   await expect(detail).toHaveCount(0);
   await expect(page.getByLabel('API credential')).toHaveValue('');
+  // An administrator can observe global summaries without granting business
+  // resource access to regular credentials or retaining the previous session.
+  await page.getByRole('alert').filter({ hasText: '/api/session (HTTP 401)' }).waitFor();
+  await page.getByLabel('API credential').fill(tokens.security_admin_1);
+  await page.getByRole('button', { name: 'Connect', exact: true }).click();
+  await expect(page.getByRole('region', { name: 'Decisions and budget' })).toContainText('lifetime decisions');
+  await expect(page.getByRole('region', { name: 'Red-team evidence' })).toContainText('16 passed · 0 failed');
+  await expect(page.getByRole('button', { name: 'Run red-team' })).toBeVisible();
+  await page.waitForLoadState('networkidle');
+  await page.getByRole('button', { name: 'Disconnect', exact: true }).click();
+  await page.getByRole('alert').filter({ hasText: '/api/events (HTTP 401)' }).waitFor();
+  await page.getByRole('alert').filter({ hasText: '/api/session (HTTP 401)' }).waitFor();
+  await expect(page.getByRole('region', { name: 'Decisions and budget' })).toHaveCount(0);
   await page.setViewportSize({ width: 375, height: 900 });
   await page.screenshot({ path: path.join(evidenceDir, `${evidencePrefix}-disconnected-375.png`), fullPage: true });
 
@@ -191,6 +244,7 @@ try {
   // the demo's bounded rejection-telemetry sampling allowance.
   const browserProbe = http.createServer(); const browserPort = await listen(browserProbe); await close(browserProbe);
   await startBackend('local-demo', browserPort, `http://127.0.0.1:${frontendPort}`);
+  await page.waitForLoadState('networkidle');
   backendPort = browserPort;
   await page.goto(`http://127.0.0.1:${frontendPort}`);
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -209,6 +263,8 @@ try {
     await expect(detail.locator('.reason-box p')).toHaveText(actual.reason);
     await expect(detail.locator('.decision')).toHaveText(decision);
     await expect(page.getByRole('button', { name: 'Inspect ' + actual.event_id, exact: true })).toBeVisible();
+    await page.waitForLoadState('networkidle');
+    await expect(page.getByRole('alert')).toHaveCount(0);
     liveCases.push({ scenario, decision, policy, event_id: actual.event_id });
   }
   for (const width of [1440, 768, 375]) {
@@ -218,12 +274,40 @@ try {
     await page.screenshot({ path: path.join(evidenceDir, `${evidencePrefix}-security-${width}.png`), fullPage: true });
   }
 
+  // Serial real-browser policy lifecycle checks use only this run's own copy.
+  // Run separately from the native-proxy offline journey below.
+  let lifecycleExit = null;
+  await page.waitForLoadState('networkidle');
+  if (!offlineGuard) {
+    const lifecyclePolicyPath = path.join(root, 'output/security-audit', `browser-policy-${randomBytes(8).toString('hex')}.yaml`);
+    await writeFile(lifecyclePolicyPath, await readFile(path.join(root, 'policies/default.yaml')));
+    const lifecycleProbe = http.createServer(); const lifecyclePort = await listen(lifecycleProbe); await close(lifecycleProbe);
+    await startBackend('local-demo', lifecyclePort, `http://127.0.0.1:${frontendPort}`, lifecyclePolicyPath);
+    backendPort = lifecyclePort;
+    const lifecycle = await new Promise((resolve, reject) => {
+      let output = '';
+      const child = spawn(process.execPath, ['node_modules/@playwright/test/cli.js', 'test', '--reporter=line'], {
+        cwd: path.join(root, 'frontend'), windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'],
+        env: { ...process.env, AEGIS_REAL_BROWSER: '1', AEGIS_FRONTEND_URL: `http://127.0.0.1:${frontendPort}`,
+          AEGIS_SECURITY_POLICY_PATH: lifecyclePolicyPath, AEGIS_CHECK_ADMIN_TOKEN: tokens.security_admin_1 },
+      });
+      children.push(child); child.once('error', reject);
+      child.stdout.on('data', data => { output += data; }); child.stderr.on('data', data => { output += data; });
+      child.once('exit', code => resolve({ code, output }));
+    });
+    await writeFile(path.join(evidenceDir, 'frontend-policy-lifecycle.log'), lifecycle.output);
+    assert.equal(lifecycle.code, 0, 'Real browser policy lifecycle must pass');
+    assert.deepEqual(await readFile(lifecyclePolicyPath), await readFile(path.join(root, 'policies/default.yaml')), 'Disposable policy restored');
+    lifecycleExit = lifecycle.code;
+  }
+
   const quotaPolicyPath = path.join(root, 'output/security-audit', `browser-quota-${randomBytes(8).toString('hex')}.yaml`);
   const originalPolicy = await readFile(path.join(root, 'policies/default.yaml'), 'utf8');
   assert.ok(originalPolicy.includes('requests: 60'));
   await writeFile(quotaPolicyPath, originalPolicy.replace('requests: 60', 'requests: 2'));
   const quotaProbe = http.createServer(); const quotaPort = await listen(quotaProbe); await close(quotaProbe);
   await startBackend('local-demo', quotaPort, `http://127.0.0.1:${frontendPort}`, quotaPolicyPath);
+  await page.waitForLoadState('networkidle');
   backendPort = quotaPort;
   await page.goto(`http://127.0.0.1:${frontendPort}`);
   await page.getByLabel('Demo scenario').selectOption('manager');
@@ -239,28 +323,31 @@ try {
     await expect(detail.locator('.detail-id')).toHaveText(actual.event_id);
     await expect(detail.locator('.reason-box p')).toHaveText(actual.reason);
     quotaDecisions.push(decision);
+    await page.waitForLoadState('networkidle');
+    await expect(page.getByRole('alert')).toHaveCount(0);
   }
   await page.screenshot({ path: path.join(evidenceDir, `${evidencePrefix}-quota-375.png`), fullPage: true });
+  await page.waitForLoadState('networkidle');
   const rendered = await page.locator('body').innerText();
   for (const secret of [...Object.values(tokens), syntheticSecret]) assert.ok(!rendered.includes(secret));
   assert.deepEqual(pageErrors, []);
-  const expectedCancellations = networkFailures.filter(request => (request.path === '/api/events' && request.status === 401) || (request.path === '/api/redteam/run' && request.status === 403));
+  const expectedCancellations = networkFailures.filter(request => (['/api/events', '/api/session'].includes(request.path) && request.status === 401) || (request.path === '/api/redteam/run' && request.status === 403));
   assert.deepEqual(networkFailures.filter(request => !expectedCancellations.includes(request)), []);
   assert.deepEqual(externalRequests, []);
-  // These two 401s are required initial/disconnect states, not hidden failures.
+  // Anonymous initial/disconnect 401s are required refusals, not hidden failures.
   assert.deepEqual(consoleErrors.filter(message => !/^Failed to load resource: the server responded with a status of 401\b/.test(message)), []);
   if (offlineGuard) assert.equal(pythonGuardProbes.length, 4);
-  const sourcePaths = ['frontend/src/adapter.ts', 'frontend/src/api.ts', 'frontend/src/App.tsx', 'frontend/src/components.tsx', 'frontend/src/scenarios.ts', 'frontend/vite.config.ts', 'frontend/scripts/verify-security.mjs', 'frontend/scripts/offline-guard.py', 'backend/guards.py', 'backend/redteam.py', 'policies/default.yaml'];
+  const sourcePaths = ['frontend/src/adapter.ts', 'frontend/src/api.ts', 'frontend/src/App.tsx', 'frontend/src/SummaryPanels.tsx', 'frontend/src/schemas.ts', 'frontend/src/components.tsx', 'frontend/src/scenarios.ts', 'frontend/e2e-live/security.spec.ts', 'frontend/vite.config.ts', 'frontend/scripts/verify-security.mjs', 'frontend/scripts/offline-guard.py', 'backend/main.py', 'backend/security.py', 'backend/state.py', 'backend/credentials.py', 'backend/live_check.py', 'backend/guards.py', 'backend/redteam.py', 'policies/default.yaml'];
   const sourceHashes = Object.fromEntries(await Promise.all(sourcePaths.map(async file => [file, createHash('sha256').update(await readFile(path.join(root, file))).digest('hex')])));
   evidence = { startedAt, completedAt: new Date().toISOString(), timezone: 'Europe/Warsaw', browser: await browser.version(), hostileResponse, hostileRunStatus: before.status,
     authenticatedRedteam: { total: run.total, passed: run.passed, failed: run.failed },
-    dashboard: 'PASS: authenticated manager evaluation, own event detail, action, disconnect', storage,
+    dashboard: 'PASS: authenticated manager evaluation, own event detail, action; admin-only summaries; disconnect clears results, detail and global summaries', storage,
     outputSecrecy: { permitted: redacted.decision, restrictedExternal: deniedResult.decision, auditContainsSecret: false },
     liveCases, freshQuota: quotaDecisions, browserResponsesIntercepted: false,
-    offlineGuard: { enabled: offlineGuard, browserRequestRouting: offlineGuard ? 'Continue owned loopback requests; abort external requests; no API response fulfillment' : 'None', guardedBrowserBlocks, pythonGuardProbes },
+    offlineGuard: { enabled: offlineGuard, browserRequestRouting: 'None', browserNetworkBoundary: offlineGuard ? 'Browser-native loopback refusing proxy; exact loopback bypass; no forwarding or API interception' : 'None', guardedBrowserBlocks: [...new Set(guardedBrowserBlocks)], pythonGuardProbes },
     pageErrors, networkFailures: [], expectedDeniedResponseCancellations: expectedCancellations, expected401ConsoleErrors: consoleErrors.length, expectedHostile403ConsoleErrors: hostileConsoleErrors.length, otherConsoleErrors: 0, externalRequests,
-    frontendIntegrationExit: integration.code, sourceHashes,
-    scope: offlineGuard ? 'Separate simulation of external-network unavailability after locked prerequisites: per-context browser request guard and per-child Python DNS/connect audit hook; self-probes blocked before outbound networking and actual owned loopback journeys succeeded. No host firewall/global disconnect or offline installation claim. Production TLS/identity-provider/runtime deployment, axe, screen-reader, CWV and visual baseline comparison not verified.' : 'Fresh loopback HTTP services after locked prerequisites; observer recorded no external browser requests. This normal journey has no request/response routing. Offline installation, production TLS/identity-provider/runtime deployment, axe, screen-reader, CWV and visual baseline comparison not verified.' };
+    frontendIntegrationExit: integration.code, policyLifecycleExit: lifecycleExit, buildPreview, sourceHashes,
+    scope: offlineGuard ? 'Separate simulation of external-network unavailability after locked prerequisites: browser-native refusing loopback proxy with exact loopback bypass, and per-child Python DNS/connect audit hook; self-probes blocked before outbound networking and actual owned loopback journeys succeeded without API interception. No host firewall/global disconnect or offline installation claim. Production TLS/identity-provider/runtime deployment, axe, screen-reader, CWV and visual baseline comparison not verified.' : 'Fresh loopback HTTP services after locked prerequisites; observer recorded no external browser requests. This normal journey has no request/response routing. Offline installation, production TLS/identity-provider/runtime deployment, axe, screen-reader, CWV and visual baseline comparison not verified.' };
 } finally {
   if (browser) await browser.close();
   const shutdown = await Promise.all(children.map(async child => {
@@ -273,6 +360,7 @@ try {
     return { pid: child.pid, stopped: child.exitCode !== null || child.signalCode !== null };
   }));
   await close(hostile); await close(frontend);
+  if (offlineProxy.listening) await close(offlineProxy);
   if (evidence) {
     evidence.cleanup = { ownedProcesses: shutdown, ownedServersClosed: true };
     await writeFile(path.join(evidenceDir, offlineGuard ? 'frontend-offline-browser-verification.json' : 'frontend-real-browser-verification.json'), JSON.stringify(evidence, null, 2));

@@ -1,10 +1,20 @@
 // Observed schemas: backend/core.py, policy.py, redteam.py and main.py.
 // Keep this boundary aligned with Developer A's docs/API_CONTRACT.md updates.
 import { z } from 'zod';
-import { decisions } from './types';
+import { decisions, roles } from './types';
 const count = z.number().int().nonnegative();
 const latency = z.number().finite().nonnegative();
 const text = z.string().min(1);
+export const sessionSchema = z.object({
+  profile: z.enum(['authenticated', 'local-demo']),
+  user: z.string().min(1).max(128).regex(/^[A-Za-z0-9_./:-]+$/).nullable(), role: z.enum(roles).nullable(),
+  can_observe: z.boolean(), can_admin: z.boolean(),
+}).refine(value => (
+  (value.user === null) === (value.role === null) &&
+  (value.profile !== 'authenticated' || value.user !== null) &&
+  value.can_admin === (value.role === 'SECURITY_ADMIN') &&
+  value.can_observe === (value.can_admin || (value.profile === 'local-demo' && value.user === null))
+));
 const idle = z.object({ status: z.literal('not_run'), total: z.literal(0), unexpected_allows: z.literal(0) });
 const failed = z.object({ status: z.literal('failed'), total: z.literal(0), unexpected_allows: z.literal(0), error: text });
 const done = z.object({ status: z.literal('completed'), run_id: text, timestamp: text, policy_version: text.nullable(), total: count, passed: count, failed: count, unexpected_allows: count, latency_ms: latency });

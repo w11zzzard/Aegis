@@ -1,12 +1,15 @@
 import { expect, test } from '@playwright/test';
 import { readFile, writeFile, rename } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { resolve, sep, basename } from 'node:path';
 
 test('real policy reload, failure/recovery and weakened-policy corpus render honestly', async ({ page }) => {
   const configuredPath = process.env.AEGIS_SECURITY_POLICY_PATH;
-  test.skip(!configuredPath, 'Supply the task-owned disposable backend/.venv/cp1-browser-policy.yaml.');
+  const adminToken = process.env.AEGIS_CHECK_ADMIN_TOKEN;
+  test.skip(!configuredPath || !adminToken, 'Use the security verifier to supply a task-owned disposable policy and admin credential.');
+  test.setTimeout(45000);
   const policyPath = resolve(configuredPath!);
-  expect(policyPath).toBe(resolve('../backend/.venv/cp1-browser-policy.yaml'));
+  expect(policyPath.startsWith(resolve('../output/security-audit') + sep)).toBe(true);
+  expect(basename(policyPath)).toMatch(/^browser-policy-[a-f0-9]{16}\.yaml$/);
   const original = await readFile(policyPath, 'utf8');
   expect(original).toContain('roles: [PORTFOLIO_MANAGER]');
   async function replacePolicy(text: string) {
@@ -27,6 +30,10 @@ test('real policy reload, failure/recovery and weakened-policy corpus render hon
     await evaluate('BLOCK', 'portfolio_restricted');
     await replacePolicy(original.replace('roles: [PORTFOLIO_MANAGER]', 'roles: [PORTFOLIO_MANAGER, ANALYST]'));
     await evaluate('ALLOW', 'portfolio_restricted');
+    await page.getByLabel('API credential').fill(adminToken!);
+    await page.getByRole('button', { name: 'Connect', exact: true }).click();
+    await page.getByRole('button', { name: 'Run red-team' }).waitFor();
+    const firstRunAt = Date.now();
     const runResponse = page.waitForResponse(response => response.url().endsWith('/api/redteam/run'));
     await page.getByRole('button', { name: 'Run red-team' }).click();
     const run = await (await runResponse).json();
@@ -36,6 +43,9 @@ test('real policy reload, failure/recovery and weakened-policy corpus render hon
     await expect(evidence).toContainText('One or more cases failed.');
     await expect(evidence).toContainText('expected BLOCK, actual ALLOW');
     await evidence.screenshot({ path: 'test-results/cp1-weakened-corpus.png' });
+    // Public demo diagnostics remain observable during an invalid policy;
+    // authenticated identities cannot be verified until the registry recovers.
+    await page.getByRole('button', { name: 'Disconnect', exact: true }).click();
     await replacePolicy('resources: [invalid');
     await page.getByRole('button', { name: 'Refresh summaries' }).click();
     const readiness = page.getByRole('region', { name: 'Policy status' });
@@ -45,10 +55,16 @@ test('real policy reload, failure/recovery and weakened-policy corpus render hon
     await evaluate('BLOCK', 'fail_closed');
     await readiness.screenshot({ path: 'test-results/cp1-invalid-policy.png' });
     await replacePolicy(original);
+    // Disconnect intentionally remounts and resets the proposal console.
+    await page.getByLabel('Demo scenario').selectOption('analyst');
     await evaluate('BLOCK', 'portfolio_restricted');
     await page.getByLabel('Demo scenario').selectOption('manager');
     await evaluate('ALLOW', 'portfolio_restricted');
     await expect(readiness).toContainText('Policy evaluation available');
+    await page.getByLabel('API credential').fill(adminToken!);
+    await page.getByRole('button', { name: 'Connect', exact: true }).click();
+    await page.getByRole('button', { name: 'Run red-team' }).waitFor();
+    await page.waitForTimeout(Math.max(0, 10500 - (Date.now() - firstRunAt)));
     await page.getByRole('button', { name: 'Run red-team' }).click();
     await expect(evidence).toContainText('16 passed · 0 failed · 0 unexpected allows');
     await evidence.screenshot({ path: 'test-results/cp1-recovered-corpus.png' });

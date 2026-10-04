@@ -5,11 +5,22 @@ import json
 import os
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import httpx
 
 
+def require(condition):
+    """Never optimize verification away or put raw backend data in an error."""
+    if not condition:
+        raise AssertionError("Live verification failed")
+
+
 def run(base_url):
+    url = urlsplit(base_url)
+    if (url.scheme != "http" or url.hostname not in {"localhost", "127.0.0.1", "::1"}
+            or url.username or url.password or url.path not in {"", "/"} or url.query or url.fragment):
+        raise ValueError("Live verification requires a loopback HTTP origin")
     checks = []
     examples = {}
     admin = {"Authorization": "Bearer " + os.environ.get("AEGIS_CHECK_ADMIN_TOKEN", "")}
@@ -22,27 +33,27 @@ def run(base_url):
     with httpx.Client(base_url=base_url, timeout=10, trust_env=False) as client:
         response = client.get("/health")
         response.raise_for_status()
-        assert response.json() == {"status": "ok"}
+        require(response.json() == {"status": "ok"})
         checks.append("health")
         examples["initial_stats"] = client.get("/api/stats").json()
 
         def evaluate(name, updates, decision, policy):
             response = client.post("/api/security/evaluate", json={**base, **updates})
-            assert response.status_code == 200, name
+            require(response.status_code == 200)
             result = response.json()
-            assert (result["decision"], result["policy"]) == (decision, policy), (name, result)
-            assert result["latency_ms"] >= 0
+            require((result["decision"], result["policy"]) == (decision, policy))
+            require(result["latency_ms"] >= 0)
             response = client.get(f'/api/events/{result["event_id"]}')
             if response.status_code == 404:
-                assert client.get('/api/stats').json()['abuse']['dropped_samples'] > 0
+                require(client.get('/api/stats').json()['abuse']['dropped_samples'] > 0)
                 checks.append(name)
                 return result, None
             response.raise_for_status()
             event = response.json()
-            assert event["id"] == result["event_id"]
-            assert (event["decision"], event["policy"]) == (decision, policy)
-            assert event["action"] == updates.get("action", "read")
-            assert not {"prompt", "source", "output", "tool_arguments", "sanitized_output"} & event.keys()
+            require(event["id"] == result["event_id"])
+            require((event["decision"], event["policy"]) == (decision, policy))
+            require(event["action"] == updates.get("action", "read"))
+            require(not {"prompt", "source", "output", "tool_arguments", "sanitized_output"} & event.keys())
             checks.append(name)
             return result, event
 
@@ -66,15 +77,15 @@ def run(base_url):
             "tool_arguments": {"resource": base["resource"], "destination": "EXTERNAL"},
         }, "BLOCK", "tool_guard")
         redacted, _ = evaluate("output_redaction", {**manager, "output": "password=synthetic-fixture"}, "REDACT", "output_secrets")
-        assert "synthetic-fixture" not in redacted["sanitized_output"]
+        require("synthetic-fixture" not in redacted["sanitized_output"])
         evaluate("token_budget", {**manager, "estimated_tokens": 1000000}, "THROTTLE", "budget")
         pending, _ = evaluate("export_approval", {**manager, "action": "export"}, "REQUIRE_APPROVAL", "portfolio_restricted")
         response = client.post(f'/api/approvals/{pending["event_id"]}', json={"approve": True},
                                headers=admin)
-        assert response.status_code == 200
+        require(response.status_code == 200)
         examples["approval"] = response.json()
-        assert examples["approval"]["status"] == "approved"
-        assert examples["approval"]["executed"] is False
+        require(examples["approval"]["status"] == "approved")
+        require(examples["approval"]["executed"] is False)
         checks.append("approval_resolution")
 
         for name, kwargs, status in (
@@ -82,30 +93,30 @@ def run(base_url):
             ("oversized_body", {"content": b"a" * 65537}, 413),
         ):
             response = client.post("/api/security/evaluate", **kwargs)
-            assert response.status_code == status
+            require(response.status_code == status)
             result = response.json()
-            assert (result["decision"], result["policy"]) == ("BLOCK", "fail_closed")
+            require((result["decision"], result["policy"]) == ("BLOCK", "fail_closed"))
             detail = client.get(f'/api/events/{result["event_id"]}')
             event = detail.json() if detail.status_code == 200 else None
             if event is not None:
-                assert all(event[key] is None for key in ("request_id", "user", "role", "action", "resource", "classification", "destination"))
+                require(all(event[key] is None for key in ("request_id", "user", "role", "action", "resource", "classification", "destination")))
             else:
-                assert detail.status_code == 404
-                assert client.get('/api/stats').json()['abuse']['dropped_samples'] > 0
+                require(detail.status_code == 404)
+                require(client.get('/api/stats').json()['abuse']['dropped_samples'] > 0)
             examples[name + "_event"] = event
             checks.append(name)
 
         response = client.post("/api/redteam/run", json={}, headers=admin)
         response.raise_for_status()
         examples["redteam"] = response.json()
-        assert examples["redteam"]["status"] == "completed"
-        assert (examples["redteam"]["total"], examples["redteam"]["passed"], examples["redteam"]["failed"], examples["redteam"]["unexpected_allows"]) == (16, 16, 0, 0)
-        assert client.get("/api/redteam/results").json() == examples["redteam"]
+        require(examples["redteam"]["status"] == "completed")
+        require((examples["redteam"]["total"], examples["redteam"]["passed"], examples["redteam"]["failed"], examples["redteam"]["unexpected_allows"]) == (16, 16, 0, 0))
+        require(client.get("/api/redteam/results").json() == examples["redteam"])
         checks.append("redteam_run_and_results")
         examples["stats"] = client.get("/api/stats").json()
         examples["policy_status"] = client.get("/api/policies/status").json()
-        assert examples["stats"]["redteam"]["run_id"] == examples["redteam"]["run_id"]
-        assert examples["policy_status"]["loaded"] is True
+        require(examples["stats"]["redteam"]["run_id"] == examples["redteam"]["run_id"])
+        require(examples["policy_status"]["loaded"] is True)
         checks.append("stats_and_policy_status")
     return {"timestamp": datetime.now(timezone.utc).isoformat(), "base_url": base_url,
             "checks_passed": len(checks), "checks": checks, "examples": examples}

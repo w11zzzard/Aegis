@@ -8,7 +8,7 @@ import { ContractError, normalizeEvent, normalizeEvaluation } from './adapter';
 import { event, result } from './test-fixtures';
 
 const encoded = (value: unknown) => new Response(JSON.stringify(value));
-const summaries: Record<string, unknown> = { '/api/stats': stats, '/api/policies/status': policyStatus, '/api/redteam/results': notRun };
+const summaries: Record<string, unknown> = { '/api/session': { profile: 'local-demo', user: null, role: null, can_observe: true, can_admin: false }, '/api/stats': stats, '/api/policies/status': policyStatus, '/api/redteam/results': notRun };
 function createApi(base: string, fetcher: (url: string, options: RequestInit) => Promise<Response>) {
   return makeApi(base, (url, options) => url in summaries ? Promise.resolve(encoded(summaries[url])) : fetcher(url, options));
 }
