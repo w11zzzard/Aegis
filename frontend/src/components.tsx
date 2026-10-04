@@ -9,16 +9,17 @@ export function DecisionBadge({ decision }: { decision?: Decision }) {
 }
 
 export function SecurityEventTable({ events, selectedId, onSelect }: { events: SecurityEvent[]; selectedId: string | null; onSelect: (id: string) => void }) {
+  const [showAll, setShowAll] = useState(false);
   if (events.length === 0) return <div className="empty-state"><span className="empty-mark" aria-hidden="true">[ ]</span><p>No audit events returned by the backend.</p><span>Evaluate a proposal to create real audit evidence.</span></div>;
-  return <div className="table-scroll"><table>
+  return <><div className="table-scroll" role="region" aria-label="Audit events" tabIndex={0}><table>
     <caption className="sr-only">Sanitized backend security events, newest first</caption>
     <thead><tr><th scope="col">Event / actor</th><th scope="col">Resource</th><th scope="col">Decision / evidence</th></tr></thead>
-    <tbody>{events.map(event => <tr key={event.id} className={selectedId === event.id ? 'selected' : ''}>
+    <tbody>{(showAll ? events : events.slice(0, 5)).map(event => <tr key={event.id} className={selectedId === event.id ? 'selected' : ''}>
       <td><button className="event-link" aria-label={`Inspect ${event.id}`} aria-pressed={selectedId === event.id} onClick={() => onSelect(event.id)}>{event.id}</button><strong>{display(event.user)}</strong><small>{display(event.role)} · {display(event.timestamp)}</small></td>
       <td><span className="resource">{display(event.resource)}</span><small>{display(event.classification)} · {display(event.destination)}</small></td>
       <td><DecisionBadge decision={event.decision} /><strong className="policy-name">{display(event.policy)}</strong><small>{display(event.reason)}</small></td>
     </tr>)}</tbody>
-  </table></div>;
+  </table></div>{events.length > 5 && <div className="events-pagination"><span>Showing {showAll ? events.length : 5} of {events.length} events</span><button className="secondary" onClick={() => setShowAll(value => !value)}>{showAll ? 'Show latest 5' : `Show all ${events.length} events`}</button></div>}</>;
 }
 
 export function EventDetails({ event }: { event: SecurityEvent }) {

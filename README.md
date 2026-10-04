@@ -46,6 +46,17 @@ Backend: follow [backend/README.md](backend/README.md) to install locked depende
 
 Frontend: in a second terminal, enter frontend/, install npm dependencies, then run npm run dev.
 
+### Five-minute judge walkthrough
+
+Use the explicitly loopback-bound `local-demo` backend described in [backend/README.md](backend/README.md), then open the dashboard at `http://127.0.0.1:5173/` on the same machine. The demo uses synthetic proposals and does not call a model or execute tools.
+
+1. Select **Try the live policy check**. Choose **Analyst · restricted portfolio** and evaluate: the backend should return **BLOCK** with `portfolio_restricted`.
+2. Choose **Portfolio manager · same resource** and evaluate: the same policy should return **ALLOW** for the authorized role. Then choose **Restricted data · external destination** to see the exfiltration **BLOCK**.
+3. Select **Inspect audited event** after any result. The event ID, decision, policy, and reason come from the running gateway. The audit table shows five recent events; **Show all events** reveals the rest.
+4. Try **Synthetic secret · redacted output** for **REDACT**. The summary cards show actual backend state. Running the red-team corpus requires a `SECURITY_ADMIN` credential; its result is not prefilled.
+
+This URL is available only on the machine hosting the demo. Do not expose `local-demo` publicly or connect it to confidential data.
+
 Never present mocked decisions or invented security metrics as live results. Mark early mock mode visibly and disable it for the final demo.
 
 ## Competition submission checklist

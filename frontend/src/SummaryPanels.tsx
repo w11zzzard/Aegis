@@ -56,7 +56,7 @@ function Policy({ data }: { data: PolicyStatusResponse }) {
   </>;
 }
 function Redteam({ data }: { data: RedteamResponse }) {
-  if (data.status === 'not_run') return <p>Not run</p>;
+  if (data.status === 'not_run') return <><p>Not run</p><p>A SECURITY_ADMIN credential is required to run the red-team corpus.</p></>;
   if (data.status === 'failed') return <><p className="error-message">Failed</p><p>{data.error}</p></>;
   return <>
     <p>Completed</p><p>Run {data.run_id} · {data.timestamp} · policy {data.policy_version ?? 'Not reported'}</p>
@@ -85,8 +85,8 @@ export function SummaryPanels({ api, revision = 0 }: { api: SecurityApi; revisio
     {session?.profile === 'local-demo' && <p>Synthetic local demo — identities are not authenticated without a credential. Admin operations still require an administrator credential.</p>}
     {session?.can_observe && <div className="summary-grid">
       <ResourcePanel title="Decisions and budget" loader={api.stats} revision={revision + refresh} render={data => <Stats data={data} />} />
-      <ResourcePanel title="Policy status" loader={api.policyStatus} revision={revision + refresh} render={data => <Policy data={data} />} />
-      <ResourcePanel title="Red-team evidence" loader={api.redteamResults} run={session.can_admin ? api.runRedteam : undefined} revision={revision + refresh} render={data => <Redteam data={data} />} />
+      <ResourcePanel title="Policy status" loader={api.policyStatus} revision={refresh} render={data => <Policy data={data} />} />
+      <ResourcePanel title="Red-team evidence" loader={api.redteamResults} run={session.can_admin ? api.runRedteam : undefined} revision={refresh} render={data => <Redteam data={data} />} />
     </div>}
   </section>;
 }

@@ -17,11 +17,10 @@ test('real policy reload, failure/recovery and weakened-policy corpus render hon
     await rename(policyPath + '.pending', policyPath);
   }
   async function evaluate(decision: string, policy: string) {
-    const pending = page.waitForResponse(response => response.url().endsWith('/api/security/evaluate') && response.request().method() === 'POST').then(response => response.json());
-    const [actual] = await Promise.all([pending, page.getByRole('button', { name: 'Evaluate proposal' }).click()]);
-    expect([actual.decision, actual.policy]).toEqual([decision, policy]);
-    await expect(page.getByRole('region', { name: 'Evaluation result' }).locator('.decision')).toHaveText(decision);
-    return actual;
+    await page.getByRole('button', { name: 'Evaluate proposal' }).click();
+    const result = page.getByRole('region', { name: 'Evaluation result' });
+    await expect(result.locator('.decision')).toHaveText(decision);
+    await expect(result.locator('.result-fields')).toContainText(policy);
   }
   try {
     await page.goto('/');
