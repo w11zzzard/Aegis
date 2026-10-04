@@ -1,71 +1,82 @@
 # AEGIS
 
-**A**gent **E**nforcement **G**ateway for **I**ntelligent **S**ystems
+### Security, with evidence.
 
-AEGIS is a lightweight AI control layer for governing requests between people, AI agents, models, tools, and data. The current backend demo uses deterministic policy enforcement and pattern-based output redaction. Semantic inspection and real model calls are not implemented; authorization and data-boundary decisions remain deterministic.
+**AEGIS** (Agent Enforcement Gateway for Intelligent Systems) evaluates proposed actions against explicit security policy and records each decision. The dashboard shows the decision and its audit evidence together.
 
-## Hackathon target
+> A working, local prototype for exploring access boundaries around AI agent requests.
 
-Build and submit a working, locally runnable gateway, configurable policy catalog, security reporting/dashboard, and executable positive and negative tests. The competition submission is due **4 October 2026 at 23:00**. The challenge is open-ended; the brief weights guardrail robustness (30%), architecture/performance (20%), reporting (20%), self-tests (15%), and implementability/scalability (15%).
+## See it in five minutes
 
-## Recommended stack
+Start the backend and dashboard using the instructions below, then open **http://127.0.0.1:5173**.
 
-- **Backend and gateway:** Python 3.12+, FastAPI, Pydantic, PyYAML
-- **Frontend:** React, TypeScript, Vite
-- **Policy and audit state:** versioned YAML for policy; SQLite for durable events and budget counters if persistence is needed
-- **Validation:** pytest + FastAPI TestClient; frontend build/typecheck
-- **Planned semantic signal:** a local advisory adapter, subject to mentor scope confirmation; not implemented in the demo
-- **Collaboration:** GitHub repository, two owner branches, short integration PRs; shared API contract in docs/API_CONTRACT.md
+| Time | Try this | Expected result |
+| --- | --- | --- |
+| 1 min | Click **Try the live policy check**. Choose **Analyst · restricted portfolio** and evaluate. | **BLOCK** · `portfolio_restricted` |
+| 1 min | Choose **Portfolio manager · same resource** and evaluate. | **ALLOW** · `portfolio_restricted` |
+| 1 min | Choose **Restricted data · external destination** and evaluate. | **BLOCK** · `external_exfiltration` |
+| 1 min | Choose **Synthetic secret · redacted output** and evaluate. | **REDACT** · `output_secrets` |
+| 1 min | Click **Inspect audited event** on a result. | Review its matching event ID, decision, policy and reason. |
 
-No paid model or external service is required for the demo. Keep the core deterministic and runnable offline.
+The audit table starts with the five newest events. Select **Show all events** to expand it. The summary cards show backend data; running the red-team corpus requires a `SECURITY_ADMIN` credential.
 
-## The 20-hour delivery order
+## Run the demo
 
-1. **0–1 h:** repository, app skeleton, shared contract, health check
-2. **1–5 h:** identity context, RBAC, YAML policy, deny-by-default evaluation and audit event
-3. **5–8 h:** output secret redaction, destination/exfiltration and proposed tool-call guard
-4. **8–11 h:** budget/rate enforcement and policy hot reload; adversarial tests
-5. **11–15 h:** dashboard event table/details, policy status, stats and real evaluation console
-6. **15–17 h:** red-team endpoint and executable test suite; integration fixes
-7. **17–19 h:** demo rehearsal, telemetry, architecture diagram, README/runbook
-8. **19–20 h:** freeze, verify submission assets, submit before deadline
+You need **Python 3.12+** and **Node.js 22+**. Open two terminals in the cloned repository.
 
-If time slips, preserve deterministic authorization, exfiltration controls, audit evidence, API integration, tests, and a working demo. Defer semantic models, elaborate charts, and broad protocol compatibility.
+Clone the project:
 
-## Parallel ownership
+```sh
+git clone https://github.com/w11zzzard/Aegis.git
+cd Aegis
+```
 
-- **Developer A — security/backend:** backend/, policies/, redteam/, backend tests. Owns all enforcement and contract implementation.
-- **Developer B — dashboard/frontend:** frontend/. Owns API client, canonical TypeScript types, event table/details, dashboard and demo UI.
-- **Integrate continuously:** A owns docs/API_CONTRACT.md; B creates a typed adapter if response details differ and flags any proposed contract change first. Avoid simultaneous edits to the same files. Share this repository and push small commits frequently.
+### Terminal 1 · Gateway
 
-First shared milestone: analyst requests restricted portfolio → backend blocks and audits → dashboard renders that real event.
+**Windows PowerShell**
 
-## Local setup
+```powershell
+py -3.12 -m venv backend/.venv
+./backend/.venv/Scripts/python.exe -m pip install -r backend/requirements-lock.txt
+$env:AEGIS_PROFILE = 'local-demo'
+./backend/.venv/Scripts/python.exe -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --no-access-log
+```
 
-Backend: follow [backend/README.md](backend/README.md) to install locked dependencies, provision credentials and set a shared SQLite state path. The default authenticated profile refuses protected requests until configured. Use `AEGIS_PROFILE=local-demo` only for an explicit loopback simulation.
+**macOS / Linux**
 
-Frontend: in a second terminal, enter frontend/, install npm dependencies, then run npm run dev.
+```sh
+python3.12 -m venv backend/.venv
+./backend/.venv/bin/python -m pip install -r backend/requirements-lock.txt
+AEGIS_PROFILE=local-demo ./backend/.venv/bin/python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --no-access-log
+```
 
-### Five-minute judge walkthrough
+### Terminal 2 · Dashboard
 
-Use the explicitly loopback-bound `local-demo` backend described in [backend/README.md](backend/README.md), then open the dashboard at `http://127.0.0.1:5173/` on the same machine. The demo uses synthetic proposals and does not call a model or execute tools.
+```sh
+cd frontend
+npm ci
+npm run dev
+```
 
-1. Select **Try the live policy check**. Choose **Analyst · restricted portfolio** and evaluate: the backend should return **BLOCK** with `portfolio_restricted`.
-2. Choose **Portfolio manager · same resource** and evaluate: the same policy should return **ALLOW** for the authorized role. Then choose **Restricted data · external destination** to see the exfiltration **BLOCK**.
-3. Select **Inspect audited event** after any result. The event ID, decision, policy, and reason come from the running gateway. The audit table shows five recent events; **Show all events** reveals the rest.
-4. Try **Synthetic secret · redacted output** for **REDACT**. The summary cards show actual backend state. Running the red-team corpus requires a `SECURITY_ADMIN` credential; its result is not prefilled.
+Open the local address Vite prints, normally **http://127.0.0.1:5173**.
 
-This URL is available only on the machine hosting the demo. Do not expose `local-demo` publicly or connect it to confidential data.
+## What the prototype does
 
-Never present mocked decisions or invented security metrics as live results. Mark early mock mode visibly and disable it for the final demo.
+- Applies deterministic policy checks to roles, data classifications, destinations, proposed tools and usage limits.
+- Returns decisions such as **ALLOW**, **BLOCK**, **REDACT** and **THROTTLE**.
+- Shows sanitized audit events with the policy and reason behind each decision.
 
-## Competition submission checklist
+## Scope and safety
 
-- English or Polish submission to HackTribe
-- Project title, team name, member list (1–6), description
-- PDF presentation of at most 10 slides
-- Working gateway/dashboard demo and runnable test suite
-- Simple architecture diagram, sample policies, measured performance telemetry
-- Submit by **4 October 2026, 23:00** (HackYeah local time)
+The demo uses synthetic proposals. It does not call a live AI model, access real financial data or execute tools. Its authorization and data-boundary decisions are deterministic; pattern-based output redaction is included. `local-demo` is intended for loopback use only—do not expose it to the public internet or connect it to confidential data. This prototype is not production-ready.
 
-See docs/ARCHITECTURE_AND_SPRINT.md and docs/API_CONTRACT.md.
+## Checks and technical details
+
+From `frontend/`, run the frontend tests and production build:
+
+```sh
+npm test
+npm run build
+```
+
+For the full security verification, backend setup and deployment limitations, see [backend/README.md](backend/README.md). For the API shape, see [docs/API_CONTRACT.md](docs/API_CONTRACT.md). The active security test suite and review are documented in [backend/SECURITY_REVIEW.md](backend/SECURITY_REVIEW.md).
