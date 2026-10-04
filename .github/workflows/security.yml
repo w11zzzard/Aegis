@@ -50,6 +50,10 @@ jobs:
       - name: Install browser
         working-directory: frontend
         run: npx playwright install --with-deps chromium
+      - name: Browser response lifetime regressions
+        env:
+          PLAYWRIGHT_CHANNEL: chromium
+        run: node --test frontend/scripts/browser-response.test.mjs
       - name: Authenticated browser and API verification
         env:
           AEGIS_TEST_PYTHON: python

@@ -7,6 +7,7 @@ import { createHash, randomBytes } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { captureJsonResponse } from './browser-response.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const evidenceDir = process.env.AEGIS_EVIDENCE_DIR || path.join(root, 'output/release-verification');
@@ -252,9 +253,9 @@ try {
   for (const [scenario, decision, policy] of [['normal', 'ALLOW', 'market_public'], ['analyst', 'BLOCK', 'portfolio_restricted'], ['manager', 'ALLOW', 'portfolio_restricted'], ['external', 'BLOCK', 'external_exfiltration'], ['tool', 'BLOCK', 'tool_guard']]) {
     await page.getByLabel('Demo scenario').selectOption(scenario);
     await page.getByRole('button', { name: 'Evaluate proposal', exact: true }).focus();
-    const responsePromise = page.waitForResponse(response => response.url().endsWith('/api/security/evaluate') && response.request().method() === 'POST');
-    await page.keyboard.press('Enter');
-    const actual = await (await responsePromise).json();
+    const actual = await captureJsonResponse(page,
+      response => response.url().endsWith('/api/security/evaluate') && response.request().method() === 'POST',
+      () => page.keyboard.press('Enter'));
     assert.equal(actual.decision, decision); assert.equal(actual.policy, policy);
     await expect(result.locator('.decision')).toHaveText(decision);
     await expect(result.locator('.reason-box p')).toHaveText(actual.reason);
@@ -313,9 +314,9 @@ try {
   await page.getByLabel('Demo scenario').selectOption('manager');
   const quotaDecisions = [];
   for (const decision of ['ALLOW', 'ALLOW', 'THROTTLE']) {
-    const responsePromise = page.waitForResponse(response => response.url().endsWith('/api/security/evaluate') && response.request().method() === 'POST');
-    await page.getByRole('button', { name: 'Evaluate proposal', exact: true }).click();
-    const actual = await (await responsePromise).json();
+    const actual = await captureJsonResponse(page,
+      response => response.url().endsWith('/api/security/evaluate') && response.request().method() === 'POST',
+      () => page.getByRole('button', { name: 'Evaluate proposal', exact: true }).click());
     assert.equal(actual.decision, decision);
     assert.ok(!('sanitized_output' in actual));
     await expect(result.locator('.decision')).toHaveText(decision);
@@ -337,7 +338,7 @@ try {
   // Anonymous initial/disconnect 401s are required refusals, not hidden failures.
   assert.deepEqual(consoleErrors.filter(message => !/^Failed to load resource: the server responded with a status of 401\b/.test(message)), []);
   if (offlineGuard) assert.equal(pythonGuardProbes.length, 4);
-  const sourcePaths = ['frontend/src/adapter.ts', 'frontend/src/api.ts', 'frontend/src/App.tsx', 'frontend/src/SummaryPanels.tsx', 'frontend/src/schemas.ts', 'frontend/src/components.tsx', 'frontend/src/scenarios.ts', 'frontend/e2e-live/security.spec.ts', 'frontend/vite.config.ts', 'frontend/scripts/verify-security.mjs', 'frontend/scripts/offline-guard.py', 'backend/main.py', 'backend/security.py', 'backend/state.py', 'backend/credentials.py', 'backend/live_check.py', 'backend/guards.py', 'backend/redteam.py', 'policies/default.yaml'];
+  const sourcePaths = ['frontend/src/adapter.ts', 'frontend/src/api.ts', 'frontend/src/App.tsx', 'frontend/src/SummaryPanels.tsx', 'frontend/src/schemas.ts', 'frontend/src/components.tsx', 'frontend/src/scenarios.ts', 'frontend/e2e-live/security.spec.ts', 'frontend/vite.config.ts', 'frontend/scripts/verify-security.mjs', 'frontend/scripts/browser-response.mjs', 'frontend/scripts/offline-guard.py', 'backend/main.py', 'backend/security.py', 'backend/state.py', 'backend/credentials.py', 'backend/live_check.py', 'backend/guards.py', 'backend/redteam.py', 'policies/default.yaml'];
   const sourceHashes = Object.fromEntries(await Promise.all(sourcePaths.map(async file => [file, createHash('sha256').update(await readFile(path.join(root, file))).digest('hex')])));
   evidence = { startedAt, completedAt: new Date().toISOString(), timezone: 'Europe/Warsaw', browser: await browser.version(), hostileResponse, hostileRunStatus: before.status,
     authenticatedRedteam: { total: run.total, passed: run.passed, failed: run.failed },

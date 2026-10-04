@@ -17,9 +17,8 @@ test('real policy reload, failure/recovery and weakened-policy corpus render hon
     await rename(policyPath + '.pending', policyPath);
   }
   async function evaluate(decision: string, policy: string) {
-    const pending = page.waitForResponse(response => response.url().endsWith('/api/security/evaluate') && response.request().method() === 'POST');
-    await page.getByRole('button', { name: 'Evaluate proposal' }).click();
-    const actual = await (await pending).json();
+    const pending = page.waitForResponse(response => response.url().endsWith('/api/security/evaluate') && response.request().method() === 'POST').then(response => response.json());
+    const [actual] = await Promise.all([pending, page.getByRole('button', { name: 'Evaluate proposal' }).click()]);
     expect([actual.decision, actual.policy]).toEqual([decision, policy]);
     await expect(page.getByRole('region', { name: 'Evaluation result' }).locator('.decision')).toHaveText(decision);
     return actual;
@@ -34,9 +33,8 @@ test('real policy reload, failure/recovery and weakened-policy corpus render hon
     await page.getByRole('button', { name: 'Connect', exact: true }).click();
     await page.getByRole('button', { name: 'Run red-team' }).waitFor();
     const firstRunAt = Date.now();
-    const runResponse = page.waitForResponse(response => response.url().endsWith('/api/redteam/run'));
-    await page.getByRole('button', { name: 'Run red-team' }).click();
-    const run = await (await runResponse).json();
+    const runResponse = page.waitForResponse(response => response.url().endsWith('/api/redteam/run') && response.request().method() === 'POST').then(response => response.json());
+    const [run] = await Promise.all([runResponse, page.getByRole('button', { name: 'Run red-team' }).click()]);
     expect([run.passed, run.failed, run.unexpected_allows]).toEqual([15, 1, 1]);
     const evidence = page.getByRole('region', { name: 'Red-team evidence' });
     await expect(evidence).toContainText('15 passed · 1 failed · 1 unexpected allows');
