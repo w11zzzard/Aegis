@@ -2,6 +2,7 @@ import { ContractError, normalizeEvent, normalizeEvents, normalizeEvaluation, no
 import type { ApprovalRequest, ApprovalResponse, EvaluateRequest, EvaluateResponse, PolicyStatusResponse, RedteamResponse, StatsResponse } from './types';
 
 type FetchTransport = (url: string, options: RequestInit) => Promise<Response>;
+const nativeFetch: FetchTransport = (url, options) => fetch(url, options);
 const MAX_RESPONSE_BYTES = 524288;
 let sessionToken = '';
 let sessionRevision = 0;
@@ -23,7 +24,7 @@ function validateBase(base: string) {
   if ((!relative && !/^https?:\/\//.test(base)) || url.username || url.password || url.search || url.hash ||
     (!relative && url.protocol === 'http:' && !['127.0.0.1', 'localhost', '[::1]'].includes(url.hostname))) invalid();
 }
-export function createApi(baseUrl = '', fetcher: FetchTransport = (url, options) => fetch(url, options), token: () => string = currentToken) {
+export function createApi(baseUrl = '', fetcher: FetchTransport = nativeFetch, token: () => string = currentToken) {
   validateBase(baseUrl);
   const base = baseUrl.replace(/\/$/, '');
   async function request(path: string, body?: unknown): Promise<{ data: unknown; status: number }> {
@@ -37,9 +38,24 @@ export function createApi(baseUrl = '', fetcher: FetchTransport = (url, options)
     };
     const timeout = setTimeout(() => controller.abort(), 10000);
     let response: Response | undefined;
+    let nativeCompletion: Response | undefined;
     let reader: ReadableStreamDefaultReader<Uint8Array> | undefined;
     let consumed = false;
     let completed = false;
+    function waitForBody<T>(operation: () => Promise<T>): Promise<T> {
+      return new Promise<T>((resolve, reject) => {
+        const finish = (settle: () => void) => {
+          controller.signal.removeEventListener('abort', interrupted);
+          settle();
+        };
+        const interrupted = () => finish(() => reject(new DOMException('Response timed out', 'AbortError')));
+        if (controller.signal.aborted) { interrupted(); return; }
+        controller.signal.addEventListener('abort', interrupted, { once: true });
+        try {
+          void operation().then(value => finish(() => resolve(value)), error => finish(() => reject(error)));
+        } catch (error) { finish(() => reject(error)); }
+      });
+    }
     try {
       try {
         response = await fetcher(`${base}${path}`, {
@@ -55,24 +71,19 @@ export function createApi(baseUrl = '', fetcher: FetchTransport = (url, options)
       if (!response.ok) throw new Error(`Backend request failed: ${path} (HTTP ${response.status}). Check the API server and proxy, then retry.`);
       const size = Number(response.headers.get('content-length'));
       if (size > MAX_RESPONSE_BYTES) throw new ContractError();
+      // Chromium can cancel its network loader when a manual stream reader is
+      // the only consumer, even after EOF. Retain a native completion branch
+      // for the browser fetch transport. It is consumed ONLY after the guarded
+      // reader has verified EOF within the byte limit. No unbounded native
+      // consumer runs ahead of the size guard.
+      if (fetcher === nativeFetch && typeof window !== 'undefined') nativeCompletion = response.clone();
       reader = response.body?.getReader();
       if (!reader) throw new ContractError();
       const chunks: Uint8Array[] = [];
       let bytes = 0;
       try {
         while (true) {
-          const { done, value } = await new Promise<ReadableStreamReadResult<Uint8Array>>((resolve, reject) => {
-            const finish = (settle: () => void) => {
-              controller.signal.removeEventListener('abort', interrupted);
-              settle();
-            };
-            const interrupted = () => finish(() => reject(new DOMException('Response timed out', 'AbortError')));
-            if (controller.signal.aborted) { interrupted(); return; }
-            controller.signal.addEventListener('abort', interrupted, { once: true });
-            try {
-              void reader!.read().then(value => finish(() => resolve(value)), error => finish(() => reject(error)));
-            } catch (error) { finish(() => reject(error)); }
-          });
+          const { done, value } = await waitForBody(() => reader!.read());
           if (done) { consumed = true; break; }
           bytes += value.byteLength;
           if (bytes > MAX_RESPONSE_BYTES) throw new ContractError();
@@ -84,6 +95,17 @@ export function createApi(baseUrl = '', fetcher: FetchTransport = (url, options)
         throw new Error(`Backend unreachable: ${path}. Response interrupted or timed out; retry.`);
       }
       assertSession();
+      if (nativeCompletion) {
+        try {
+          const complete = await waitForBody(() => nativeCompletion!.arrayBuffer());
+          if (complete.byteLength !== bytes || complete.byteLength > MAX_RESPONSE_BYTES) throw new ContractError();
+        } catch (error) {
+          assertSession();
+          if (error instanceof ContractError) throw error;
+          throw new Error(`Backend unreachable: ${path}. Response interrupted or timed out; retry.`);
+        }
+        assertSession();
+      }
       try {
         const raw = new Uint8Array(bytes);
         let offset = 0;
@@ -101,6 +123,9 @@ export function createApi(baseUrl = '', fetcher: FetchTransport = (url, options)
           // Cancellation is best effort. Never await an untrusted stream's
           // cancellation promise or replace the sanitized request error.
           try { void (reader ? reader.cancel() : response?.body?.cancel())?.catch(() => undefined); } catch { /* synchronous cancellation failure */ }
+          // Cancel both tee branches so an oversized/stalled peer cannot keep
+          // supplying bytes through the unused native completion branch.
+          try { void nativeCompletion?.body?.cancel()?.catch(() => undefined); } catch { /* best effort */ }
         }
       }
       reader?.releaseLock();

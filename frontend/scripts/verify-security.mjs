@@ -8,6 +8,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { captureJsonResponse } from './browser-response.mjs';
+import { observeApiRequests } from './browser-network.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const evidenceDir = process.env.AEGIS_EVIDENCE_DIR || path.join(root, 'output/release-verification');
@@ -141,6 +142,16 @@ try {
     await probePage.close();
   }
   const page = await context.newPage();
+  const apiTransfers = observeApiRequests(page);
+  async function settleDashboard() {
+    // React may launch follow-up summaries/events after evaluation. Wait for
+    // their rendered loading states and actual current transfers, not the
+    // document's already-fired networkidle event.
+    await expect(page.getByRole('button', { name: 'Refresh events', exact: true })).toBeEnabled();
+    await expect(page.getByText('Checking summary access…', { exact: true })).toHaveCount(0);
+    await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
+    await apiTransfers.waitForIdle();
+  }
   const pageErrors = [];
   const networkFailures = [];
   const consoleErrors = [];
@@ -185,7 +196,7 @@ try {
   await detail.getByText('read', { exact: true }).waitFor();
   const storage = await page.evaluate(() => ({ local: localStorage.length, session: sessionStorage.length }));
   assert.deepEqual(storage, { local: 0, session: 0 });
-  await page.waitForLoadState('networkidle');
+  await settleDashboard();
   await page.getByRole('button', { name: 'Disconnect', exact: true }).click();
   await page.getByRole('alert').filter({ hasText: '/api/events (HTTP 401)' }).waitFor();
   await expect(result).toHaveCount(0);
@@ -199,7 +210,7 @@ try {
   await expect(page.getByRole('region', { name: 'Decisions and budget' })).toContainText('lifetime decisions');
   await expect(page.getByRole('region', { name: 'Red-team evidence' })).toContainText('16 passed · 0 failed');
   await expect(page.getByRole('button', { name: 'Run red-team' })).toBeVisible();
-  await page.waitForLoadState('networkidle');
+  await settleDashboard();
   await page.getByRole('button', { name: 'Disconnect', exact: true }).click();
   await page.getByRole('alert').filter({ hasText: '/api/events (HTTP 401)' }).waitFor();
   await page.getByRole('alert').filter({ hasText: '/api/session (HTTP 401)' }).waitFor();
@@ -245,7 +256,7 @@ try {
   // the demo's bounded rejection-telemetry sampling allowance.
   const browserProbe = http.createServer(); const browserPort = await listen(browserProbe); await close(browserProbe);
   await startBackend('local-demo', browserPort, `http://127.0.0.1:${frontendPort}`);
-  await page.waitForLoadState('networkidle');
+  await settleDashboard();
   backendPort = browserPort;
   await page.goto(`http://127.0.0.1:${frontendPort}`);
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -264,7 +275,7 @@ try {
     await expect(detail.locator('.reason-box p')).toHaveText(actual.reason);
     await expect(detail.locator('.decision')).toHaveText(decision);
     await expect(page.getByRole('button', { name: 'Inspect ' + actual.event_id, exact: true })).toBeVisible();
-    await page.waitForLoadState('networkidle');
+    await settleDashboard();
     await expect(page.getByRole('alert')).toHaveCount(0);
     liveCases.push({ scenario, decision, policy, event_id: actual.event_id });
   }
@@ -278,7 +289,7 @@ try {
   // Serial real-browser policy lifecycle checks use only this run's own copy.
   // Run separately from the native-proxy offline journey below.
   let lifecycleExit = null;
-  await page.waitForLoadState('networkidle');
+  await settleDashboard();
   if (!offlineGuard) {
     const lifecyclePolicyPath = path.join(root, 'output/security-audit', `browser-policy-${randomBytes(8).toString('hex')}.yaml`);
     await writeFile(lifecyclePolicyPath, await readFile(path.join(root, 'policies/default.yaml')));
@@ -308,7 +319,7 @@ try {
   await writeFile(quotaPolicyPath, originalPolicy.replace('requests: 60', 'requests: 2'));
   const quotaProbe = http.createServer(); const quotaPort = await listen(quotaProbe); await close(quotaProbe);
   await startBackend('local-demo', quotaPort, `http://127.0.0.1:${frontendPort}`, quotaPolicyPath);
-  await page.waitForLoadState('networkidle');
+  await settleDashboard();
   backendPort = quotaPort;
   await page.goto(`http://127.0.0.1:${frontendPort}`);
   await page.getByLabel('Demo scenario').selectOption('manager');
@@ -324,11 +335,11 @@ try {
     await expect(detail.locator('.detail-id')).toHaveText(actual.event_id);
     await expect(detail.locator('.reason-box p')).toHaveText(actual.reason);
     quotaDecisions.push(decision);
-    await page.waitForLoadState('networkidle');
+    await settleDashboard();
     await expect(page.getByRole('alert')).toHaveCount(0);
   }
   await page.screenshot({ path: path.join(evidenceDir, `${evidencePrefix}-quota-375.png`), fullPage: true });
-  await page.waitForLoadState('networkidle');
+  await settleDashboard();
   const rendered = await page.locator('body').innerText();
   for (const secret of [...Object.values(tokens), syntheticSecret]) assert.ok(!rendered.includes(secret));
   assert.deepEqual(pageErrors, []);
@@ -338,7 +349,7 @@ try {
   // Anonymous initial/disconnect 401s are required refusals, not hidden failures.
   assert.deepEqual(consoleErrors.filter(message => !/^Failed to load resource: the server responded with a status of 401\b/.test(message)), []);
   if (offlineGuard) assert.equal(pythonGuardProbes.length, 4);
-  const sourcePaths = ['frontend/src/adapter.ts', 'frontend/src/api.ts', 'frontend/src/App.tsx', 'frontend/src/SummaryPanels.tsx', 'frontend/src/schemas.ts', 'frontend/src/components.tsx', 'frontend/src/scenarios.ts', 'frontend/e2e-live/security.spec.ts', 'frontend/vite.config.ts', 'frontend/scripts/verify-security.mjs', 'frontend/scripts/browser-response.mjs', 'frontend/scripts/offline-guard.py', 'backend/main.py', 'backend/security.py', 'backend/state.py', 'backend/credentials.py', 'backend/live_check.py', 'backend/guards.py', 'backend/redteam.py', 'policies/default.yaml'];
+  const sourcePaths = ['frontend/src/adapter.ts', 'frontend/src/api.ts', 'frontend/src/App.tsx', 'frontend/src/SummaryPanels.tsx', 'frontend/src/schemas.ts', 'frontend/src/components.tsx', 'frontend/src/scenarios.ts', 'frontend/e2e-live/security.spec.ts', 'frontend/vite.config.ts', 'frontend/scripts/verify-security.mjs', 'frontend/scripts/browser-response.mjs', 'frontend/scripts/browser-network.mjs', 'frontend/scripts/offline-guard.py', 'backend/main.py', 'backend/security.py', 'backend/state.py', 'backend/credentials.py', 'backend/live_check.py', 'backend/guards.py', 'backend/redteam.py', 'policies/default.yaml'];
   const sourceHashes = Object.fromEntries(await Promise.all(sourcePaths.map(async file => [file, createHash('sha256').update(await readFile(path.join(root, file))).digest('hex')])));
   evidence = { startedAt, completedAt: new Date().toISOString(), timezone: 'Europe/Warsaw', browser: await browser.version(), hostileResponse, hostileRunStatus: before.status,
     authenticatedRedteam: { total: run.total, passed: run.passed, failed: run.failed },

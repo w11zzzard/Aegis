@@ -2,9 +2,35 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createApi, setSessionToken } from './api';
 import { event } from './test-fixtures';
 
-afterEach(() => setSessionToken(''));
+afterEach(() => { setSessionToken(''); vi.unstubAllGlobals(); vi.useRealTimers(); });
 
 describe('credential transport boundary', () => {
+  it.each(['failure', 'timeout', 'disconnect'])('bounds and sanitizes native completion %s', async mode => {
+    vi.useFakeTimers();
+    const response = new Response('{"events":[]}');
+    const completion = new Response('{"events":[]}');
+    let started!: () => void;
+    const consuming = new Promise<void>(resolve => { started = resolve; });
+    vi.spyOn(response, 'clone').mockReturnValue(completion);
+    vi.spyOn(completion, 'arrayBuffer').mockImplementation(() => {
+      started();
+      return mode === 'failure' ? Promise.reject(new Error('synthetic private native detail')) : new Promise<ArrayBuffer>(() => {});
+    });
+    let signal!: AbortSignal;
+    vi.stubGlobal('fetch', vi.fn(async (_url, options) => {
+      signal = options.signal;
+      return response;
+    }));
+    const request = createApi('').events();
+    const refusal = expect(request).rejects.toThrow(mode === 'disconnect' ? /session changed/i : /response interrupted or timed out/i);
+    await consuming;
+    if (mode === 'timeout') await vi.advanceTimersByTimeAsync(10000);
+    if (mode === 'disconnect') setSessionToken('');
+    await refusal;
+    expect(signal.aborted).toBe(true);
+    expect(response.body!.locked).toBe(false);
+    expect(vi.getTimerCount()).toBe(0);
+  });
   it.each(['http://example.com', '//example.com', 'https://user:pass@example.com', 'https://example.com?token=x', 'https://example.com#fragment', '/\\example.com', 'file:///tmp/api'])('refuses unsafe API base %s before sending credentials', base => {
     expect(() => createApi(base)).toThrow(/API base/i);
   });
