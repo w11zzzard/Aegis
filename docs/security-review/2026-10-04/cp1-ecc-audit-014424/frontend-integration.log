@@ -1,0 +1,9 @@
+
+ RUN  v4.1.11 C:/Users/admin/.codex/worktrees/aegis-security-cp1/Hackyeah 2026 goldman/frontend
+
+
+ Test Files  2 passed (2)
+      Tests  7 passed (7)
+   Start at  02:12:16
+   Duration  736ms (transform 97ms, setup 0ms, import 258ms, tests 538ms, environment 0ms)
+

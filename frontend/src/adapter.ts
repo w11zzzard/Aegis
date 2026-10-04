@@ -23,16 +23,44 @@ function parse<T>(schema: z.ZodType<T>, value: unknown): T {
   if (!parsed.success) throw new ContractError();
   return parsed.data;
 }
+const sensitiveFields = new Set([
+  'prompt', 'output', 'source', 'tool', 'toolarguments', 'authorization',
+  'token', 'accesstoken', 'refreshtoken', 'credential', 'credentials',
+  'password', 'secret', 'apikey', 'stack', 'traceback', 'sanitizedoutput',
+]);
+function rejectSensitiveFields(value: unknown, permittedOutput = false) {
+  const queue: [unknown, number][] = [[value, 0]];
+  let nodes = 0;
+  while (queue.length) {
+    const [item, depth] = queue.pop()!;
+    if (++nodes > 10000 || depth > 16) throw new ContractError();
+    if (!item || typeof item !== 'object') continue;
+    for (const [key, child] of Object.entries(item)) {
+      if (sensitiveFields.has(key.toLowerCase().replace(/[_-]/g, ''))) {
+        // Only the canonical permitted evaluation field belongs to this API.
+        // The dashboard still omits it from the public view model.
+        if (!(depth === 0 && key === 'sanitized_output' && permittedOutput && typeof child === 'string')) throw new ContractError();
+      }
+      queue.push([child, depth + 1]);
+    }
+  }
+}
 export function normalizeEvent(value: unknown): SecurityEvent {
   // Omit unavailable nullable context consistently. Never substitute identity or action.
+  rejectSensitiveFields(value);
   return Object.fromEntries(Object.entries(parse(eventSchema, value)).filter(([, value]) => value !== null && value !== undefined)) as unknown as SecurityEvent;
 }
 export function normalizeEvents(value: unknown): SecurityEvent[] {
   // Explicit compatibility boundary; no guessed fields or fabricated defaults.
+  rejectSensitiveFields(value);
   const parsed = parse(z.union([z.array(eventSchema).max(100), z.object({ events: z.array(eventSchema).max(100) })]), value);
   return (Array.isArray(parsed) ? parsed : parsed.events).map(normalizeEvent);
 }
-export function normalizeEvaluation(value: unknown): EvaluateResponse { return parse(evaluationSchema, value); }
+export function normalizeEvaluation(value: unknown): EvaluateResponse {
+  const decision = value && typeof value === 'object' && 'decision' in value ? value.decision : undefined;
+  rejectSensitiveFields(value, decision === 'ALLOW' || decision === 'REDACT');
+  return parse(evaluationSchema, value);
+}
 export function normalizeJson(value: unknown): JsonValue {
   const queue: [unknown, number][] = [[value, 0]];
   let nodes = 0;

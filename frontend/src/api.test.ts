@@ -5,8 +5,9 @@ import { event, result } from './test-fixtures';
 import type { EvaluateRequest } from './types';
 
 describe('typed backend adapter', () => {
-  it('accepts sanitized events and strips restricted extra payloads', () => {
-    expect(normalizeEvent({ ...event, prompt: 'secret', output: 'restricted' })).toEqual(event);
+  it('accepts sanitized events, omits benign extras and rejects restricted payloads', () => {
+    expect(normalizeEvent({ ...event, evidence_class: 'protected' })).toEqual(event);
+    expect(() => normalizeEvent({ ...event, prompt: 'secret', output: 'restricted' })).toThrow(/contract/i);
   });
   it('supports a direct list and an explicit events envelope', () => {
     expect(normalizeEvents([event])).toEqual([event]);

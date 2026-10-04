@@ -1,0 +1,42 @@
+[
+  {
+    "name": "unicode-escaped-duplicate-corpus-key",
+    "status": 503,
+    "persisted_status": "failed",
+    "reported_total": 0,
+    "no_green_result": true,
+    "cache_control": "no-store"
+  },
+  {
+    "name": "max_plain_opaque",
+    "chars": 16000,
+    "sha256_comparisons": 32768,
+    "elapsed_ms": 22.351,
+    "masked": true,
+    "remaining_chars": 10
+  },
+  {
+    "name": "encoded_opaque_chunks",
+    "chars": 15823,
+    "sha256_comparisons": 32768,
+    "elapsed_ms": 21.634,
+    "masked": true,
+    "remaining_chars": 10
+  },
+  {
+    "name": "encoded_with_binary_looking_separators",
+    "chars": 15183,
+    "sha256_comparisons": 32768,
+    "elapsed_ms": 21.383,
+    "masked": true,
+    "remaining_chars": 10
+  },
+  {
+    "name": "benign_small_text",
+    "chars": 24,
+    "sha256_comparisons": 0,
+    "elapsed_ms": 0.102,
+    "masked": false,
+    "remaining_chars": 24
+  }
+]

@@ -1,0 +1,47 @@
+{
+  "scope": "Actual adapter source transpiled by installed TypeScript; independent schema probes, separate from live browser",
+  "rows": [
+    {
+      "name": "nested-array-case-hyphen-secret-field",
+      "rejected": true,
+      "sanitized": true,
+      "passed": true
+    },
+    {
+      "name": "unicode-escaped-credential-key",
+      "rejected": true,
+      "sanitized": true,
+      "passed": true
+    },
+    {
+      "name": "sensitive-field-inside-prototype-like-extra",
+      "rejected": true,
+      "sanitized": true,
+      "passed": true
+    },
+    {
+      "name": "blocked-canonical-sanitized-output",
+      "rejected": true,
+      "sanitized": true,
+      "passed": true
+    },
+    {
+      "name": "nested-permitted-output-is-refused",
+      "rejected": true,
+      "sanitized": true,
+      "passed": true
+    },
+    {
+      "name": "benign-extra-metadata-survives-compatibility",
+      "rejected": false,
+      "sanitized": false,
+      "passed": true
+    },
+    {
+      "name": "allowed-output-remains-omitted-from-view",
+      "rejected": false,
+      "sanitized": false,
+      "passed": true
+    }
+  ]
+}

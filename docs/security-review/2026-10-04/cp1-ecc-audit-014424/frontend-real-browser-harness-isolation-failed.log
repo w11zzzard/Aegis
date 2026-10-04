@@ -1,0 +1,183 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+ExpectError: expect(locator).toHaveText(expected) failed
+
+Locator: getByRole('region', { name: 'Event details' }).locator('.detail-id')
+Expected: "c066b15f-4ba8-45e7-b368-ea42b4c31cc7"
+Timeout: 5000ms
+Error: element(s) not found
+
+Call log:
+  - Expect "toHaveText" getByRole('region', { name: 'Event details' }).locator('.detail-id') with timeout 5000ms
+  - waiting for getByRole('region', { name: 'Event details' }).locator('.detail-id')
+
+    at captureRawStack (C:\Users\admin\Documents\ChatGPT\Hackyeah 2026 goldman\frontend\node_modules\playwright-core\lib\coreBundle.js:8588:17)
+    at callMatcherAsStep (C:\Users\admin\Documents\ChatGPT\Hackyeah 2026 goldman\frontend\node_modules\playwright\lib\matchers\expect.js:13310:57)
+    at Object.toHaveText (C:\Users\admin\Documents\ChatGPT\Hackyeah 2026 goldman\frontend\node_modules\playwright\lib\matchers\expect.js:13302:23)
+    at C:\Users\admin\.codex\worktrees\aegis-security-cp1\Hackyeah 2026 goldman\frontend\scripts\verify-security.mjs:178:48 {
+  matcherResult: {
+    name: 'toHaveText',
+    expected: 'c066b15f-4ba8-45e7-b368-ea42b4c31cc7',
+    message: 'expect(locator).toHaveText(expected) failed\n' +
+      '\n' +
+      "Locator: getByRole('region', { name: 'Event details' }).locator('.detail-id')\n" +
+      'Expected: "c066b15f-4ba8-45e7-b368-ea42b4c31cc7"\n' +
+      'Timeout: 5000ms\n' +
+      'Error: element(s) not found\n' +
+      '\n' +
+      'Call log:\n' +
+      `  - Expect "toHaveText" getByRole('region', { name: 'Event details' }).locator('.detail-id') with timeout 5000ms\n` +
+      "  - waiting for getByRole('region', { name: 'Event details' }).locator('.detail-id')\n",
+    pass: false,
+    actual: undefined,
+    log: [
+      `  - Expect "toHaveText" getByRole('region', { name: 'Event details' }).locator('.detail-id') with timeout 5000ms`,
+      "  - waiting for getByRole('region', { name: 'Event details' }).locator('.detail-id')"
+    ],
+    timeout: 5000,
+    ariaSnapshot: '- main:\n' +
+      '  - navigation "Main navigation":\n' +
+      '    - link "AEGIS Enforcement gateway":\n' +
+      '      - /url: "#"\n' +
+      '    - link "Audit trail":\n' +
+      '      - /url: "#audit"\n' +
+      '    - link "Evaluation console":\n' +
+      '      - /url: "#console"\n' +
+      '  - paragraph: The security control room\n' +
+      '  - heading "Security, with evidence." [level=1]\n' +
+      '  - paragraph: See what the gateway decided. Understand the policy behind every action.\n' +
+      '  - link "Inspect the audit trail":\n' +
+      '    - /url: "#audit"\n' +
+      '  - heading "Backend decisions." [level=2]\n' +
+      '  - paragraph: Authorization comes from the engine. The dashboard makes it visible.\n' +
+      '  - heading "Traceable reasons." [level=2]\n' +
+      '  - paragraph: Inspect the policy and reason returned with each audit event.\n' +
+      '  - heading "Evaluation only." [level=2]\n' +
+      '  - paragraph: Test proposed actions through the API. No tools run from this console.\n' +
+      '  - region "The audit trail.":\n' +
+      '    - text: API credential\n' +
+      '    - textbox "API credential"\n' +
+      '    - button "Connect"\n' +
+      '    - button "Disconnect"\n' +
+      '    - paragraph: Use the credential provided by your operator. It stays in memory until you disconnect or reload.\n' +
+      '    - paragraph: Sanitized backend evidence\n' +
+      '    - heading "The audit trail." [level=2]\n' +
+      '    - paragraph: Choose an event to inspect the decision in context.\n' +
+      '    - button "Refresh events"\n' +
+      '    - heading "Security events" [level=3]\n' +
+      '    - text: GET /api/events\n' +
+      '    - table "Sanitized backend security events, newest first":\n' +
+      '      - caption: Sanitized backend security events, newest first\n' +
+      '      - rowgroup:\n' +
+      '        - row "Event / actor Resource Decision / evidence":\n' +
+      '          - columnheader "Event / actor"\n' +
+      '          - columnheader "Resource"\n' +
+      '          - columnheader "Decision / evidence"\n' +
+      '      - rowgroup:\n' +
+      '        - row "Inspect bb22fa31-969a-4675-aa6c-8b630fd4f00b manager_1 PORTFOLIO_MANAGER · 2026-10-04T00:03:58.248584+00:00 portfolio/current_positions RESTRICTED · INTERNAL ALLOW portfolio_restricted Authorized by resource policy":\n' +
+      '          - cell "Inspect bb22fa31-969a-4675-aa6c-8b630fd4f00b manager_1 PORTFOLIO_MANAGER · 2026-10-04T00:03:58.248584+00:00":\n' +
+      '            - button "Inspect bb22fa31-969a-4675-aa6c-8b630fd4f00b": bb22fa31-969a-4675-aa6c-8b630fd4f00b\n' +
+      '            - strong: manager_1\n' +
+      '            - text: PORTFOLIO_MANAGER · 2026-10-04T00:03:58.248584+00:00\n' +
+      '          - cell "portfolio/current_positions RESTRICTED · INTERNAL"\n' +
+      '          - cell "ALLOW portfolio_restricted Authorized by resource policy":\n' +
+      '            - text: ALLOW\n' +
+      '            - strong: portfolio_restricted\n' +
+      '            - text: Authorized by resource policy\n' +
+      '        - row "Inspect f1ea2801-ac7f-4cb0-bd76-e2925b9c8ce9 analyst_42 ANALYST · 2026-10-04T00:03:58.137539+00:00 portfolio/current_positions RESTRICTED · INTERNAL BLOCK portfolio_restricted ANALYST cannot access RESTRICTED resource":\n' +
+      '          - cell "Inspect f1ea2801-ac7f-4cb0-bd76-e2925b9c8ce9 analyst_42 ANALYST · 2026-10-04T00:03:58.137539+00:00":\n' +
+      '            - button "Inspect f1ea2801-ac7f-4cb0-bd76-e2925b9c8ce9": f1ea2801-ac7f-4cb0-bd76-e2925b9c8ce9\n' +
+      '            - strong: analyst_42\n' +
+      '            - text: ANALYST · 2026-10-04T00:03:58.137539+00:00\n' +
+      '          - cell "portfolio/current_positions RESTRICTED · INTERNAL"\n' +
+      '          - cell "BLOCK portfolio_restricted ANALYST cannot access RESTRICTED resource":\n' +
+      '            - text: BLOCK\n' +
+      '            - strong: portfolio_restricted\n' +
+      '            - text: ANALYST cannot access RESTRICTED resource\n' +
+      '        - row "Inspect a8d50dba-f4c8-4544-91b5-a1cd9b97f5c4 analyst_42 ANALYST · 2026-10-04T00:03:58.007725+00:00 public/market_summary PUBLIC · INTERNAL ALLOW market_public Authorized by resource policy":\n' +
+      '          - cell "Inspect a8d50dba-f4c8-4544-91b5-a1cd9b97f5c4 analyst_42 ANALYST · 2026-10-04T00:03:58.007725+00:00":\n' +
+      '            - button "Inspect a8d50dba-f4c8-4544-91b5-a1cd9b97f5c4": a8d50dba-f4c8-4544-91b5-a1cd9b97f5c4\n' +
+      '            - strong: analyst_42\n' +
+      '            - text: ANALYST · 2026-10-04T00:03:58.007725+00:00\n' +
+      '          - cell "public/market_summary PUBLIC · INTERNAL"\n' +
+      '          - cell "ALLOW market_public Authorized by resource policy":\n' +
+      '            - text: ALLOW\n' +
+      '            - strong: market_public\n' +
+      '            - text: Authorized by resource policy\n' +
+      '        - row "Inspect 5dfb0bba-e91a-48ef-a506-83d78044c04f manager_1 PORTFOLIO_MANAGER · 2026-10-04T00:03:57.895198+00:00 portfolio/current_positions RESTRICTED · INTERNAL BLOCK tool_guard Proposed tool is not allowlisted":\n' +
+      '          - cell "Inspect 5dfb0bba-e91a-48ef-a506-83d78044c04f manager_1 PORTFOLIO_MANAGER · 2026-10-04T00:03:57.895198+00:00":\n' +
+      '            - button "Inspect 5dfb0bba-e91a-48ef-a506-83d78044c04f": 5dfb0bba-e91a-48ef-a506-83d78044c04f\n' +
+      '            - strong: manager_1\n' +
+      '            - text: PORTFOLIO_MANAGER · 2026-10-04T00:03:57.895198+00:00\n' +
+      '          - cell "portfolio/current_positions RESTRICTED · INTERNAL"\n' +
+      '          - cell "BLOCK tool_guard Proposed tool is not allowlisted":\n' +
+      '            - text: BLOCK\n' +
+      '            - strong: tool_guard\n' +
+      '            - text: Proposed tool is not allowlisted\n' +
+      '        - row "Inspect 91dd8742-9b1f-4eb6-9fb5-78ce51a3f262 manager_1 PORTFOLIO_MANAGER · 2026-10-04T00:03:57.876762+00:00 portfolio/current_positions RESTRICTED · EXTERNAL BLOCK external_exfiltration RESTRICTED data cannot leave INTERNAL destinations":\n' +
+      '          - cell "Inspect 91dd8742-9b1f-4eb6-9fb5-78ce51a3f262 manager_1 PORTFOLIO_MANAGER · 2026-10-04T00:03:57.876762+00:00":\n' +
+      '            - button "Inspect 91dd8742-9b1f-4eb6-9fb5-78ce51a3f262": 91dd8742-9b1f-4eb6-9fb5-78ce51a3f262\n' +
+      '            - strong: manager_1\n' +
+      '            - text: PORTFOLIO_MANAGER · 2026-10-04T00:03:57.876762+00:00\n' +
+      '          - cell "portfolio/current_positions RESTRICTED · EXTERNAL"\n' +
+      '          - cell "BLOCK external_exfiltration RESTRICTED data cannot leave INTERNAL destinations":\n' +
+      '            - text: BLOCK\n' +
+      '            - strong: external_exfiltration\n' +
+      '            - text: RESTRICTED data cannot leave INTERNAL destinations\n' +
+      '        - row "Inspect 973cedf6-ed62-4cc3-9b05-8793bb56eac6 manager_1 PORTFOLIO_MANAGER · 2026-10-04T00:03:57.844714+00:00 portfolio/current_positions RESTRICTED · INTERNAL ALLOW portfolio_restricted Authorized by resource policy":\n' +
+      '          - cell "Inspect 973cedf6-ed62-4cc3-9b05-8793bb56eac6 manager_1 PORTFOLIO_MANAGER · 2026-10-04T00:03:57.844714+00:00":\n' +
+      '            - button "Inspect 973cedf6-ed62-4cc3-9b05-8793bb56eac6": 973cedf6-ed62-4cc3-9b05-8793bb56eac6\n' +
+      '            - strong: manager_1\n' +
+      '            - text: PORTFOLIO_MANAGER · 2026-10-04T00:03:57.844714+00:00\n' +
+      '          - cell "portfolio/current_positions RESTRICTED · INTERNAL"\n' +
+      '          - cell "ALLOW portfolio_restricted Authorized by resource policy":\n' +
+      '            - text: ALLOW\n' +
+      '            - strong: portfolio_restricted\n' +
+      '            - text: Authorized by resource policy\n' +
+      '        - row "Inspect 788c203a-9f75-4e31-a8d8-f74f7a726ab1 analyst_42 ANALYST · 2026-10-04T00:03:57.813953+00:00 portfolio/current_positions RESTRICTED · INTERNAL BLOCK portfolio_restricted ANALYST cannot access RESTRICTED resource":\n' +
+      '          - cell "Inspect 788c203a-9f75-4e31-a8d8-f74f7a726ab1 analyst_42 ANALYST · 2026-10-04T00:03:57.813953+00:00":\n' +
+      '            - button "Inspect 788c203a-9f75-4e31-a8d8-f74f7a726ab1": 788c203a-9f75-4e31-a8d8-f74f7a726ab1\n' +
+      '            - strong: analyst_42\n' +
+      '            - text: ANALYST · 2026-10-04T00:03:57.813953+00:00\n' +
+      '          - cell "portfolio/current_positions RESTRICTED · INTERNAL"\n' +
+      '          - cell "BLOCK portfolio_restricted ANALYST cannot access RESTRICTED resource":\n' +
+      '            - text: BLOCK\n' +
+      '            - strong: portfolio_restricted\n' +
+      '            - text: ANALYST cannot access RESTRICTED resource\n' +
+      '        - row "Inspect a7385f66-2056-475c-9257-a31821cf4cfb analyst_42 ANALYST · 2026-10-04T00:03:57.781906+00:00 public/market_summary PUBLIC · INTERNAL ALLOW market_public Authorized by resource policy":\n' +
+      '          - cell "Inspect a7385f66-2056-475c-9257-a31821cf4cfb analyst_42 ANALYST · 2026-10-04T00:03:57.781906+00:00":\n' +
+      '            - button "Inspect a7385f66-2056-475c-9257-a31821cf4cfb": a7385f66-2056-475c-9257-a31821cf4cfb\n' +
+      '            - strong: analyst_42\n' +
+      '            - text: ANALYST · 2026-10-04T00:03:57.781906+00:00\n' +
+      '          - cell "public/market_summary PUBLIC · INTERNAL"\n' +
+      '          - cell "ALLOW market_public Authorized by resource policy":\n' +
+      '            - text: ALLOW\n' +
+      '            - strong: market_public\n' +
+      '            - text: Authorized by resource policy\n' +
+      '        - row "Inspect 172904ad-c769-4b54-b11c-3d45cf62bb5e Not reported Not reported · 2026-10-04T00:03:57.695644+00:00 Not reported Not reported · Not reported BLOCK fail_closed Malformed request":\n' +
+      '          - cell "Inspect 172904ad-c769-4b54-b11c-3d45cf62bb5e Not reported Not reported · 2026-10-04T00:03:57.695644+00:00":\n' +
+      '            - button "Inspect 172904ad-c769-4b54-b11c-3d45cf62bb5e": 172904ad-c769-4b54-b11c-3d45cf62bb5e\n' +
+      '            - strong: Not reported\n' +
+      '            - text: Not reported · 2026-10-04T00:03:57.695644+00:00\n' +
+      '          - cell "Not reported Not reported · Not reported"\n' +
+      '          - cell "BLOCK fail_closed Malformed request":\n' +
+      '            - text: BLOCK\n' +
+      '            - strong: fail_closed\n' +
+      '            - text: Malformed request\n' +
+      '        - row "Inspect c91a8b32-6086-4e8b-afa7-d7769dc8d0a6 Not reported ANALYST · 2026-10-04T00:03:57.663280+00:00 public/market_summary PUBLIC · INTERNAL BLOCK identity Unknown identity or claimed role mismatch":\n' +
+      '          - cell "Inspect c91a8b32-6086-4e8b-afa7-d7769dc8d0a6 Not reported ANALYST · 2026-10-04T00:03:57.663280+00:00":\n' +
+      '            - button "Inspect c91a8b32-6086-4e8b-afa7-d7769dc8d0a6": c91a8b32-6086-4e8b-afa7-d7769dc8d0a6\n' +
+      '            - strong: Not reported\n' +
+      '            - text: ANALYST · 2026-10-04T00:03:57.663280+00:00\n' +
+      '          - cell "public/market_summary PUBLIC · INTERNAL"\n' +
+      '          - cell "BLOCK identity Unknown identity or claimed role mismatch":\n' +
+      '            - text: BLOCK\n' +
+      '            - strong: identity\n' +
+      '            - text: Unknown identity or claimed role mismatch\n' +
+      '        - row "Inspect 7970e3de-f7bc-4d79-910c-095585e5db7b analyst_42 ANALYST · 2026-10-04T00:03:57.629497+00:00 public/market_summary PUBLIC · INTERNAL ALLOW market_pu'... 6607 more characters
+  }
+}
+
+Node.js v24.19.0

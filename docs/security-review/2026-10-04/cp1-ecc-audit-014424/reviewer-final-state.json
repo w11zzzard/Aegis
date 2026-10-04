@@ -1,0 +1,69 @@
+{
+  "reviewed_at_warsaw": "2026-10-04T02:16:00.150517+02:00",
+  "head": "e52eb5059bba618db768c17353256d9eb516938c",
+  "branch": "",
+  "target_directory": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+  "verification_kind": "working-tree review and verification; no release/merge certification",
+  "tracked_binary_diff_sha256": "d8be38e97a90cf6c9b6d0276704ddb46ab2b2efa007f99e9cc8490648ade3333",
+  "changed_tracked_paths": [
+    "backend/README.md",
+    "backend/guards.py",
+    "backend/redteam.py",
+    "docs/API_CONTRACT.md",
+    "frontend/scripts/verify-security.mjs",
+    "frontend/src/adapter.ts",
+    "frontend/src/api.test.ts",
+    "frontend/src/audit-regression.test.tsx",
+    "frontend/vite.config.ts"
+  ],
+  "relevant_untracked_paths": [
+    "backend/tests/test_cp1_lifecycle.py",
+    "backend/tests/test_encoded_credential_context.py",
+    "backend/tests/test_redteam_integrity.py",
+    "frontend/e2e/security-boundaries.spec.ts",
+    "frontend/scripts/offline-guard.py",
+    "frontend/src/response-secrecy.test.ts",
+    "frontend/src/security-boundaries.test.tsx"
+  ],
+  "reviewed_changed_and_untracked_sha256": {
+    "backend/README.md": "ddedab83537b26b5a28072421ff9558a3bb7eeadfe76dbbb37801110b11fe7da",
+    "backend/guards.py": "3d5691377b6c021a380160391df56ab1e64b19fffb09e4e902d1e7cfc8496fa8",
+    "backend/redteam.py": "0295d9fe517753db7348e62ca3040ef43c6fa26ff394388e1843498796c02e77",
+    "docs/API_CONTRACT.md": "05bf943a4c69d6b57b6c5786b1d30b4133a2b14a8916f36310fb3cdf5f3462e5",
+    "frontend/scripts/verify-security.mjs": "028c9710ab4daaeff3bd7a85f43714ac689954afd23c6d2b857ef416d554791f",
+    "frontend/src/adapter.ts": "db1b53c8c23138f17c5c43132c7049610bff9ba1f0b7d5b7887be0ae9f0bb93c",
+    "frontend/src/api.test.ts": "9b9777f8301373ca567c61c16979f3ddc83332a349f2b502bfd692d8ea0f1e2d",
+    "frontend/src/audit-regression.test.tsx": "ddd2c09752129a4fa8414ab1838910fdb6fbbea47a0e997fa2b219e5ca097ca9",
+    "frontend/vite.config.ts": "c3bfde35ddb79436d4cb0a9f687769836d669ad9da0e5745e677e1ce46a5e84f",
+    "backend/tests/test_cp1_lifecycle.py": "6bd2751ab03a9462465e47a861b5ce47970b53a6b92cb1633d48d7b79b022cd0",
+    "backend/tests/test_encoded_credential_context.py": "e7300a778110137071d3fc07750582acb316b98b8e65a8ea17d394f85956b8c2",
+    "backend/tests/test_redteam_integrity.py": "92c004c949e3836853ab81d6b9af1c4b8bc6d0f8ab06993aa51f90e4b5e722b1",
+    "frontend/e2e/security-boundaries.spec.ts": "6018e09792e387207c67807f56415a20ab3f68b749cf61d8b05e3f95656065a3",
+    "frontend/scripts/offline-guard.py": "a53a5a4e8595e52e84113414523ff0f7eafeaf52c2d40417de0b375d3955f965",
+    "frontend/src/response-secrecy.test.ts": "fda13b17380e013d9b77a620fe076c6c18dd8459e5ed07e65da7ab40ca00b540",
+    "frontend/src/security-boundaries.test.tsx": "78b48fb3f72b9eabb9442320ac53c58615f05549fd7760e56004ecd603d66b06"
+  },
+  "review_verdict": "No unresolved confirmed critical/high exploit in agreed demo enforcement after encoded-context/full16k fixes; primary full-suite/live evidence and human sign-off remain separate requirements",
+  "limitations": [
+    "Pattern masker is not arbitrary-secret/DLP or recursive encoding detection",
+    "No semantic model/real forwarding/tool execution exists",
+    "Local-demo selected identities are not authentication",
+    "No disconnected-host runtime test or hosted/proxy deployment test performed by reviewer",
+    "Provider/assignment history scan is heuristic",
+    "Python dependency lock lacks artifact hashes",
+    "Final source mutation requires re-evaluation of source identity and affected verification"
+  ],
+  "independent_evidence": [
+    "reviewer-large-encoded-after.json",
+    "reviewer-encoded-after.json",
+    "reviewer-final-probes.json",
+    "reviewer-corpus-nonfinite-after.json",
+    "reviewer-frontend-probes.json",
+    "reviewer-focused-tests.json",
+    "reviewer-focused-final-tests.json",
+    "reviewer-dependency-verification.json",
+    "reviewer-baseline.json",
+    "reviewer-expanded-secrets.json",
+    "reviewer-harness-review.json"
+  ]
+}

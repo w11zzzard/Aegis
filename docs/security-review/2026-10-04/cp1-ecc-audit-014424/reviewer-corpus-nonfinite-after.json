@@ -1,0 +1,38 @@
+[
+  {
+    "scalar": "NaN",
+    "status": 503,
+    "persisted_status": "failed",
+    "total": 0,
+    "passed": null,
+    "cache_control": "no-store",
+    "refused_not_green": true
+  },
+  {
+    "scalar": "Infinity",
+    "status": 503,
+    "persisted_status": "failed",
+    "total": 0,
+    "passed": null,
+    "cache_control": "no-store",
+    "refused_not_green": true
+  },
+  {
+    "scalar": "-Infinity",
+    "status": 503,
+    "persisted_status": "failed",
+    "total": 0,
+    "passed": null,
+    "cache_control": "no-store",
+    "refused_not_green": true
+  },
+  {
+    "scalar": "1e999",
+    "status": 503,
+    "persisted_status": "failed",
+    "total": 0,
+    "passed": null,
+    "cache_control": "no-store",
+    "refused_not_green": true
+  }
+]

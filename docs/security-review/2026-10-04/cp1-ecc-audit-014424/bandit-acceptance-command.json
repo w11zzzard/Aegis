@@ -1,0 +1,20 @@
+{
+  "command": [
+    "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-audit\\.venv\\Scripts\\python.exe",
+    "-m",
+    "bandit",
+    "-r",
+    "backend",
+    "-x",
+    "backend/tests,backend/.venv",
+    "-f",
+    "json",
+    "-o",
+    "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\bandit-acceptance.json"
+  ],
+  "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+  "started_warsaw": "2026-10-04T02:17:22.203218+02:00",
+  "ended_warsaw": "2026-10-04T02:17:22.515207+02:00",
+  "exit_code": 0,
+  "log": "bandit-acceptance.log"
+}

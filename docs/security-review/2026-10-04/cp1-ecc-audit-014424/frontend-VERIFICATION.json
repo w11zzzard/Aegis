@@ -1,0 +1,254 @@
+{
+  "generatedAtUtc": "2026-10-04T00:16:41.322Z",
+  "timezone": "Europe/Warsaw",
+  "source": {
+    "checkout": "C:/Users/admin/.codex/worktrees/aegis-security-cp1/Hackyeah 2026 goldman",
+    "head": "e52eb5059bba618db768c17353256d9eb516938c",
+    "verification": "Uncommitted working-tree verification; frontend tracked diff hash plus untracked test/harness hashes; primary owns final whole-repository manifest",
+    "frontendDiffSha256": "be20489b7ce6a5fca78bd9f7cb19efa62194b6e238203350eb95cb8eefde31c1",
+    "untrackedHashes": {
+      "frontend/src/security-boundaries.test.tsx": "78b48fb3f72b9eabb9442320ac53c58615f05549fd7760e56004ecd603d66b06",
+      "frontend/src/response-secrecy.test.ts": "fda13b17380e013d9b77a620fe076c6c18dd8459e5ed07e65da7ab40ca00b540",
+      "frontend/e2e/security-boundaries.spec.ts": "6018e09792e387207c67807f56415a20ab3f68b749cf61d8b05e3f95656065a3",
+      "frontend/scripts/offline-guard.py": "a53a5a4e8595e52e84113414523ff0f7eafeaf52c2d40417de0b375d3955f965"
+    },
+    "applicationAndHarnessHashes": {
+      "frontend/src/adapter.ts": "db1b53c8c23138f17c5c43132c7049610bff9ba1f0b7d5b7887be0ae9f0bb93c",
+      "frontend/src/api.ts": "f643549a5a261718ea8ae55340f2c2b6744cb8410460e432847cfc5f82b94754",
+      "frontend/src/App.tsx": "ae0f12ea7415ed25bb35bb51bc94dfa30d5f595e1fe859c35dc8f4ba3231ad47",
+      "frontend/src/components.tsx": "dec5b3fc41906e519b17f21bf55ed37a2b6aa908bceea1248f09be6e5356518a",
+      "frontend/src/scenarios.ts": "361aa8f57c9af290fadcb8ec201631416021c0741e861b668a19ccb99c7ed3d5",
+      "frontend/vite.config.ts": "c3bfde35ddb79436d4cb0a9f687769836d669ad9da0e5745e677e1ce46a5e84f",
+      "frontend/scripts/verify-security.mjs": "028c9710ab4daaeff3bd7a85f43714ac689954afd23c6d2b857ef416d554791f",
+      "frontend/scripts/offline-guard.py": "a53a5a4e8595e52e84113414523ff0f7eafeaf52c2d40417de0b375d3955f965",
+      "backend/guards.py": "3d5691377b6c021a380160391df56ab1e64b19fffb09e4e902d1e7cfc8496fa8",
+      "backend/redteam.py": "0295d9fe517753db7348e62ca3040ef43c6fa26ff394388e1843498796c02e77",
+      "policies/default.yaml": "58e1056de4028e59a480bb17a729ea3db8b2c68490ce32cfd8f4809db09aedc9"
+    }
+  },
+  "results": {
+    "unitTests": 100,
+    "unitFiles": 8,
+    "coverage": {
+      "statements": 97.78,
+      "branches": 94.26,
+      "functions": 98.33,
+      "lines": 99.34
+    },
+    "preservedThresholds": 80,
+    "fixtureBrowserTests": 6,
+    "realBackendIntegrationTests": 7,
+    "guardedBackendIntegrationTests": 7,
+    "realBrowserJourneys": [
+      "authenticated manager and disconnect",
+      "five fresh demo response/feed/detail cases",
+      "fresh ALLOW, ALLOW, THROTTLE"
+    ],
+    "offlineSimulation": "Passed same journeys with external browser requests denied and pre-import Python DNS/connect guard; no host-global disconnect or offline installation claim"
+  },
+  "commands": [
+    {
+      "name": "required sensitive-field negative regression",
+      "executable": "C:/Users/admin/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+      "argv": [
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "src/response-secrecy.test.ts",
+        "--configLoader=runner"
+      ],
+      "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman\\frontend",
+      "exitCode": 1,
+      "wallSeconds": 1.2664982,
+      "startedUtc": "2026-10-03T23:57:47.714Z",
+      "endedUtc": "2026-10-03T23:57:48.981Z",
+      "startedWarsaw": "2026-10-04 01:57:47",
+      "endedWarsaw": "2026-10-04 01:57:48",
+      "timestampMethod": "Tool-reported command wall duration and retained log mtime; approximate at subsecond precision",
+      "log": "frontend-sensitive-fields-before.log"
+    },
+    {
+      "name": "unit tests and coverage",
+      "executable": "C:/Users/admin/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+      "argv": [
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "--configLoader=runner",
+        "--coverage"
+      ],
+      "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman\\frontend",
+      "exitCode": 0,
+      "wallSeconds": 3.4629363,
+      "startedUtc": "2026-10-04T00:06:06.759Z",
+      "endedUtc": "2026-10-04T00:06:10.222Z",
+      "startedWarsaw": "2026-10-04 02:06:06",
+      "endedWarsaw": "2026-10-04 02:06:10",
+      "timestampMethod": "Tool-reported command wall duration and retained log mtime; approximate at subsecond precision",
+      "log": "frontend-unit-coverage.log"
+    },
+    {
+      "name": "TypeScript plus build",
+      "executable": "C:/Users/admin/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+      "argv": [
+        "node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "THEN",
+        "node_modules/vite/bin/vite.js",
+        "build",
+        "--configLoader=runner"
+      ],
+      "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman\\frontend",
+      "exitCode": 0,
+      "wallSeconds": 3.1623069,
+      "startedUtc": "2026-10-04T00:03:15.089Z",
+      "endedUtc": "2026-10-04T00:03:18.252Z",
+      "startedWarsaw": "2026-10-04 02:03:15",
+      "endedWarsaw": "2026-10-04 02:03:18",
+      "timestampMethod": "Tool-reported command wall duration and retained log mtime; approximate at subsecond precision",
+      "log": "frontend-build.log"
+    },
+    {
+      "name": "fixture browser",
+      "executable": "C:/Users/admin/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+      "argv": [
+        "node_modules/@playwright/test/cli.js",
+        "test",
+        "--reporter=line"
+      ],
+      "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman\\frontend",
+      "exitCode": 0,
+      "wallSeconds": 4.7989259,
+      "startedUtc": "2026-10-04T00:03:51.703Z",
+      "endedUtc": "2026-10-04T00:03:56.502Z",
+      "startedWarsaw": "2026-10-04 02:03:51",
+      "endedWarsaw": "2026-10-04 02:03:56",
+      "timestampMethod": "Tool-reported command wall duration and retained log mtime; approximate at subsecond precision",
+      "log": "frontend-fixture-browser.log",
+      "env": {
+        "AEGIS_FRONTEND_URL": "http://127.0.0.1:18349",
+        "AEGIS_EVIDENCE_DIR": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424",
+        "PLAYWRIGHT_CHANNEL": "chrome"
+      },
+      "ownedServerCommand": [
+        "C:/Users/admin/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+        "node_modules/vite/bin/vite.js",
+        "preview",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "18349",
+        "--strictPort",
+        "--configLoader=runner"
+      ]
+    },
+    {
+      "name": "normal real-backend browser and typed/live integration",
+      "executable": "C:/Users/admin/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+      "argv": [
+        "frontend/scripts/verify-security.mjs"
+      ],
+      "cwd": "C:/Users/admin/.codex/worktrees/aegis-security-cp1/Hackyeah 2026 goldman",
+      "env": {
+        "AEGIS_OFFLINE_GUARD": "0",
+        "AEGIS_TEST_PYTHON": "C:/Users/admin/Documents/ChatGPT/Hackyeah 2026 goldman/.worktrees/b-dashboard-integration/frontend/.integration-venv/Scripts/python.exe",
+        "PLAYWRIGHT_CHANNEL": "chrome",
+        "AEGIS_EVIDENCE_DIR": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424"
+      },
+      "exitCode": 0,
+      "startedUtc": "2026-10-04T00:12:13.800Z",
+      "endedUtc": "2026-10-04T00:12:19.802Z",
+      "startedWarsaw": "2026-10-04 02:12:13",
+      "endedWarsaw": "2026-10-04 02:12:19",
+      "wallSeconds": 6.538353,
+      "log": "frontend-real-browser.log",
+      "integrationLog": "frontend-integration.log"
+    },
+    {
+      "name": "separate guarded external-network-unavailability simulation",
+      "executable": "C:/Users/admin/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+      "argv": [
+        "frontend/scripts/verify-security.mjs"
+      ],
+      "cwd": "C:/Users/admin/.codex/worktrees/aegis-security-cp1/Hackyeah 2026 goldman",
+      "env": {
+        "AEGIS_OFFLINE_GUARD": "1",
+        "AEGIS_TEST_PYTHON": "C:/Users/admin/Documents/ChatGPT/Hackyeah 2026 goldman/.worktrees/b-dashboard-integration/frontend/.integration-venv/Scripts/python.exe",
+        "PLAYWRIGHT_CHANNEL": "chrome",
+        "AEGIS_EVIDENCE_DIR": "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424"
+      },
+      "exitCode": 0,
+      "startedUtc": "2026-10-04T00:12:13.401Z",
+      "endedUtc": "2026-10-04T00:12:19.273Z",
+      "startedWarsaw": "2026-10-04 02:12:13",
+      "endedWarsaw": "2026-10-04 02:12:19",
+      "wallSeconds": 6.4310798,
+      "log": "frontend-offline-browser.log",
+      "integrationLog": "frontend-offline-integration.log"
+    }
+  ],
+  "cleanup": {
+    "browserChildren": {
+      "ownedProcesses": [
+        {
+          "pid": 34920,
+          "stopped": true
+        },
+        {
+          "pid": 31304,
+          "stopped": true
+        },
+        {
+          "pid": 1780,
+          "stopped": true
+        },
+        {
+          "pid": 32448,
+          "stopped": true
+        },
+        {
+          "pid": 3684,
+          "stopped": true
+        }
+      ],
+      "ownedServersClosed": true
+    },
+    "guardedChildren": {
+      "ownedProcesses": [
+        {
+          "pid": 1304,
+          "stopped": true
+        },
+        {
+          "pid": 16168,
+          "stopped": true
+        },
+        {
+          "pid": 32556,
+          "stopped": true
+        },
+        {
+          "pid": 18924,
+          "stopped": true
+        },
+        {
+          "pid": 32912,
+          "stopped": true
+        }
+      ],
+      "ownedServersClosed": true
+    },
+    "vitePreview": {
+      "sessionId": 76994,
+      "port": 18349,
+      "stoppedByOwnedSessionInterrupt": true,
+      "followupConnect": "ECONNREFUSED"
+    },
+    "disposableFiles": "frontend-scratch-cleanup.json"
+  },
+  "limitations": [
+    "Generic administrative JSON responses are bounded but not typed; never rendered by this dashboard",
+    "No report/export/CSV UI exists in chosen source, so CSV injection/export parity is inapplicable and CP4 reporting scope remains incomplete",
+    "No visual regression baseline, axe run, screen-reader assessment or Core Web Vitals evidence",
+    "Current advisory review and whole-repository CP1 verdict belong to primary/reviewer evidence",
+    "Initial CSP failure is preserved as an honest transcript summary, not a raw retained before-log file"
+  ]
+}

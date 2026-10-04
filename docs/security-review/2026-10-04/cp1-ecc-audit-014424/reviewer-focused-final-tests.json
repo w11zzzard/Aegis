@@ -1,0 +1,13 @@
+{
+  "checked_at_warsaw": "2026-10-04T02:09:09+02:00",
+  "command": "C:/Users/admin/Documents/ChatGPT/Hackyeah 2026 goldman/.worktrees/b-dashboard-integration/frontend/.integration-venv/Scripts/python.exe -B -m pytest backend/tests/test_encoded_credential_context.py backend/tests/test_redteam_integrity.py backend/tests/test_cp1_lifecycle.py backend/tests/test_credential_redaction.py -q -p no:cacheprovider",
+  "working_directory": "C:/Users/admin/.codex/worktrees/aegis-security-cp1/Hackyeah 2026 goldman",
+  "source": "reviewer-final-state.json",
+  "tracked_binary_diff_sha256": "820d0b751b68ec050bd1b4239f7e066411d82164af29c450f5188d54abf2606f",
+  "exit_code": 0,
+  "passed": 37,
+  "warnings": 1,
+  "elapsed_seconds": 2.18,
+  "warning": "Existing Starlette TestClient/httpx deprecation; not a failed security check",
+  "scope": "Independent final focused ASGI/regression recheck after full16000character encoded scan and finite corpus checks; separate from primary full-suite/live-socket/browser runs. The recorded diff is the application-review stage before later harness/doc-only changes; application hashes are unchanged in latest reviewer-final-state.json."
+}

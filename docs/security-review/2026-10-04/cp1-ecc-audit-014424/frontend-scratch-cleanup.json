@@ -1,0 +1,19 @@
+{
+  "scope": "Exact synthetic verifier-created quota policies and SQLite files, after all owned children stopped; no recursive deletion",
+  "timestampUtc": "2026-10-04T00:13:54.3419412Z",
+  "removed": [
+    "browser-quota-07bdf7c77c790ba9.yaml",
+    "browser-quota-0cb3cfcc2b065f94.yaml",
+    "browser-quota-207fa654792f71d8.yaml",
+    "browser-quota-26f93a37d6f3eeea.yaml",
+    "browser-quota-cf97b2ee74793fec.yaml",
+    "browser-quota-e71bf58e58501901.yaml",
+    "verify-0090adddef0f8e31.sqlite3",
+    "verify-3ead5f66f6689751.sqlite3",
+    "verify-42a137bda98160cd.sqlite3",
+    "verify-971bf8c3b81e68ec.sqlite3",
+    "verify-bab26fa6d8f0d556.sqlite3",
+    "verify-ee7a3b75eff08649.sqlite3",
+    "verify-fbbc5c4ce3edd239.sqlite3"
+  ]
+}

@@ -1,0 +1,462 @@
+diff --git a/backend/README.md b/backend/README.md
+index 62af06e..4fbe1b7 100644
+--- a/backend/README.md
++++ b/backend/README.md
+@@ -54,7 +54,7 @@ Hosts default to localhost and IPv4/IPv6 loopback; `AEGIS_ALLOWED_HOSTS` is the
+ 
+ Invalid/missing/duplicate-key/aliased/oversized policy fails closed. Evaluation captures config/digest together; pending approval cannot adopt a concurrently reloaded digest. Each red-team run pins one policy and reports its version/digest. Trusted classification, registered roles, destination restrictions, exact allowlisted tool proposals and conservative character quotas remain authoritative. Only matching read/export resource proposals are admitted; tools never execute.
+ 
+-Masking recognizes temporary ASIA AWS keys and one bounded base64 decoding layer containing recognizable credential patterns or an exact configured service token. Configured opaque service tokens are recognized by digest/length, including tokens embedded in longer URL-safe audit metadata or output. Only digest/length pairs remain in memory for this check; its comparison budget is bounded and conservatively masks the whole value when exhausted. Unknown formats and arbitrary encodings remain outside this masker; authoritative data boundaries are still required. Raw prompt/output/source are excluded from audit and pending state. Resolution records preserve requester/action and add actor/approval correlation. Denied privileged attempts and replay/expiry failures are audited. Resolution expires after five minutes and is evidence only, without execution or a reusable grant.
++Masking recognizes temporary ASIA AWS keys and one bounded base64/base64url decoding layer containing recognizable credential patterns or a configured service token embedded in surrounding text. Encoded candidates cover the full 16,000-character API text limit, and each credential substring search is limited to 32,768 comparisons with conservative masking on exhaustion. Configured opaque service tokens are recognized by digest/length, including tokens embedded in longer URL-safe audit metadata or output. Only digest/length pairs remain in memory for this check. Unknown formats, recursive encoding and arbitrary encodings remain outside this masker; authoritative data boundaries are still required. Raw prompt/output/source are excluded from audit and pending state. Resolution records preserve requester/action and add actor/approval correlation. Denied privileged attempts and replay/expiry failures are audited. Resolution expires after five minutes and is evidence only, without execution or a reusable grant.
+ 
+ Body safeguards use the installed FastAPI MIME parser for application/json and accepted application/*+json variants, with duplicate-key rejection at every level. Case/parameters and valid UTF encodings preserve framework behavior. Nonempty missing/empty Content-Type is sanitized 422 with strict FastAPI parsing; bodyless red-team requests remain supported. Actual chunks enforce 64 KiB even with false/missing Content-Length; nesting32, nodes10,000 and the full ten-second deadline apply before endpoint parsing. Duplicate Content-Type headers are refused. See the API contract for canonical 422/413/408 BLOCK responses and storage-outage precedence.
+ 
+diff --git a/backend/guards.py b/backend/guards.py
+index 78a7120..98cc8fc 100644
+--- a/backend/guards.py
++++ b/backend/guards.py
+@@ -30,9 +30,9 @@ class CredentialRedactor:
+         self.lengths = sorted(set(self.credentials.values()), reverse=True)
+ 
+     def matches(self, value):
+-        if not 32 <= len(value) <= 256:
+-            return False
+-        return self.credentials.get(hashlib.sha256(value.encode()).digest()) == len(value)
++        # Decoded prose may contain the credential rather than equal it. Reuse
++        # the bounded substring search, including its conservative fallback.
++        return self.redact(value)[1]
+ 
+     def redact(self, value):
+         if not self.credentials:
+@@ -68,7 +68,7 @@ def redact_secrets(value: str, known_secret=None):
+     result = value
+     for pattern in SECRET_PATTERNS:
+         result = pattern.sub("[REDACTED]", result)
+-    # One bounded decoding layer catches recognizable encoded credentials. This
++    # One decoding layer covers the full permitted 16KiB API text field. This
+     # remains a pattern masker, not an arbitrary secret or content classifier.
+     def encoded_secret(match):
+         token = match.group(0)
+@@ -80,7 +80,7 @@ def redact_secrets(value: str, known_secret=None):
+         if known_secret is not None:
+             recognized = recognized or known_secret(decoded)
+         return "[REDACTED]" if recognized else token
+-    result = re.sub(r"(?<![A-Za-z0-9+/_-])[A-Za-z0-9+/_-]{12,1024}={0,2}(?![A-Za-z0-9+/_-])", encoded_secret, result)
++    result = re.sub(r"(?<![A-Za-z0-9+/_-])[A-Za-z0-9+/_-]{12,16000}={0,2}(?![A-Za-z0-9+/_-])", encoded_secret, result)
+     return result, result != value
+ 
+ 
+diff --git a/backend/redteam.py b/backend/redteam.py
+index 3f829af..b35507d 100644
+--- a/backend/redteam.py
++++ b/backend/redteam.py
+@@ -1,6 +1,7 @@
+ """Run committed cases against a fresh instance of the actual enforcement engine."""
+ 
+ import json
++import math
+ from pathlib import Path
+ from threading import Lock
+ from time import perf_counter
+@@ -40,6 +41,24 @@ class RedteamRunner:
+                 raw = handle.read(262145)
+             if len(raw) > 262144:
+                 raise ValueError("Corpus too large")
++            # The schema parser otherwise accepts duplicate JSON keys with
++            # last-value-wins semantics, which can erase an attack expectation.
++            def unique(pairs):
++                values = {}
++                for key, value in pairs:
++                    if key in values:
++                        raise ValueError("Duplicate corpus key")
++                    values[key] = value
++                return values
++            def finite(number):
++                value = float(number)
++                if not math.isfinite(value):
++                    raise ValueError("Nonfinite corpus number")
++                return value
++            try:
++                json.loads(raw, object_pairs_hook=unique, parse_constant=finite, parse_float=finite)
++            except RecursionError:
++                raise ValueError("Corpus too complex") from None
+             corpus = Corpus.model_validate_json(raw)
+             if len({case.id for case in corpus.cases}) != len(corpus.cases):
+                 raise ValueError("Duplicate case IDs")
+diff --git a/docs/API_CONTRACT.md b/docs/API_CONTRACT.md
+index 25d511d..4b4c184 100644
+--- a/docs/API_CONTRACT.md
++++ b/docs/API_CONTRACT.md
+@@ -58,6 +58,8 @@ Optional fields may include request_id, prompt, output, tool, tool_arguments, es
+ 
+ Latency is measured. Events expose id, timestamp, request_id, user, role, action, category, resource, classification, destination, decision, policy, reason and latency_ms when known. Collections return `{events: [...]}`, newest first, with `limit` 1–100 (default 100). Detail returns one event. Approval resolution preserves requester/action and adds resolving `actor` and correlated `approval_id`. Denials and replay/expiry failures are sanitized audit events. Raw prompt/output/source and credentials are omitted.
+ 
++Configured opaque bearer credentials are masked in permitted output and retained metadata, including inside surrounding text decoded from one base64/base64url layer. Encoded candidates cover the full 16,000-character API text limit; credential substring searches stop after 32,768 comparisons and conservatively mask the candidate on exhaustion. Benign encodings remain intact when scanning finishes within that bound. Unknown secrets, other encodings and recursive encoding are outside this pattern masker; catalog/destination authorization remains authoritative.
++
+ ## Administrative operations and response budgets
+ 
+ `POST /api/approvals/{id}` accepts exactly `{approve: true}` or `{approve: false}` with a verified SECURITY_ADMIN credential. Success returns `{id, status, resolved_by, executed: false}`. Expired/replayed/changed-policy proposals return 409; unknown proposals return 404. Resolution never executes tools or creates a reusable grant. Pending operations bind the policy configuration/digest captured together at evaluation.
+@@ -66,6 +68,10 @@ Latency is measured. Events expose id, timestamp, request_id, user, role, action
+ 
+ The frontend caps complete successful response bodies at 512 KiB, collections at 100 events, reasons at 1,024 characters, identifiers at 128, and miscellaneous JSON at 16 nesting levels/10,000 nodes, with a ten-second transport/read deadline. Non-2xx responses abort the transport and initiate unread-body cancellation before throwing the sanitized endpoint/status error; arbitrary error bodies are never rendered. Cleanup handles size failures, interruptions, timeouts and parsing failures, releases reader locks/listeners/timers, and never waits for a cancellation promise that could stall or reject. Contract validation occurs after the stream has been fully consumed. API/error responses include server `Cache-Control: no-store`.
+ 
++Dashboard event/feed/evaluation normalization rejects unexpected raw `prompt`, `output`, `source`, `tool`, `tool_arguments`, credential, authorization, token, password, secret, API-key, stack and traceback fields, including case and underscore/hyphen aliases. Sensitive fields cannot silently become a successful dashboard result; rejection uses the sanitized contract error and clears stale success. Event responses also reject `sanitized_output`. Evaluation responses may contain `sanitized_output` only for ALLOW/REDACT; the dashboard omits that legitimate permitted content from its view. BLOCK/REQUIRE_APPROVAL/THROTTLE content is refused. Unexpected non-sensitive metadata remains omitted for compatibility. Administrative JSON endpoints not displayed in this dashboard retain bounded generic JSON validation and are not certified as typed reporting/export interfaces.
++
++Trusted attack-corpus files are capped at 256 KiB and 100 cases. Duplicate JSON keys at any nesting level (including escaped-equivalent names) and nonfinite constants or overflowed numbers are invalid. They produce sanitized 503 with persisted `failed` runner status and no completed/green results; they never rewrite expectations through last-value-wins parsing.
++
+ ## Admission, audit retention and storage errors
+ 
+ All HTTP admissions, including health/preflight, use fixed ten-second windows before policy loading, body buffering or evaluation. Without a verified configured bearer credential, the shared global limit is 120 requests/window. Configured credentials use a separate global limit of 1,200/window and 120/window per principal; current policy membership and endpoint role authorization must still pass. Source addresses, forwarding headers, body identities, claimed roles and decisions cannot choose limiter keys or grant authorization. Admission refusal returns 429 `{detail: "Request admission limit exceeded"}` with `Retry-After: 10`. Limits are fixed server constants and workers must run identical code/configuration. At most 1,002 live keys exist; expiration removes keys and clock rollback grants no fresh allowance. Cross-origin browser preflights have no credential and share the untrusted allowance; the same-origin dashboard proxy avoids this availability dependency.
+diff --git a/frontend/scripts/verify-security.mjs b/frontend/scripts/verify-security.mjs
+index 95c0b2e..ff54245 100644
+--- a/frontend/scripts/verify-security.mjs
++++ b/frontend/scripts/verify-security.mjs
+@@ -1,9 +1,9 @@
+ // Fresh loopback services and synthetic credentials; no existing service is used.
+ import assert from 'node:assert/strict';
+-import { chromium } from '@playwright/test';
++import { chromium, expect } from '@playwright/test';
+ import { spawn } from 'node:child_process';
+ import http from 'node:http';
+-import { randomBytes } from 'node:crypto';
++import { createHash, randomBytes } from 'node:crypto';
+ import { mkdir, readFile, writeFile } from 'node:fs/promises';
+ import { fileURLToPath } from 'node:url';
+ import path from 'node:path';
+@@ -11,6 +11,9 @@ import path from 'node:path';
+ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+ const evidenceDir = process.env.AEGIS_EVIDENCE_DIR || path.join(root, 'docs/security-review/2026-10-04');
+ const python = process.env.AEGIS_TEST_PYTHON || path.join(root, 'backend/.venv/Scripts/python.exe');
++const offlineGuard = process.env.AEGIS_OFFLINE_GUARD === '1';
++const evidencePrefix = offlineGuard ? 'frontend-offline' : 'frontend-live';
++const pythonGuardProbes = [];
+ const tokens = Object.fromEntries(['manager_1', 'security_admin_1'].map(user => [user, randomBytes(32).toString('base64url')]));
+ const listen = server => new Promise((resolve, reject) => {
+   server.once('error', reject); server.listen(0, '127.0.0.1', () => resolve(server.address().port));
+@@ -18,10 +21,15 @@ const listen = server => new Promise((resolve, reject) => {
+ const close = server => new Promise(resolve => server.close(resolve));
+ const children = [];
+ let browser;
++let evidence;
++const startedAt = new Date().toISOString();
+ const hostile = http.createServer((_request, response) => response.end('<!doctype html><title>Synthetic untrusted origin</title>'));
+ let backendPort;
+ const dist = path.join(root, 'frontend/dist');
+ const frontend = http.createServer(async (request, response) => {
++  // This owned fixture server has no favicon asset; avoid a browser-generated
++  // 404 unrelated to the application's security or asset loading.
++  if (request.url === '/favicon.ico') { response.statusCode = 204; response.end(); return; }
+   if (request.url.startsWith('/api/')) {
+     const proxy = http.request({ hostname: '127.0.0.1', port: backendPort, path: request.url, method: request.method, headers: request.headers }, upstream => {
+       response.writeHead(upstream.statusCode, upstream.headers); upstream.pipe(response);
+@@ -36,17 +44,19 @@ const frontend = http.createServer(async (request, response) => {
+     const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.woff': 'font/woff', '.woff2': 'font/woff2' };
+     response.setHeader('Content-Type', types[path.extname(file)] || 'application/octet-stream');
+     response.setHeader('X-Content-Type-Options', 'nosniff');
+-    response.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'");
++    response.setHeader('Cache-Control', 'no-store');
++    response.setHeader('Content-Security-Policy', "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'");
+     response.end(await readFile(file));
+   } catch { response.statusCode = 404; response.end('Unavailable'); }
+ });
+ 
+-async function startBackend(profile, port, frontendOrigin) {
++async function startBackend(profile, port, frontendOrigin, policyPath = path.join(root, 'policies/default.yaml')) {
+   const statePath = path.join(root, 'output/security-audit', `verify-${randomBytes(8).toString('hex')}.sqlite3`);
+-  const processHandle = spawn(python, ['-m', 'uvicorn', 'backend.main:app', '--host', '127.0.0.1', '--port', String(port), '--no-access-log'], {
++  const args = offlineGuard ? [path.join(root, 'frontend/scripts/offline-guard.py'), String(port)] : ['-m', 'uvicorn', 'backend.main:app', '--host', '127.0.0.1', '--port', String(port), '--workers', '1', '--no-access-log'];
++  const processHandle = spawn(python, args, {
+     cwd: root, windowsHide: true, stdio: ['ignore', 'pipe', 'pipe'],
+-    env: { ...process.env, AEGIS_PROFILE: profile, AEGIS_AUTH_FILE: '', AEGIS_AUTH_TOKENS: JSON.stringify(tokens),
+-      AEGIS_STATE_PATH: profile === 'authenticated' ? statePath : '', AEGIS_POLICY_PATH: path.join(root, 'policies/default.yaml'),
++    env: { ...process.env, PYTHONPATH: root, AEGIS_PROFILE: profile, AEGIS_AUTH_FILE: '', AEGIS_AUTH_TOKENS: JSON.stringify(tokens),
++      AEGIS_STATE_PATH: profile === 'authenticated' ? statePath : '', AEGIS_POLICY_PATH: policyPath,
+       AEGIS_ALLOWED_HOSTS: '127.0.0.1,localhost', AEGIS_ALLOWED_ORIGINS: frontendOrigin },
+   });
+   children.push(processHandle);
+@@ -55,7 +65,10 @@ async function startBackend(profile, port, frontendOrigin) {
+   processHandle.once('error', error => { failure = error; });
+   // Drain logs without publishing environment values or response payloads.
+   processHandle.stdout.on('data', () => {});
+-  processHandle.stderr.on('data', data => { if (String(data).includes(`Uvicorn running on http://127.0.0.1:${port}`)) started = true; });
++  processHandle.stderr.on('data', data => {
++    if (String(data).includes(`Uvicorn running on http://127.0.0.1:${port}`)) started = true;
++    if (String(data).includes('AEGIS_OFFLINE_GUARD_SELF_PROBE_PASS')) pythonGuardProbes.push({ pid: processHandle.pid, dnsAndConnectBlocked: true });
++  });
+   for (let attempt = 0; attempt < 80; attempt++) {
+     if (failure) throw failure;
+     if (processHandle.exitCode !== null) throw new Error('Dedicated backend failed to start');
+@@ -77,7 +90,33 @@ try {
+   const adminHeaders = { Authorization: 'Bearer ' + tokens.security_admin_1 };
+   assert.equal((await fetch(base + '/api/events')).status, 401);
+   browser = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL || 'chrome', headless: true });
+-  const page = await browser.newPage();
++  const context = await browser.newContext();
++  const guardedBrowserBlocks = [];
++  if (offlineGuard) {
++    await context.route('**/*', route => {
++      const url = new URL(route.request().url());
++      if (['127.0.0.1', 'localhost', '[::1]'].includes(url.hostname)) return route.continue();
++      guardedBrowserBlocks.push(url.origin);
++      return route.abort('internetdisconnected');
++    });
++    const probePage = await context.newPage();
++    await assert.rejects(probePage.goto('https://aegis-owned-negative.invalid/'), /ERR_INTERNET_DISCONNECTED/);
++    assert.deepEqual(guardedBrowserBlocks, ['https://aegis-owned-negative.invalid']);
++    await probePage.close();
++  }
++  const page = await context.newPage();
++  const pageErrors = [];
++  const networkFailures = [];
++  const consoleErrors = [];
++  const externalRequests = [];
++  const responseStatuses = new Map();
++  page.on('pageerror', error => pageErrors.push(error.name));
++  page.on('response', response => responseStatuses.set(response.request(), response.status()));
++  page.on('requestfailed', request => networkFailures.push({ path: new URL(request.url()).pathname, status: responseStatuses.get(request), failure: request.failure()?.errorText }));
++  page.on('request', request => { const url = new URL(request.url()); if (!['127.0.0.1', 'localhost'].includes(url.hostname)) externalRequests.push(url.origin); });
++  page.on('console', message => {
++    if (message.type() === 'error') consoleErrors.push(message.text().replace(/data:[^\s]+/g, 'data:[REDACTED_ASSET]'));
++  });
+   await page.goto(`http://127.0.0.1:${hostilePort}`);
+   const hostileResponse = await page.evaluate(async target => {
+     const response = await fetch(target + '/api/redteam/run', { method: 'POST', mode: 'no-cors' });
+@@ -91,6 +130,8 @@ try {
+   assert.equal(runResponse.status, 200);
+   const run = await runResponse.json(); assert.equal(run.passed, 16); assert.equal(run.failed, 0);
+   assert.equal((await fetch(base + '/api/redteam/run', { method: 'POST', headers: adminHeaders })).status, 429);
++  const hostileConsoleErrors = consoleErrors.splice(0);
++  assert.ok(hostileConsoleErrors.every(message => /^Failed to load resource: the server responded with a status of 403\b/.test(message)));
+   await page.goto(`http://127.0.0.1:${frontendPort}`);
+   await page.getByLabel('API credential').fill(tokens.manager_1);
+   await page.getByRole('button', { name: 'Connect', exact: true }).click();
+@@ -106,6 +147,28 @@ try {
+   assert.deepEqual(storage, { local: 0, session: 0 });
+   await page.getByRole('button', { name: 'Disconnect', exact: true }).click();
+   await page.getByRole('alert').filter({ hasText: 'HTTP 401' }).waitFor();
++  await expect(result).toHaveCount(0);
++  await expect(detail).toHaveCount(0);
++  await expect(page.getByLabel('API credential')).toHaveValue('');
++  await page.setViewportSize({ width: 375, height: 900 });
++  await page.screenshot({ path: path.join(evidenceDir, `${evidencePrefix}-disconnected-375.png`), fullPage: true });
++
++  const manager = { user: 'manager_1', role: 'PORTFOLIO_MANAGER', action: 'read', resource: 'portfolio/current_positions', classification: 'RESTRICTED', destination: 'INTERNAL' };
++  const syntheticSecret = 'sk-AEGISSYNTHETIC01234567890123456789';
++  const leaked = await fetch(base + '/api/security/evaluate', { method: 'POST', headers: { ...adminHeaders, Authorization: 'Bearer ' + tokens.manager_1, 'Content-Type': 'application/json' }, body: JSON.stringify({ ...manager, output: 'Synthetic output ' + syntheticSecret }) });
++  assert.equal(leaked.status, 200);
++  const redacted = await leaked.json();
++  assert.equal(redacted.decision, 'REDACT');
++  assert.ok(redacted.sanitized_output.includes('[REDACTED]'));
++  assert.ok(!JSON.stringify(redacted).includes(syntheticSecret));
++  const denied = await fetch(base + '/api/security/evaluate', { method: 'POST', headers: { Authorization: 'Bearer ' + tokens.manager_1, 'Content-Type': 'application/json' }, body: JSON.stringify({ ...manager, destination: 'EXTERNAL', output: syntheticSecret }) });
++  const deniedResult = await denied.json();
++  assert.equal(denied.status, 200);
++  assert.equal(deniedResult.decision, 'BLOCK');
++  assert.equal(deniedResult.policy, 'external_exfiltration');
++  assert.ok(!('sanitized_output' in deniedResult));
++  const sensitiveAudit = await (await fetch(base + '/api/events', { headers: adminHeaders })).json();
++  assert.ok(!JSON.stringify(sensitiveAudit).includes(syntheticSecret));
+ 
+   // Preserve the separate simulation acceptance check on a fresh explicit demo.
+   const demoProbe = http.createServer(); const demoPort = await listen(demoProbe); await close(demoProbe);
+@@ -119,16 +182,100 @@ try {
+     child.stdout.on('data', data => { output += data; }); child.stderr.on('data', data => { output += data; });
+     child.once('exit', code => resolve({ code, output }));
+   });
+-  await writeFile(path.join(evidenceDir, 'frontend-integration.log'), integration.output);
++  await writeFile(path.join(evidenceDir, offlineGuard ? 'frontend-offline-integration.log' : 'frontend-integration.log'), integration.output);
+   assert.equal(integration.code, 0);
+-  const evidence = { browser: await browser.version(), hostileResponse, hostileRunStatus: before.status,
++
++  // A second real browser journey through the same-origin proxy, without routes,
++  // mocked responses or a network connection to an external service.
++  // Its own fresh demo prevents preceding HTTP/integration evidence from using
++  // the demo's bounded rejection-telemetry sampling allowance.
++  const browserProbe = http.createServer(); const browserPort = await listen(browserProbe); await close(browserProbe);
++  await startBackend('local-demo', browserPort, `http://127.0.0.1:${frontendPort}`);
++  backendPort = browserPort;
++  await page.goto(`http://127.0.0.1:${frontendPort}`);
++  await page.setViewportSize({ width: 1440, height: 900 });
++  const liveCases = [];
++  for (const [scenario, decision, policy] of [['normal', 'ALLOW', 'market_public'], ['analyst', 'BLOCK', 'portfolio_restricted'], ['manager', 'ALLOW', 'portfolio_restricted'], ['external', 'BLOCK', 'external_exfiltration'], ['tool', 'BLOCK', 'tool_guard']]) {
++    await page.getByLabel('Demo scenario').selectOption(scenario);
++    await page.getByRole('button', { name: 'Evaluate proposal', exact: true }).focus();
++    const responsePromise = page.waitForResponse(response => response.url().endsWith('/api/security/evaluate') && response.request().method() === 'POST');
++    await page.keyboard.press('Enter');
++    const actual = await (await responsePromise).json();
++    assert.equal(actual.decision, decision); assert.equal(actual.policy, policy);
++    await expect(result.locator('.decision')).toHaveText(decision);
++    await expect(result.locator('.reason-box p')).toHaveText(actual.reason);
++    await page.getByRole('button', { name: 'Inspect audited event' }).click();
++    await expect(detail.locator('.detail-id')).toHaveText(actual.event_id);
++    await expect(detail.locator('.reason-box p')).toHaveText(actual.reason);
++    await expect(detail.locator('.decision')).toHaveText(decision);
++    await expect(page.getByRole('button', { name: 'Inspect ' + actual.event_id, exact: true })).toBeVisible();
++    liveCases.push({ scenario, decision, policy, event_id: actual.event_id });
++  }
++  for (const width of [1440, 768, 375]) {
++    await page.setViewportSize({ width, height: 900 });
++    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
++    await expect(page.getByLabel('API credential')).toHaveValue('');
++    await page.screenshot({ path: path.join(evidenceDir, `${evidencePrefix}-security-${width}.png`), fullPage: true });
++  }
++
++  const quotaPolicyPath = path.join(root, 'output/security-audit', `browser-quota-${randomBytes(8).toString('hex')}.yaml`);
++  const originalPolicy = await readFile(path.join(root, 'policies/default.yaml'), 'utf8');
++  assert.ok(originalPolicy.includes('requests: 60'));
++  await writeFile(quotaPolicyPath, originalPolicy.replace('requests: 60', 'requests: 2'));
++  const quotaProbe = http.createServer(); const quotaPort = await listen(quotaProbe); await close(quotaProbe);
++  await startBackend('local-demo', quotaPort, `http://127.0.0.1:${frontendPort}`, quotaPolicyPath);
++  backendPort = quotaPort;
++  await page.goto(`http://127.0.0.1:${frontendPort}`);
++  await page.getByLabel('Demo scenario').selectOption('manager');
++  const quotaDecisions = [];
++  for (const decision of ['ALLOW', 'ALLOW', 'THROTTLE']) {
++    const responsePromise = page.waitForResponse(response => response.url().endsWith('/api/security/evaluate') && response.request().method() === 'POST');
++    await page.getByRole('button', { name: 'Evaluate proposal', exact: true }).click();
++    const actual = await (await responsePromise).json();
++    assert.equal(actual.decision, decision);
++    assert.ok(!('sanitized_output' in actual));
++    await expect(result.locator('.decision')).toHaveText(decision);
++    await page.getByRole('button', { name: 'Inspect audited event' }).click();
++    await expect(detail.locator('.detail-id')).toHaveText(actual.event_id);
++    await expect(detail.locator('.reason-box p')).toHaveText(actual.reason);
++    quotaDecisions.push(decision);
++  }
++  await page.screenshot({ path: path.join(evidenceDir, `${evidencePrefix}-quota-375.png`), fullPage: true });
++  const rendered = await page.locator('body').innerText();
++  for (const secret of [...Object.values(tokens), syntheticSecret]) assert.ok(!rendered.includes(secret));
++  assert.deepEqual(pageErrors, []);
++  const expectedCancellations = networkFailures.filter(request => (request.path === '/api/events' && request.status === 401) || (request.path === '/api/redteam/run' && request.status === 403));
++  assert.deepEqual(networkFailures.filter(request => !expectedCancellations.includes(request)), []);
++  assert.deepEqual(externalRequests, []);
++  // These two 401s are required initial/disconnect states, not hidden failures.
++  assert.deepEqual(consoleErrors.filter(message => !/^Failed to load resource: the server responded with a status of 401\b/.test(message)), []);
++  if (offlineGuard) assert.equal(pythonGuardProbes.length, 4);
++  const sourcePaths = ['frontend/src/adapter.ts', 'frontend/src/api.ts', 'frontend/src/App.tsx', 'frontend/src/components.tsx', 'frontend/src/scenarios.ts', 'frontend/vite.config.ts', 'frontend/scripts/verify-security.mjs', 'frontend/scripts/offline-guard.py', 'backend/guards.py', 'backend/redteam.py', 'policies/default.yaml'];
++  const sourceHashes = Object.fromEntries(await Promise.all(sourcePaths.map(async file => [file, createHash('sha256').update(await readFile(path.join(root, file))).digest('hex')])));
++  evidence = { startedAt, completedAt: new Date().toISOString(), timezone: 'Europe/Warsaw', browser: await browser.version(), hostileResponse, hostileRunStatus: before.status,
+     authenticatedRedteam: { total: run.total, passed: run.passed, failed: run.failed },
+     dashboard: 'PASS: authenticated manager evaluation, own event detail, action, disconnect', storage,
+-    frontendIntegrationExit: integration.code, scope: 'Fresh loopback HTTP services; production TLS/identity-provider/runtime deployment not verified.' };
+-  await writeFile(path.join(evidenceDir, 'browser-verification.json'), JSON.stringify(evidence, null, 2));
+-  console.log(JSON.stringify(evidence, null, 2));
++    outputSecrecy: { permitted: redacted.decision, restrictedExternal: deniedResult.decision, auditContainsSecret: false },
++    liveCases, freshQuota: quotaDecisions, browserResponsesIntercepted: false,
++    offlineGuard: { enabled: offlineGuard, browserRequestRouting: offlineGuard ? 'Continue owned loopback requests; abort external requests; no API response fulfillment' : 'None', guardedBrowserBlocks, pythonGuardProbes },
++    pageErrors, networkFailures: [], expectedDeniedResponseCancellations: expectedCancellations, expected401ConsoleErrors: consoleErrors.length, expectedHostile403ConsoleErrors: hostileConsoleErrors.length, otherConsoleErrors: 0, externalRequests,
++    frontendIntegrationExit: integration.code, sourceHashes,
++    scope: offlineGuard ? 'Separate simulation of external-network unavailability after locked prerequisites: per-context browser request guard and per-child Python DNS/connect audit hook; self-probes blocked before outbound networking and actual owned loopback journeys succeeded. No host firewall/global disconnect or offline installation claim. Production TLS/identity-provider/runtime deployment, axe, screen-reader, CWV and visual baseline comparison not verified.' : 'Fresh loopback HTTP services after locked prerequisites; observer recorded no external browser requests. This normal journey has no request/response routing. Offline installation, production TLS/identity-provider/runtime deployment, axe, screen-reader, CWV and visual baseline comparison not verified.' };
+ } finally {
+   if (browser) await browser.close();
+-  for (const child of children) if (child.exitCode === null) child.kill();
++  const shutdown = await Promise.all(children.map(async child => {
++    if (child.exitCode === null && child.signalCode === null) {
++      const exited = new Promise(resolve => child.once('exit', resolve));
++      child.kill();
++      const stopped = await Promise.race([exited.then(() => true), new Promise(resolve => { const timer = setTimeout(() => resolve(false), 5000); timer.unref(); })]);
++      assert.equal(stopped, true, 'Owned process must stop');
++    }
++    return { pid: child.pid, stopped: child.exitCode !== null || child.signalCode !== null };
++  }));
+   await close(hostile); await close(frontend);
++  if (evidence) {
++    evidence.cleanup = { ownedProcesses: shutdown, ownedServersClosed: true };
++    await writeFile(path.join(evidenceDir, offlineGuard ? 'frontend-offline-browser-verification.json' : 'frontend-real-browser-verification.json'), JSON.stringify(evidence, null, 2));
++    console.log(JSON.stringify(evidence, null, 2));
++  }
+ }
+diff --git a/frontend/src/adapter.ts b/frontend/src/adapter.ts
+index b515890..703f95e 100644
+--- a/frontend/src/adapter.ts
++++ b/frontend/src/adapter.ts
+@@ -23,16 +23,44 @@ function parse<T>(schema: z.ZodType<T>, value: unknown): T {
+   if (!parsed.success) throw new ContractError();
+   return parsed.data;
+ }
++const sensitiveFields = new Set([
++  'prompt', 'output', 'source', 'tool', 'toolarguments', 'authorization',
++  'token', 'accesstoken', 'refreshtoken', 'credential', 'credentials',
++  'password', 'secret', 'apikey', 'stack', 'traceback', 'sanitizedoutput',
++]);
++function rejectSensitiveFields(value: unknown, permittedOutput = false) {
++  const queue: [unknown, number][] = [[value, 0]];
++  let nodes = 0;
++  while (queue.length) {
++    const [item, depth] = queue.pop()!;
++    if (++nodes > 10000 || depth > 16) throw new ContractError();
++    if (!item || typeof item !== 'object') continue;
++    for (const [key, child] of Object.entries(item)) {
++      if (sensitiveFields.has(key.toLowerCase().replace(/[_-]/g, ''))) {
++        // Only the canonical permitted evaluation field belongs to this API.
++        // The dashboard still omits it from the public view model.
++        if (!(depth === 0 && key === 'sanitized_output' && permittedOutput && typeof child === 'string')) throw new ContractError();
++      }
++      queue.push([child, depth + 1]);
++    }
++  }
++}
+ export function normalizeEvent(value: unknown): SecurityEvent {
+   // Omit unavailable nullable context consistently. Never substitute identity or action.
++  rejectSensitiveFields(value);
+   return Object.fromEntries(Object.entries(parse(eventSchema, value)).filter(([, value]) => value !== null && value !== undefined)) as unknown as SecurityEvent;
+ }
+ export function normalizeEvents(value: unknown): SecurityEvent[] {
+   // Explicit compatibility boundary; no guessed fields or fabricated defaults.
++  rejectSensitiveFields(value);
+   const parsed = parse(z.union([z.array(eventSchema).max(100), z.object({ events: z.array(eventSchema).max(100) })]), value);
+   return (Array.isArray(parsed) ? parsed : parsed.events).map(normalizeEvent);
+ }
+-export function normalizeEvaluation(value: unknown): EvaluateResponse { return parse(evaluationSchema, value); }
++export function normalizeEvaluation(value: unknown): EvaluateResponse {
++  const decision = value && typeof value === 'object' && 'decision' in value ? value.decision : undefined;
++  rejectSensitiveFields(value, decision === 'ALLOW' || decision === 'REDACT');
++  return parse(evaluationSchema, value);
++}
+ export function normalizeJson(value: unknown): JsonValue {
+   const queue: [unknown, number][] = [[value, 0]];
+   let nodes = 0;
+diff --git a/frontend/src/api.test.ts b/frontend/src/api.test.ts
+index baf47ed..84ac4ad 100644
+--- a/frontend/src/api.test.ts
++++ b/frontend/src/api.test.ts
+@@ -5,8 +5,9 @@ import { event, result } from './test-fixtures';
+ import type { EvaluateRequest } from './types';
+ 
+ describe('typed backend adapter', () => {
+-  it('accepts sanitized events and strips restricted extra payloads', () => {
+-    expect(normalizeEvent({ ...event, prompt: 'secret', output: 'restricted' })).toEqual(event);
++  it('accepts sanitized events, omits benign extras and rejects restricted payloads', () => {
++    expect(normalizeEvent({ ...event, evidence_class: 'protected' })).toEqual(event);
++    expect(() => normalizeEvent({ ...event, prompt: 'secret', output: 'restricted' })).toThrow(/contract/i);
+   });
+   it('supports a direct list and an explicit events envelope', () => {
+     expect(normalizeEvents([event])).toEqual([event]);
+diff --git a/frontend/src/audit-regression.test.tsx b/frontend/src/audit-regression.test.tsx
+index e298614..afb69fa 100644
+--- a/frontend/src/audit-regression.test.tsx
++++ b/frontend/src/audit-regression.test.tsx
+@@ -28,8 +28,8 @@ describe('backend audit regression', () => {
+   });
+   it.each(['read', 'export'])('preserves documented action %s', action => expect(normalizeEvent({ ...event, action }).action).toBe(action));
+   it.each([{ ...event, action: 'execute' }, { ...event, role: 'ADMIN' }, { ...event, decision: null }, { ...event, latency_ms: Infinity }, { ...event, latency_ms: -1 }, { id: 'only-id' }])('keeps required structure strict %j', value => expect(() => normalizeEvent(value)).toThrow(/contract/i));
+-  it('strips untrusted output even when metadata is null', () => {
+-    expect(normalizeEvent({ ...malformedEvent, sanitized_output: 'restricted', prompt: 'secret' })).not.toHaveProperty('sanitized_output');
++  it('rejects untrusted output even when metadata is null', () => {
++    expect(() => normalizeEvent({ ...malformedEvent, sanitized_output: 'restricted', prompt: 'secret' })).toThrow(/contract/i);
+   });
+ });
+ describe('backend-aligned demo proposals', () => {
+diff --git a/frontend/vite.config.ts b/frontend/vite.config.ts
+index 66fe119..c98c9e0 100644
+--- a/frontend/vite.config.ts
++++ b/frontend/vite.config.ts
+@@ -6,6 +6,8 @@ export default defineConfig(({ mode }) => {
+   const apiOrigin = /^https?:\/\//.test(env.VITE_API_BASE_URL || '') ? new URL(env.VITE_API_BASE_URL).origin : '';
+   return {
+     plugins: [react()],
++    // Emit same-origin assets so the strict preview CSP never needs data: fonts.
++    build: { assetsInlineLimit: 0 },
+     server: { headers, proxy: { '/api': { target: env.AEGIS_BACKEND_URL || 'http://127.0.0.1:8000', changeOrigin: true } } },
+     preview: { headers: { ...headers, 'Content-Security-Policy': `default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; connect-src 'self' ${apiOrigin}; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'` } },
+   };

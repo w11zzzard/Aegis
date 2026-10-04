@@ -1,0 +1,54 @@
+{"name": "authenticated manager", "timestamp": "2026-10-04T02:08:51.257467+02:00", "passed": true, "status": 200, "decision": "ALLOW", "policy": "portfolio_restricted", "event_agrees": true}
+{"name": "analyst restricted denial", "timestamp": "2026-10-04T02:08:51.275649+02:00", "passed": true, "status": 200, "decision": "BLOCK", "policy": "portfolio_restricted", "event_agrees": true}
+{"name": "credential principal cannot spoof manager", "timestamp": "2026-10-04T02:08:51.293302+02:00", "passed": true, "status": 200, "decision": "BLOCK", "policy": "identity", "event_agrees": true}
+{"name": "unknown resource", "timestamp": "2026-10-04T02:08:51.310807+02:00", "passed": true, "status": 200, "decision": "BLOCK", "policy": "fail_closed", "event_agrees": true}
+{"name": "missing classification", "timestamp": "2026-10-04T02:08:51.327389+02:00", "passed": true, "status": 200, "decision": "BLOCK", "policy": "fail_closed", "event_agrees": true}
+{"name": "server classification cannot be lowered", "timestamp": "2026-10-04T02:08:51.343419+02:00", "passed": true, "status": 200, "decision": "BLOCK", "policy": "classification", "event_agrees": true}
+{"name": "restricted external regardless of injected prompt", "timestamp": "2026-10-04T02:08:51.358108+02:00", "passed": true, "status": 200, "decision": "BLOCK", "policy": "external_exfiltration", "event_agrees": true}
+{"name": "public external positive", "timestamp": "2026-10-04T02:08:51.373446+02:00", "passed": true, "status": 200, "decision": "ALLOW", "policy": "market_public", "event_agrees": true}
+{"name": "banned shell inert proposal", "timestamp": "2026-10-04T02:08:51.389127+02:00", "passed": true, "status": 200, "decision": "BLOCK", "policy": "tool_guard", "event_agrees": true}
+{"name": "banned HTTP owned downstream", "timestamp": "2026-10-04T02:08:51.409185+02:00", "passed": true, "status": 200, "decision": "BLOCK", "policy": "tool_guard", "event_agrees": true}
+{"name": "mismatched tool destination", "timestamp": "2026-10-04T02:08:51.426193+02:00", "passed": true, "status": 200, "decision": "BLOCK", "policy": "tool_guard", "event_agrees": true}
+{"name": "nested tool resource", "timestamp": "2026-10-04T02:08:51.445166+02:00", "passed": true, "status": 200, "decision": "BLOCK", "policy": "tool_guard", "event_agrees": true}
+{"name": "extra nested tool argument", "timestamp": "2026-10-04T02:08:51.462040+02:00", "passed": true, "status": 200, "decision": "BLOCK", "policy": "tool_guard", "event_agrees": true}
+{"name": "owned downstream remains untouched", "timestamp": "2026-10-04T02:08:51.462040+02:00", "passed": true, "calls": 0, "marker_absent": true}
+{"name": "allowlisted matching tool", "timestamp": "2026-10-04T02:08:51.482028+02:00", "passed": true, "status": 200, "decision": "ALLOW", "policy": "portfolio_restricted", "event_agrees": true}
+{"name": "supported synthetic secret", "timestamp": "2026-10-04T02:08:51.502990+02:00", "passed": true, "status": 200, "decision": "REDACT", "policy": "output_secrets", "event_agrees": true}
+{"name": "encoded configured credential suffix", "timestamp": "2026-10-04T02:08:51.524494+02:00", "passed": true, "status": 200, "decision": "REDACT", "policy": "output_secrets", "event_agrees": true}
+{"name": "encoded configured credential prose", "timestamp": "2026-10-04T02:08:51.540732+02:00", "passed": true, "status": 200, "decision": "REDACT", "policy": "output_secrets", "event_agrees": true}
+{"name": "benign encoding preserved", "timestamp": "2026-10-04T02:08:51.557374+02:00", "passed": true, "status": 200, "decision": "ALLOW", "policy": "portfolio_restricted", "event_agrees": true}
+{"name": "full16000 once-encoded configured credential", "timestamp": "2026-10-04T02:08:51.612095+02:00", "passed": true, "status": 200, "decision": "REDACT", "policy": "output_secrets", "event_agrees": true}
+{"name": "large benign encoding preserved", "timestamp": "2026-10-04T02:08:51.660668+02:00", "passed": true, "status": 200, "decision": "ALLOW", "policy": "market_public", "event_agrees": true}
+{"name": "pending output absent", "timestamp": "2026-10-04T02:08:51.679901+02:00", "passed": true, "status": 200, "decision": "REQUIRE_APPROVAL", "policy": "portfolio_restricted", "event_agrees": true}
+{"name": "approval never grants subsequent execution", "timestamp": "2026-10-04T02:08:51.733441+02:00", "passed": true, "status": 200, "decision": "REQUIRE_APPROVAL", "policy": "portfolio_restricted", "event_agrees": true}
+{"name": "approval non-admin mutation replay controls", "timestamp": "2026-10-04T02:08:51.733441+02:00", "passed": true, "unauthorized": 403, "mutation": 422, "resolution": 200, "replay": 409, "executed": false}
+{"name": "pending policy-change binding", "timestamp": "2026-10-04T02:08:51.748441+02:00", "passed": true, "status": 200, "decision": "REQUIRE_APPROVAL", "policy": "portfolio_restricted", "event_agrees": true}
+{"name": "pending expiry fixture", "timestamp": "2026-10-04T02:08:51.780016+02:00", "passed": true, "status": 200, "decision": "REQUIRE_APPROVAL", "policy": "portfolio_restricted", "event_agrees": true}
+{"name": "throttled output absent", "timestamp": "2026-10-04T02:08:51.800140+02:00", "passed": true, "status": 200, "decision": "THROTTLE", "policy": "budget", "event_agrees": true}
+{"name": "malformed JSON sanitized", "timestamp": "2026-10-04T02:08:51.811145+02:00", "passed": true, "status": 422, "decision": "BLOCK", "output_absent": true, "no_store": true}
+{"name": "duplicate JSON sanitized", "timestamp": "2026-10-04T02:08:51.823785+02:00", "passed": true, "status": 422, "decision": "BLOCK", "output_absent": true, "no_store": true}
+{"name": "nonfinite JSON sanitized", "timestamp": "2026-10-04T02:08:51.834806+02:00", "passed": true, "status": 422, "decision": "BLOCK", "output_absent": true, "no_store": true}
+{"name": "deep JSON sanitized", "timestamp": "2026-10-04T02:08:51.842953+02:00", "passed": true, "status": 422, "decision": "BLOCK", "output_absent": true, "no_store": true}
+{"name": "oversized input sanitized", "timestamp": "2026-10-04T02:08:51.854718+02:00", "passed": true, "status": 413, "decision": "BLOCK", "output_absent": true, "no_store": true}
+{"name": "alternate chat route", "timestamp": "2026-10-04T02:08:51.879960+02:00", "passed": true, "denied": 403, "allowed": 200, "offline_canned_output": true}
+{"name": "administrative reads protected", "timestamp": "2026-10-04T02:08:51.902604+02:00", "passed": true, "no_credential": 401, "non_admin": 403}
+{"name": "untrusted origin refused", "timestamp": "2026-10-04T02:08:51.914115+02:00", "passed": true, "status": 403}
+{"name": "committed corpus positive and attack controls", "timestamp": "2026-10-04T02:08:51.944249+02:00", "passed": true, "total": 16, "passed_cases": 16, "failed": 0, "unexpected_allows": 0}
+{"name": "weakened disposable policy negative control", "timestamp": "2026-10-04T02:09:02.043342+02:00", "passed": true, "total": 16, "passed_cases": 15, "failed": 1, "unexpected_allows": 1}
+{"name": "restored policy blocks analyst", "timestamp": "2026-10-04T02:09:02.063968+02:00", "passed": true, "status": 200, "decision": "BLOCK", "policy": "portfolio_restricted", "event_agrees": true}
+{"name": "approval expires across real restart", "timestamp": "2026-10-04T02:09:02.662233+02:00", "passed": true, "status": 409, "fixture": "created timestamp aged in stopped owned SQLite state", "executed": false}
+{"name": "audit and SQLite exclude synthetic secret/encoded credential", "timestamp": "2026-10-04T02:09:02.664239+02:00", "passed": true, "checked_pools": ["protected events", "telemetry", "approvals"], "secrets_absent": true}
+{"name": "fresh quota request 1", "timestamp": "2026-10-04T02:09:03.428445+02:00", "passed": true, "status": 200, "decision": "ALLOW", "policy": "portfolio_restricted", "event_agrees": true}
+{"name": "fresh quota request 2", "timestamp": "2026-10-04T02:09:03.443778+02:00", "passed": true, "status": 200, "decision": "ALLOW", "policy": "portfolio_restricted", "event_agrees": true}
+{"name": "fresh quota request 3", "timestamp": "2026-10-04T02:09:03.457430+02:00", "passed": true, "status": 200, "decision": "THROTTLE", "policy": "budget", "event_agrees": true}
+{"name": "lowering limits retains consumed quota", "timestamp": "2026-10-04T02:09:03.474183+02:00", "passed": true, "status": 200, "decision": "THROTTLE", "policy": "budget", "event_agrees": true}
+{"name": "lowered limits and consumed usage", "timestamp": "2026-10-04T02:09:03.482551+02:00", "passed": true, "requests_used": 2, "character_units_used": 16, "requests_limit": 1, "character_unit_limit": 15}
+{"name": "restart retains consumed quota", "timestamp": "2026-10-04T02:09:04.071155+02:00", "passed": true, "status": 200, "decision": "THROTTLE", "policy": "budget", "event_agrees": true}
+{"name": "bounded concurrent HTTP quota", "timestamp": "2026-10-04T02:09:04.308185+02:00", "passed": true, "requests": 20, "concurrent_workers": 8, "allowed": 3, "throttled": 17}
+{"name": "local-demo policy initial manager", "timestamp": "2026-10-04T02:09:04.882615+02:00", "passed": true, "status": 200, "decision": "ALLOW", "policy": "portfolio_restricted", "event_agrees": true}
+{"name": "valid policy reload changes authorization", "timestamp": "2026-10-04T02:09:04.901179+02:00", "passed": true, "status": 200, "decision": "BLOCK", "policy": "portfolio_restricted", "event_agrees": true}
+{"name": "invalid policy unknown control", "timestamp": "2026-10-04T02:09:04.922994+02:00", "passed": true, "status": 200, "decision": "BLOCK", "policy": "fail_closed", "event_agrees": true}
+{"name": "invalid policy missing budgets", "timestamp": "2026-10-04T02:09:04.948041+02:00", "passed": true, "status": 200, "decision": "BLOCK", "policy": "fail_closed", "event_agrees": true}
+{"name": "malformed YAML disables policy", "timestamp": "2026-10-04T02:09:04.968685+02:00", "passed": true, "status": 200, "decision": "BLOCK", "policy": "fail_closed", "event_agrees": true}
+{"name": "repaired policy recovers", "timestamp": "2026-10-04T02:09:04.990457+02:00", "passed": true, "status": 200, "decision": "ALLOW", "policy": "portfolio_restricted", "event_agrees": true}
+{"name": "policy lifecycle visible in documented local-demo", "timestamp": "2026-10-04T02:09:04.995632+02:00", "passed": true, "valid_changed": true, "invalid_disabled": true, "repaired": true, "selectable_identity_not_authentication": true}

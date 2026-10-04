@@ -1,0 +1,12 @@
+{
+  "command": [
+    "C:\\Users\\admin\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+    "node_modules/typescript/bin/tsc",
+    "--noEmit"
+  ],
+  "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman\\frontend",
+  "started_warsaw": "2026-10-04T02:17:22.037935+02:00",
+  "ended_warsaw": "2026-10-04T02:17:23.357546+02:00",
+  "exit_code": 0,
+  "log": "frontend-typecheck-acceptance.log"
+}

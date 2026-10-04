@@ -6,6 +6,8 @@ export default defineConfig(({ mode }) => {
   const apiOrigin = /^https?:\/\//.test(env.VITE_API_BASE_URL || '') ? new URL(env.VITE_API_BASE_URL).origin : '';
   return {
     plugins: [react()],
+    // Emit same-origin assets so the strict preview CSP never needs data: fonts.
+    build: { assetsInlineLimit: 0 },
     server: { headers, proxy: { '/api': { target: env.AEGIS_BACKEND_URL || 'http://127.0.0.1:8000', changeOrigin: true } } },
     preview: { headers: { ...headers, 'Content-Security-Policy': `default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; connect-src 'self' ${apiOrigin}; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'` } },
   };

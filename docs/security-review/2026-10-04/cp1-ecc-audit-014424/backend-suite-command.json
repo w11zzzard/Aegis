@@ -1,0 +1,21 @@
+{
+  "command": [
+    "C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\.worktrees\\b-dashboard-integration\\frontend\\.integration-venv\\Scripts\\python.exe",
+    "-m",
+    "pytest",
+    "backend/tests",
+    "-q",
+    "-p",
+    "pytest_cov",
+    "--cov=backend",
+    "--cov-config=backend/.coveragerc",
+    "--cov-report=term-missing",
+    "--cov-report=json:C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\backend-coverage.json",
+    "--basetemp=C:\\Users\\admin\\Documents\\ChatGPT\\Hackyeah 2026 goldman\\output\\security-hardening\\2026-10-04_014424\\backend-suite-tmp"
+  ],
+  "cwd": "C:\\Users\\admin\\.codex\\worktrees\\aegis-security-cp1\\Hackyeah 2026 goldman",
+  "started_warsaw": "2026-10-04T01:55:04.854870+02:00",
+  "ended_warsaw": "2026-10-04T01:56:12.486152+02:00",
+  "exit_code": 0,
+  "log": "backend-suite.log"
+}

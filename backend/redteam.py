@@ -1,6 +1,7 @@
 """Run committed cases against a fresh instance of the actual enforcement engine."""
 
 import json
+import math
 from pathlib import Path
 from threading import Lock
 from time import perf_counter
@@ -40,6 +41,24 @@ class RedteamRunner:
                 raw = handle.read(262145)
             if len(raw) > 262144:
                 raise ValueError("Corpus too large")
+            # The schema parser otherwise accepts duplicate JSON keys with
+            # last-value-wins semantics, which can erase an attack expectation.
+            def unique(pairs):
+                values = {}
+                for key, value in pairs:
+                    if key in values:
+                        raise ValueError("Duplicate corpus key")
+                    values[key] = value
+                return values
+            def finite(number):
+                value = float(number)
+                if not math.isfinite(value):
+                    raise ValueError("Nonfinite corpus number")
+                return value
+            try:
+                json.loads(raw, object_pairs_hook=unique, parse_constant=finite, parse_float=finite)
+            except RecursionError:
+                raise ValueError("Corpus too complex") from None
             corpus = Corpus.model_validate_json(raw)
             if len({case.id for case in corpus.cases}) != len(corpus.cases):
                 raise ValueError("Duplicate case IDs")

@@ -1,0 +1,11 @@
+{
+  "command": "C:/Users/admin/Documents/ChatGPT/Hackyeah 2026 goldman/.worktrees/b-dashboard-integration/frontend/.integration-venv/Scripts/python.exe -B -m pytest backend/tests/test_encoded_credential_context.py backend/tests/test_redteam_integrity.py backend/tests/test_cp1_lifecycle.py backend/tests/test_credential_redaction.py -q -p no:cacheprovider",
+  "working_directory": "C:/Users/admin/.codex/worktrees/aegis-security-cp1/Hackyeah 2026 goldman",
+  "source": "e52eb5059bba618db768c17353256d9eb516938c plus working-tree backend/guards.py and backend/redteam.py fixes and new tests",
+  "exit_code": 0,
+  "passed": 31,
+  "warnings": 1,
+  "elapsed_seconds": 1.90,
+  "warning": "Existing Starlette TestClient/httpx deprecation; not a failed security check",
+  "scope": "Independent focused ASGI/regression recheck; separate from final full-suite/live-socket/browser runs"
+}

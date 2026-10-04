@@ -30,9 +30,9 @@ class CredentialRedactor:
         self.lengths = sorted(set(self.credentials.values()), reverse=True)
 
     def matches(self, value):
-        if not 32 <= len(value) <= 256:
-            return False
-        return self.credentials.get(hashlib.sha256(value.encode()).digest()) == len(value)
+        # Decoded prose may contain the credential rather than equal it. Reuse
+        # the bounded substring search, including its conservative fallback.
+        return self.redact(value)[1]
 
     def redact(self, value):
         if not self.credentials:
@@ -68,7 +68,7 @@ def redact_secrets(value: str, known_secret=None):
     result = value
     for pattern in SECRET_PATTERNS:
         result = pattern.sub("[REDACTED]", result)
-    # One bounded decoding layer catches recognizable encoded credentials. This
+    # One decoding layer covers the full permitted 16KiB API text field. This
     # remains a pattern masker, not an arbitrary secret or content classifier.
     def encoded_secret(match):
         token = match.group(0)
@@ -80,7 +80,7 @@ def redact_secrets(value: str, known_secret=None):
         if known_secret is not None:
             recognized = recognized or known_secret(decoded)
         return "[REDACTED]" if recognized else token
-    result = re.sub(r"(?<![A-Za-z0-9+/_-])[A-Za-z0-9+/_-]{12,1024}={0,2}(?![A-Za-z0-9+/_-])", encoded_secret, result)
+    result = re.sub(r"(?<![A-Za-z0-9+/_-])[A-Za-z0-9+/_-]{12,16000}={0,2}(?![A-Za-z0-9+/_-])", encoded_secret, result)
     return result, result != value
 
 

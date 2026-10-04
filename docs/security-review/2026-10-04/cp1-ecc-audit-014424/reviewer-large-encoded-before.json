@@ -1,0 +1,54 @@
+[
+  {
+    "name": "large-supported-secret",
+    "encoded_chars": 1584,
+    "status": 200,
+    "decision": "ALLOW",
+    "encoded_output_retained": true,
+    "encoded_state_retained": false,
+    "passed": false
+  },
+  {
+    "name": "near-api-limit-secret",
+    "encoded_chars": 16000,
+    "status": 200,
+    "decision": "ALLOW",
+    "encoded_output_retained": true,
+    "encoded_state_retained": false,
+    "passed": false
+  },
+  {
+    "name": "near-api-limit-benign",
+    "encoded_chars": 16000,
+    "status": 200,
+    "decision": "ALLOW",
+    "encoded_output_retained": true,
+    "encoded_state_retained": false,
+    "passed": true
+  },
+  {
+    "name": "large-benign-prose",
+    "encoded_chars": 13868,
+    "status": 200,
+    "decision": "ALLOW",
+    "encoded_output_retained": true,
+    "encoded_state_retained": false,
+    "passed": true
+  },
+  {
+    "name": "work_bound_one_credential_length",
+    "encoded_chars": 16000,
+    "sha256_comparisons": 15951,
+    "elapsed_ms": 11.55,
+    "masked": false,
+    "finite_runtime": true
+  },
+  {
+    "name": "work_bound_all_225_lengths",
+    "encoded_chars": 16000,
+    "sha256_comparisons": 32768,
+    "elapsed_ms": 20.977,
+    "masked": true,
+    "finite_runtime": true
+  }
+]

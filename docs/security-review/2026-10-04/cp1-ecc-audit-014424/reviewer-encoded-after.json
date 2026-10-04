@@ -1,0 +1,74 @@
+[
+  {
+    "name": "padded-punctuation",
+    "encoded_chars": 68,
+    "status": 200,
+    "decision": "REDACT",
+    "recoverable_output_retained": false,
+    "recoverable_detail_retained": false,
+    "recoverable_feed_retained": false,
+    "recoverable_state_retained": false,
+    "metadata_case": false,
+    "raw_synthetic_credential_absent": true
+  },
+  {
+    "name": "unpadded-prefix",
+    "encoded_chars": 87,
+    "status": 200,
+    "decision": "REDACT",
+    "recoverable_output_retained": false,
+    "recoverable_detail_retained": false,
+    "recoverable_feed_retained": false,
+    "recoverable_state_retained": false,
+    "metadata_case": true,
+    "raw_synthetic_credential_absent": true
+  },
+  {
+    "name": "unpadded-suffix",
+    "encoded_chars": 87,
+    "status": 200,
+    "decision": "REDACT",
+    "recoverable_output_retained": false,
+    "recoverable_detail_retained": false,
+    "recoverable_feed_retained": false,
+    "recoverable_state_retained": false,
+    "metadata_case": true,
+    "raw_synthetic_credential_absent": true
+  },
+  {
+    "name": "url-identifier-context",
+    "encoded_chars": 94,
+    "status": 200,
+    "decision": "REDACT",
+    "recoverable_output_retained": false,
+    "recoverable_detail_retained": false,
+    "recoverable_feed_retained": false,
+    "recoverable_state_retained": false,
+    "metadata_case": true,
+    "raw_synthetic_credential_absent": true
+  },
+  {
+    "name": "larger-once-encoded-context",
+    "encoded_chars": 1584,
+    "status": 200,
+    "decision": "ALLOW",
+    "recoverable_output_retained": true,
+    "recoverable_detail_retained": false,
+    "recoverable_feed_retained": false,
+    "recoverable_state_retained": false,
+    "metadata_case": false,
+    "raw_synthetic_credential_absent": true
+  },
+  {
+    "name": "benign-encoded-control",
+    "encoded_chars": 32,
+    "status": 200,
+    "decision": "ALLOW",
+    "recoverable_output_retained": true,
+    "recoverable_detail_retained": true,
+    "recoverable_feed_retained": true,
+    "recoverable_state_retained": true,
+    "metadata_case": true,
+    "raw_synthetic_credential_absent": true
+  }
+]
