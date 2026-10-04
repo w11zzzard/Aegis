@@ -308,7 +308,8 @@ try {
       child.once('exit', code => resolve({ code, output }));
     });
     await writeFile(path.join(evidenceDir, 'frontend-policy-lifecycle.log'), lifecycle.output);
-    assert.equal(lifecycle.code, 0, 'Real browser policy lifecycle must pass');
+    const lifecycleOutput = lifecycle.output.replaceAll(tokens.security_admin_1, '[REDACTED]').slice(-12000);
+    assert.equal(lifecycle.code, 0, `Real browser policy lifecycle must pass. Subprocess output:\n${lifecycleOutput}`);
     assert.deepEqual(await readFile(lifecyclePolicyPath), await readFile(path.join(root, 'policies/default.yaml')), 'Disposable policy restored');
     lifecycleExit = lifecycle.code;
   }

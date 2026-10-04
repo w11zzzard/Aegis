@@ -57,6 +57,7 @@ test('real policy reload, failure/recovery and weakened-policy corpus render hon
     await evaluate('BLOCK', 'portfolio_restricted');
     await page.getByLabel('Demo scenario').selectOption('manager');
     await evaluate('ALLOW', 'portfolio_restricted');
+    await page.getByRole('button', { name: 'Refresh summaries' }).click();
     await expect(readiness).toContainText('Policy evaluation available');
     await page.getByLabel('API credential').fill(adminToken!);
     await page.getByRole('button', { name: 'Connect', exact: true }).click();
